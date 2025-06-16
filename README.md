@@ -850,7 +850,7 @@ fn route(ip_kind: IPAddressKind) {}
 	3. The third variant stores a single string
 	4. The fourth variant stores three integers
 
-We **could define each of these variants as a separate struct; however these structs would all have different types. The benefit of an enum is that all of these variants are grouped under the Message type.**
+^^^We **could define each of these variants as a separate struct; however these structs would all have different types. The benefit of an enum is that all of these variants are grouped under the Message type**...
 ```Rust
 enum Message {
     Quit,
