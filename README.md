@@ -267,7 +267,8 @@ for element in a.iter() {
     println!("{}", element);
 }
 
-for number in 1..4 {        // just like Python range(), `..` doesn't include upper bound unless you use `..=`.
+// Just like Python range(), `..` doesn't include the upper bound unless you use `..=`
+for number in 1..4 {        
     println!{"{}", number};
 }
 ```
