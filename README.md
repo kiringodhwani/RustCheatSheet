@@ -713,7 +713,107 @@ With our new modified code...
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height: 50,  
 }"
 
+### Methods
+- In our earlier code, we have related data grouped together under the Rectangle struct. However, our area() function to compute the area of the rectangle is defined separately from the Rectangle struct, even though it is very closely tied to our Rectangle struct. We can improve this by **grouping the area() function with our Rectangle struct by using the method syntax.**
+- Methods are similar to functions, except that they are tied to an instance of a struct.
+- The first argument in a method is always **self**, which is the instance of the struct that the method is being called on. Usually, you take a reference to self (`&self`). We could also take a mutable reference to self (`&mut self`), or, in rare cases, we could take ownership of the instance (`self`).
+- A struct's methods are defined in **implementation blocks** for the struct. Implementation blocks house the functions and methods associated with the struct.
 
+```Rust
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32
+}
+
+// Implementation block for the Rectangle struct
+impl Rectangle {
+    // Here, self is a reference to our current Rectangle instance.
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+
+fn main() {
+    let rect = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!("rect: {:#?}", rect);
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        rect.area() 	// CALLING the area() method
+    );
+}
+```
+
+- <ins>Example:</ins> Method that takes in multiple parameters
+
+```Rust
+impl Rectangle {
+	fn area(&self) -> u32 {
+        		self.width * self.height
+    	}
+
+    	// Method that takes in multiple parameters.
+    	// The bigger_area_than() method takes in a reference to another rectangle and determines
+	// if the current rectangle instance has a bigger area than the passed in rectangle.
+    	fn bigger_area_than(&self, other_rect: &Rectangle) -> bool {
+        	let cur_area = self.area();
+        	let other_area = other_rect.area();
+        	if cur_area > other_area {
+            		return true;
+        	} else {
+            		return false;
+        	}
+    	}
+}
+
+fn main() {
+	let rect = Rectangle {
+        	width: 30,
+        	height: 50,
+    	};
+    	let rect1 = Rectangle {
+        	width: 5,
+        	height: 10,
+    	};
+    	let rect2 = Rectangle {
+        	width: 100,
+        	height: 120,
+    	};
+    	println!("rect is bigger than rect1? {}", rect.bigger_area_than(&rect1));	// true
+    	println!("rect is bigger than rect2? {}", rect.bigger_area_than(&rect2));	// false
+}
+```
+
+### Associated Functions
+- Unlike methods, associated functions are **not tied to an instance of our struct** (i.e., **don't take self as a parameter**).
+
+```Rust
+impl Rectangle {
+    // IMPORTANT: Bc this is an associated function, not a method, we don't get
+    // passed in the self argument… 
+    fn square(size: u32) -> Rectangle {
+        Rectangle {
+            width: size,
+            height: size,
+        }
+    }
+}
+
+fn main() {
+    let rect3 = Rectangle::square(25); // CALLING THE ASSOCIATED FUNCTION
+    println!("Square: {:#?}", rect3);
+}
+```
+
+---
+
+# Enums
+- Enums allow us to **enumerate a list of variants**.
 
 
 
