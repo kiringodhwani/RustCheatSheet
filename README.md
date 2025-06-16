@@ -814,9 +814,51 @@ fn main() {
 
 # Enums
 - Enums allow us to **enumerate a list of variants**.
+- When is it appropriate to use enums over structs?
+	- Ex: Consider IP addresses. We can use enums to enumerate all of the variants — there are 2 variants, IPv4 and IPv6. An IP address can only be one of these 2 variants. Given these properties, if we wanted to express IP addresses in code, then using enums would make sense.
 
+```Rust
+enum IPAddressKind {
+    // We can store data directly inside the enum variant by adding
+    // parenthesis after the variant and specifying the type of data
+    // we want to store. In this case, we want to store the string
+    // for the IP address. By doing this, we are able to group the
+    // the version of the IP address with the actual IP address (grouping
+    // related data just like with structs).
+    IPv6(String),
 
+    IPv4(u8, u8, u8, u8),	// enum variants can store different types of data.
+				// This variant stores four 8-bit integers.
+}
 
+fn main() {
+    // Variants are namespaced under their identifier, so in this case, we use :: to specify each of our variants.
+    let four = IPAddressKind::IPv4;
+    let six = IPAddressKind::IPv6;
+
+    // Storing the IP address inside the enum variant.
+    let local_host = IPAddressKind::IPv4(127, 0, 0, 1);
+    let kirin_yah = IPAddressKind::IPv6(String::from("127.0.0.1"));
+}
+
+// In main(), variables 'four' and 'six' are both variants of the IPAddressKind type, so we can
+// define a function that takes in a parameter of type IPAddressKind (our enum).
+fn route(ip_kind: IPAddressKind) {}
+
+- <ins>Enum Example 2:</ins> **Enum variants can store a wide variety of types.** The Message enum below has four variants...
+	1. The first variant stores no data
+	2. The second variant stores an anonymous struct
+	3. The third variant stores a single string
+	4. The fourth variant stores three integers
+We **could define each of these variants as a separate struct; however these structs would all have different types. The benefit of an enum is that all of these variants are grouped under the Message type.**
+```Rust
+enum Message {
+    Quit,
+    Move { x : i32, y : i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+```
 
 
 
