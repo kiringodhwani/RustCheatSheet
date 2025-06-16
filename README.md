@@ -379,7 +379,7 @@ let s2 = s1; 	// Move (not shallow copy), invalidates s1
 
 ```Rust
 let s1 = String::from("hello");
-let s2 = s1.clone(); // Clone
+let s2 = s1.clone(); 	// Clone
 ```
 
 <ins>Example:</ins> Strings vs. Integers (Move vs. Copy)
