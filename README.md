@@ -118,3 +118,16 @@ println!("This is the new value of my variable after reassignment: {}", x);
 const SUBSCRIBER_COUNT: u32 = 1000;
 ```
 - NOTE: **Constants can ONLY be set to constant expressions**, e.g., can't be set to return value of function or any value that's computed at runtime.
+
+# Data Types
+
+## Scalar Data Types
+
+### Integers
+- **i32** = signed 32-bit integer (signed = can be positive or negative)
+- **u32** = unsigned 32-bit integer (unsigned = can only be positive)
+```Rust
+let a = 98332;
+let b = 98_332;    // '_' is a visual separator, like a comma, so `b` is same as `a`
+println!("My value: {}", b);
+```
