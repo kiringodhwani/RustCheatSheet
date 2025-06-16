@@ -273,7 +273,7 @@ for number in 1..4 {
 }
 ```
 
-# Comments
+## Comments
 
 - Line comment:
 ```Rust
@@ -286,3 +286,7 @@ for number in 1..4 {
 	Block comment
 */
 ```
+
+---
+
+
