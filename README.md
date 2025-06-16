@@ -180,3 +180,23 @@ let byte = [0; 8];     // create an array with 8 values all set to 0
 ---
 
 # Functions
+- The **naming convention** for functions in Rust is **all lowercase and underscores for spaces**.
+// **Have to specify return type**, e.g., "-> i32".
+
+```Rust
+fn my_function(name: &str, age: i32, in_x_years: i32) -> i32{
+    println!("{} is {} years old!", name, age);
+
+    // By default, the last line in a function is returned and
+    // doesn't require a semicolon. So, can replace the below...
+    // let sum = age + in_x_years;
+    // return sum
+    age + in_x_years
+}
+
+fn main() {
+    // Call the function in `main`
+    let sum = my_function("Kirin", 23, 5);
+    println!("In five years, he will be {}", sum)
+}
+```
