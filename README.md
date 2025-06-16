@@ -349,9 +349,9 @@ Examples with a scope (we define a new scope here using curly brackets):
 {  // s is not valid here, it’s not yet declared
 
 	let s = String::from("hello");  // `s` is valid from this point forward.
-					// `s` is `String` type, dynamic in size, can be mutated, so it is automatically stored on the heap
+					// `s` is `String` type, dynamic in size, can be mutated, so it is automatically stored on the heap.
 					// Rust automatically allocates memory on the heap for the `String`, and when the scope ends, Rust
-					// drops the value and automatically deallocates memory on the heap
+					// drops the value and automatically deallocates memory on the heap.
 
 	// do stuff with `s`
 
