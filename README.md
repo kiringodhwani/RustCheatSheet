@@ -322,3 +322,39 @@ Looking at the above code, the following happens in order…
 
 2. The function b() is executed (it is called in a). This creates a new stack frame that is added to the top of the stack. b() creates its own variable `x`, which is of type `String`. As a `String`, `x` can be dynamic in size, so can’t store it directly in the stack frame; instead, we ask the heap to allocate memory for `x`. The heap does this and passes back a pointer which is what we store in the stack frame. 
 
+## Ownership -- 3 Rules in Rust
+1. **Each value in Rust has a variable that’s called its owner.**
+
+2. **There can only be one owner at a time for a specific value (i.e., a value can’t have two owners at the same time).**
+    - This rule ensures memory safety by preventing multiple concurrent mutable accesses.
+    - Note on Shared Ownership: Types like **Rc<T>** (Reference Counter) and **Arc<T>** (Atomic Reference Counter) **allow multiple references to share ownership of a value.** The value is only dropped when the last Rc or Arc smart pointer goes out of scope. While multiple Rc/Arc pointers exist, they collectively manage the single underlying value.
+
+3. **When the owner goes out of scope, the value will be dropped.**
+
+Examples with a scope (we define a new scope here using curly brackets):
+- Ex 1:
+```Rust
+{  // `s` is not valid here, it’s not yet declared
+
+	let s = "hello";  // `s` is valid from this point forward.
+			  // `s` is a string literal stored directly in the binary, fixed size.
+
+	// do stuff with `s`
+
+}  // this scope is now over, and `s` is no longer valid
+```
+
+- Ex 2:
+```Rust
+{  // s is not valid here, it’s not yet declared
+
+	let s = String::from("hello");  // `s` is valid from this point forward.
+					// `s` is `String` type, dynamic in size, can be mutated, so it is automatically stored on the heap
+					// Rust automatically allocates memory on the heap for the `String`, and when the scope ends, Rust
+					// drops the value and automatically deallocates memory on the heap
+
+	// do stuff with `s`
+
+}  // this scope is now over, and `s` is no longer valid
+```
+
