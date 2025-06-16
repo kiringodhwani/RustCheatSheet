@@ -860,6 +860,27 @@ enum Message {
 }
 ```
 
+### Enum Methods
+- Just like structs, we **can define methods and associated functions on our enum type**. Just like structs, we use **implementation blocks** again.
+```Rust
+enum Message {
+    Quit,
+    Move { x : i32, y : i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
 
+impl Message {
+    fn some_function(&self) {
+        println!("Let's get Rusty!");
+    }
+}
 
+fn main() {
+    let kirins_message = Message::Move { x: 5, y: 2002 };
+    kirins_message.some_function()
+}
+```
+
+## Option Enum
 
