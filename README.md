@@ -74,6 +74,7 @@ fn main() {
         //
         //     If parsing fails (Err(_)), the underscore means "ignore the specific error" 
         //          and continue skips to the next iteration of a loop
+        //
         let guess: u32 = match guess.trim().parse() {
             Ok(val) => val, 
             Err(_) => continue,
