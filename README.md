@@ -495,7 +495,9 @@ fn dangle() -> &String {
 }
 ```
 “This function’s return type contains a borrowed value, but there is no value for it to be borrowed from”
+<img width="711" alt="Image" src="https://github.com/user-attachments/assets/b2654965-7f5e-445b-8cb3-f9e9dc5b5439" />
 
+## Slices
 
 
 
