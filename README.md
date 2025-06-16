@@ -359,3 +359,54 @@ Looking at the above code, the following happens in order…
 }  // this scope is now over, and `s` is no longer valid
 ```
 
+## Copy, Move, Clone
+
+- **Copy:** Simple types stored on the stack like integers, booleans, and characters implement a copy trait that allows these types to be copied instead of moved.
+
+```Rust
+let x = 5;
+let y = x; 	// Copy
+```
+
+- **Move:** In the below, Rust invalidates `s1` (called a "move"). Cloning s1 would be way too memory expensive (would create a new String on the heap). A shallow copy not as memory safe.
+
+```Rust
+let s1 = String::from("hello");
+let s2 = s1; 	// Move (not shallow copy), invalidates s1
+```
+
+- **Clone:** More expensive, Rust defaults to "move".
+
+```Rust
+let s1 = String::from("hello");
+let s2 = s1.clone(); // Clone
+```
+
+<ins>Example:</ins> Strings vs. Integers (Move vs. Copy)
+```Rust
+// Define a vector with two `String` types, "Kirin" and "Godhwani"
+let vec_str = vec![String::from("Kirin"), String::from("Godhwani")];
+println!("{:?}", vec_str);
+
+// Without using `&` to take a reference, the below errors: "cannot move out of index of `Vec<String>` ".
+// A move occurs because value has type `String`, which does not implement the `Copy` trait.
+let temp = &vec_str[0];		// HAVE to take a reference
+
+println!("{}", temp);
+println!("{:?}", vec_str);
+```
+
+However, we do not need to take a reference `&` when dealing with a vector of integers...
+
+```Rust
+// vector with two numbers, 0 and 1
+let vec_num = vec![0, 1];
+println!("{:?}", vec_num);
+
+//  works without &, bc integers copy by default, they exist on the stack
+let temp = vec_num[0];
+
+println!("{}", temp);
+println!("{:?}", vec_num);
+```
+
