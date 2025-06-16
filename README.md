@@ -659,6 +659,7 @@ fn area(dimensions: (u32, u32)) -> u32 {
 ```
 
 ***Major Improvement with Structs:** 
+```Rust
 struct Rectangle {
     width: u32,
     height: u32
@@ -680,6 +681,7 @@ fn main() {
 fn area(rect: &Rectangle) -> u32 {
     rect.width * rect.height
 }
+```
 
 
 
