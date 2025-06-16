@@ -815,7 +815,7 @@ fn main() {
 # Enums
 - Enums allow us to **enumerate a list of variants**.
 - When is it appropriate to use enums over structs?
-	- <ins>Example 1:</ins>: Consider IP addresses. We can use enums to enumerate all of the variants — there are 2 variants, IPv4 and IPv6. An IP address can only be one of these 2 variants. Given these properties, if we wanted to express IP addresses in code, then using enums would make sense.
+	- <ins>Example 1:</ins> Consider IP addresses. We can use enums to enumerate all of the variants — there are 2 variants, IPv4 and IPv6. An IP address can only be one of these 2 variants. Given these properties, if we wanted to express IP addresses in code, then using enums would make sense.
 
 ```Rust
 enum IPAddressKind {
