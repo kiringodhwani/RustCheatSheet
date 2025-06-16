@@ -387,7 +387,7 @@ let s2 = s1.clone(); 	// Clone
 // Define a vector with two `String` types, "Kirin" and "Godhwani"
 let vec_str = vec![String::from("Kirin"), String::from("Godhwani")];
 
-// Without using `&` to take a reference, the below errors: "cannot move out of index of `Vec<String>` ".
+// If we don't use `&` to take a reference, then the below errors: "cannot move out of index of `Vec<String>` ".
 // A move occurs because the value is a `String` type, which does not implement the `Copy` trait.
 let temp = &vec_str[0];		// HAVE to take a reference
 ```
