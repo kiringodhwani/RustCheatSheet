@@ -48,6 +48,7 @@ fn main() {
             // it takes a reference to the guess string and modifies it without taking
             // ownership of it. Returns a result type that either returns 'Ok' holding
             // the return value (i.e., user input) or 'Err' holding an error object.
+            //
             .read_line(&mut guess)
 
             // If an error is returned, probably a system error. If Ok is returned, then expect
