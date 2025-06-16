@@ -39,12 +39,12 @@ fn main() {
         let mut guess = String::new();
 
         io::stdin()
-            // no named parameters in rust so type in value then "param_name:" shows up.
+            // No named parameters in rust so type in value then "param_name:" shows up.
             //
 
-            // read_line takes in the user's input and appends it to the specified buffer
-            // we specify the buffer to be guess (which is initialized to '').
-            // specify the buffer as a mutable reference (here, to the guess string), so
+            // read_line takes in the user's input and appends it to the specified buffer.
+            // We specify the buffer to be guess (which is initialized to '').
+            // Specify the buffer as a mutable reference (here, to the guess string), so
             // it takes a reference to the guess string and modifies it without taking
             // ownership of it. Returns a result type that either returns 'Ok' holding
             // the return value (i.e., user input) or 'Err' holding an error object.
