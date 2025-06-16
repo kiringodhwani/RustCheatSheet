@@ -95,3 +95,24 @@ fn main() {
 }
 
 ```
+
+# Variables
+
+- **Variables in Rust are immutable by default**. You have to specify "mut" to make mutable.
+
+```Rust
+   let mut x = 5;
+    println!("This is the value of my variable: {}", x);
+    x = 6;
+    println!("This is the new value of my variable after reassignment: {}", x);
+```
+
+## Constants
+- Compared to immutable variables, **constants can't be made mutable with "mut"**.
+- Define constants with all upper case and underscores for spaces
+- Also, they have to be type annotated, like the 'u32' specified below.
+
+```Rust
+const SUBSCRIBER_COUNT: u32 = 1000;
+```
+- NOTE: **Constants can ONLY be set to constant expressions**, e.g., can't be set to return value of function or any value that's computed at runtime.
