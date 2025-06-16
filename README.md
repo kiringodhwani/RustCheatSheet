@@ -499,6 +499,191 @@ fn dangle() -> &String {
 
 ## Slices
 
+- Let you **reference a contiguous sequence of elements within a collection** instead of referencing the entire collection.
+- **Do not take ownership of the underlying data**.
+
+```Rust
+let mut s = String::from("hello world");
+let hello = &s[0..5];      // since 0 is start of string, can do &s[..5]
+let world = &s[6..11];     // since 11 is end of string, can do &s[6..]
+let all = &s[0..11];       // can do &s[..]
+```
+
+- <ins> Example 1: </ins> first_word() takes in the string slice `s2` (note that string literals are string slices, string literals are stored directly in the binary so s2 is a string slice to that location in the binary).
+
+```Rust
+fn main() {
+    let s2 = "hello world";
+
+    let word = first_word(s2);  // this would work even if s2 is a String bc it would be
+				// automatically coerced into a string slice
+}
+
+// Returns a string slice. If the index of the first word is found, returns a slice containing
+// the first word. If reaches the end of the input string without returning, then returns
+// a slice containing the whole string (bc the whole string would be 1 word in this case). 
+//
+// Because first_word() accepts a string slice (&str), it borrows a reference to the
+// data owned by s2. Therefore, the s parameter in first_word() does not take 
+// ownership of the underlying value owned by s2, so the s2 variable in main() keeps
+// ownership.
+fn first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+    &s[..]
+}
+```
+
+- <ins> Example 2: </ins> Slices on different types of collections.
+
+```Rust
+let a = [1, 2, 3, 4, 5];
+let slice = &a[0..2];
+```
+
+---
+
+# Structs
+- Structs allow you to group related data together
+- Enums and structs are the building blocks for creating new types in rust
+
+### Attributes of a Struct
+- Like a tuple, **Structs allows us to group related data of different types together**, but we get the **benefit of naming our structure and the data inside** the structure, so we can **reference data by name instead of index**.
+
+```Rust
+struct User {
+    // Attributes of the struct
+    username: String,
+    email: String,
+    sign_in_count: u64,
+    active: bool,
+}
+
+fn main() {
+
+    // Define a mutable instance of the `User` struct
+    let mut user1 = User {
+        email: String::from("kiringodhwani@gmail.com"),
+         username: String::from("kirincg"),
+         active: true,
+         sign_in_count: 1
+    };
+
+    // Can get specific values from struct using dot notation
+    let name = user1.username;
+
+    // Can modify specific values in our struct using dot notation
+    // NOTE: Must make sure to make the whole object mutable, can't just do a single attribute.
+    user1.username = String::from("valgodhwani");
+
+    // Can use functions to define new instances of Struct
+    let user2 = build_user(
+        String::from("kaig@gmail.com"), 
+        String::from("kaig13"));
+    
+    // We can create new instances of a Struct using existing instances
+    // In the below, we give `user3` a specific email address and username, 
+    // and for the remaining attributes (active, sign_in_count) takes the
+    // same values as `user2`. 
+    let user3 = User {
+        email: String::from("sgodhwani7@gmail.com"),
+        username: String::from("sgod"),
+        ..user2 // for the remaining fields, give us what user2 has
+    };
+
+}
+
+// Function to create a new instance of the `User` struct.
+fn build_user(email: String, username: String) -> User {
+    User {
+        email: email,
+        username: username,
+        active: true,
+        sign_in_count: 1,
+    }
+}
+```
+
+### Tuple Structs (anonymous structs)
+
+- We can create Structs without named fields.
+
+- Tuple structs are useful when you want your entire tuple to have a name and be of different type then other tuples...
+
+```Rust
+// In the below, Color and Point have the same field/attribute types, which are three signed 32 bit integers.
+// But, they are of different type: one is Color and one is Point. As a result, if a function expects a tuple
+// struct of type Point, you cannot pass it Color.
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+```
+
+### Example to Show the Value of Structs
+
+**Code Before Using Structs:** works, but could be improved in terms of readability. Specifically, we are calculating the area of one rectangle, so the width and height are related; however, our program does not express that these two variables are related.
+```Rust
+fn main() {
+    let width1 = 30;
+    let height1 = 50;
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        area(width1, height1)
+    );
+}
+
+fn area(width: u32, height:u32) -> u32 {
+    width * height
+}
+```
+
+**Improvement without Structs:** Group the weight and height variables together using tuples. This is better, but it is not clear what the fields in the tuple represent, because not named. Is the first variable the width or the height? 
+```Rust
+fn main() {
+    let rect = (30, 50);
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        area(rect)
+    );
+}
+
+fn area(dimensions: (u32, u32)) -> u32 {
+    dimensions.0 * dimensions.1
+}
+```
+
+***Major Improvement with Structs:** 
+struct Rectangle {
+    width: u32,
+    height: u32
+}
+
+fn main() {
+    let rect = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        area(&rect)
+    );
+}
+
+// Pass in a reference to the rectangle, because we don't want the function to take ownership of it.
+fn area(rect: &Rectangle) -> u32 {
+    rect.width * rect.height
+}
+
+
+
+
 
 
 
