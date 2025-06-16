@@ -687,7 +687,11 @@ fn area(rect: &Rectangle) -> u32 {
 
 **What if we want to print our rectangle?? Our Rectangle struct does not implement the Display trait.** The Display trait specifies how something should be printed. Primitive types like integers implement this Display trait by default, since there is only one way to print an integer. But, for custom types like our structure, we have to implement it ourselves. 
 
+<img width="583" alt="Image" src="https://github.com/user-attachments/assets/a0dd0851-987d-4dce-aa35-1c65f93c60fe" />
 
+SOLUTION: `println!("rect: {:?}", rect);	// use the `{:?}`` 
+
+**New Error:** Now we see that our **Rectangle struct doesn’t implement the Debug trait**, which allows us to print out information useful for developers.
 
 
 
