@@ -361,14 +361,14 @@ Looking at the above code, the following happens in order…
 
 ## Copy, Move, Clone
 
-- **Copy:** Simple types stored on the stack like integers, booleans, and characters implement the `Copy` trait which allows these types to be copied instead of moved.
+- **Copy:** Simple types stored on the stack like integers, booleans, and characters implement the `Copy` trait which allows these types to be copied by default instead of moved.
 
 ```Rust
 let x = 5;
 let y = x; 	// Copy
 ```
 
-- **Move:** In the below, Rust invalidates `s1` (called a "move"). Cloning s1 would be way too memory expensive (would create a new String on the heap). A shallow copy not as memory safe.
+- **Move:** In the below, Rust invalidates `s1` (called a "move"). Cloning s1 would be way too memory expensive (would create a new String on the heap). A shallow copy not as memory safe. Rust defaults to "move" unless `Copy` trait is implemented.
 
 ```Rust
 let s1 = String::from("hello");
