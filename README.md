@@ -693,6 +693,25 @@ SOLUTION: `println!("rect: {:?}", rect);	// use the `{:?}``
 
 **New Error:** Now we see that our **Rectangle struct doesn’t implement the Debug trait**, which allows us to print out information useful for developers.
 
+<img width="686" alt="Image" src="https://github.com/user-attachments/assets/d79412b6-756a-440e-b3d1-2ad4983c5cba" />
+
+SOLUTION: use a **derived trait**...
+- The hint in the above error tells us to add the `#[derive(Debug)]` text.
+- **Debug is a trait** and **adding derive** here **allows the compiler to provide a basic implementation of the Debug trait**.
+```Rust
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32
+}
+```
+With our new modified code...
+- `println!("rect: {:?}", rect);` => "rect: Rectangle { width: 30, height: 50 }"
+- `println!("rect: {:#?}", rect);` =>
+"rect: Rectangle {
+  width: 30,
+  height: 50,
+}"
 
 
 
