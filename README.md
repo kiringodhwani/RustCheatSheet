@@ -277,7 +277,7 @@ for number in 1..4 {
 
 - Line comment:
 ```Rust
-`// Line comment`
+// Line comment
 ```
 
 - Block comment:
