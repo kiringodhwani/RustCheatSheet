@@ -161,7 +161,7 @@ let c = 'k';
 
 ## Compound Data Types
 
-## Tuple (0-indexed)
+### Tuple (0-indexed)
 ```Rust
 let tup = ("kirin", 23);
 let (name, age) = tup;     // destructing to access tuple values
@@ -169,7 +169,7 @@ let name = tup.0;          // dot notation to access tuple values
 let age = tup.1;
 ```
 
-## Array (0-indexed, fixed length)
+### Array (0-indexed, fixed length)
 ```Rust
 let error_codes = [200, 404, 500];
 let not_found = error_codes[1];     // 404
