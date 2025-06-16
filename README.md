@@ -707,10 +707,10 @@ struct Rectangle {
 ```
 With our new modified code...
 - `println!("rect: {:?}", rect);` => "rect: Rectangle { width: 30, height: 50 }"
-- `println!("rect: {:#?}", rect);` =>  
+- `println!("rect: {:#?}", rect);` =>  Prints out...
 "rect: Rectangle {  
-      width: 30,  
-      height: 50,  
+&nbsp;&nbsp;&nbsp;&nbsp;width: 30,  
+&nbsp;&nbsp;&nbsp;&nbsp;height: 50,  
 }"
 
 
