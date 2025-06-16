@@ -658,7 +658,7 @@ fn area(dimensions: (u32, u32)) -> u32 {
 }
 ```
 
-***Major Improvement with Structs:** 
+**Major Improvement with Structs:** 
 ```Rust
 struct Rectangle {
     width: u32,
@@ -682,6 +682,11 @@ fn area(rect: &Rectangle) -> u32 {
     rect.width * rect.height
 }
 ```
+
+### Derived Traits
+
+**What if we want to print our rectangle?? Our Rectangle struct does not implement the Display trait.** The Display trait specifies how something should be printed. Primitive types like integers implement this Display trait by default, since there is only one way to print an integer. But, for custom types like our structure, we have to implement it ourselves. 
+
 
 
 
