@@ -301,8 +301,8 @@ Rust is a systems programming language, so it is important to understand how our
 - During runtime, our program has access to both the stack and the heap
 
 ### The Stack
-- The stack is **fixed size** **(can’t grow or shrink during runtime)**.
-- - The stack stores stack frames, which are created for every function that executes. 
+- **Fixed size** **(can’t grow or shrink during runtime)**.
+- Stores stack frames, which are created for every function that executes. 
 - The stack frames store the local variables of the function being executed. 
 - **The size of a stack frame is calculated at compile time, so the variables inside a stack frame must have a known, fixed size.**
 - Variables inside of a stack frame only live as long as the stack frame lives.  
