@@ -819,12 +819,9 @@ fn main() {
 
 ```Rust
 enum IPAddressKind {
-    // We can store data directly inside the enum variant by adding
-    // parenthesis after the variant and specifying the type of data
-    // we want to store. In this case, we want to store the string
-    // for the IP address. By doing this, we are able to group the
-    // the version of the IP address with the actual IP address (grouping
-    // related data just like with structs).
+    // We can store data directly inside the enum variant by adding parenthesis after the variant and specifying the type of data
+    // we want to store. In this case, we want to store the string for the IP address. By doing this, we are able to group the
+    // the version of the IP address with the actual IP address (grouping related data just like with structs).
     IPv6(String),
 
     IPv4(u8, u8, u8, u8),	// enum variants can store different types of data.
