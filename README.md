@@ -361,7 +361,7 @@ Looking at the above code, the following happens in order…
 
 ## Copy, Move, Clone
 
-- **Copy:** Simple types stored on the stack like integers, booleans, and characters implement a copy trait that allows these types to be copied instead of moved.
+- **Copy:** Simple types stored on the stack like integers, booleans, and characters implement the `Copy` trait which allows these types to be copied instead of moved.
 
 ```Rust
 let x = 5;
@@ -386,22 +386,17 @@ let s2 = s1.clone(); // Clone
 ```Rust
 // Define a vector with two `String` types, "Kirin" and "Godhwani"
 let vec_str = vec![String::from("Kirin"), String::from("Godhwani")];
-println!("{:?}", vec_str);
 
 // Without using `&` to take a reference, the below errors: "cannot move out of index of `Vec<String>` ".
-// A move occurs because value has type `String`, which does not implement the `Copy` trait.
+// A move occurs because the value is a `String` type, which does not implement the `Copy` trait.
 let temp = &vec_str[0];		// HAVE to take a reference
-
-println!("{}", temp);
-println!("{:?}", vec_str);
 ```
 
-However, we do not need to take a reference `&` when dealing with a vector of integers...
+However, we do not need to take a reference `&` when dealing with a vector of integers bc integers implement the `Copy` trait.
 
 ```Rust
 // vector with two numbers, 0 and 1
 let vec_num = vec![0, 1];
-println!("{:?}", vec_num);
 
 //  works without &, bc integers copy by default, they exist on the stack
 let temp = vec_num[0];
