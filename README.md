@@ -272,3 +272,17 @@ for number in 1..4 {
     println!{"{}", number};
 }
 ```
+
+# Comments
+
+- Line comment:
+```Rust
+`// Line comment`
+```
+
+- Block comment:
+```Rust
+/*
+	Block comment
+*/
+```
