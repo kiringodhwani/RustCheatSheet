@@ -438,6 +438,18 @@ fn calculate_length(s: &String) -> usize {
 
 2. **References must always be valid** (i.e., the data they point to must be valid).
 
+3. <ins>NOTE:</ins> **the scope of a reference starts when it is first introduced and ends when it is used for the last time.** As a result, in ex 5 below, we can declare a mutable reference to s after the println!() statement because the scopes of r1 and r2 end at this line (since it is the last time they are used.
+```Rust
+let mut s = String::from("hello");
+
+let r1 = &s;
+let r2 = &s;
+
+println!("{}, {}", r1, r2);	// scopes of `r1` and `r2` end at this line (since it is the last time they are used.
+
+let r3 = &mut s;	// can declare a mutable reference to `s` since no other references to `s` exist
+```
+
 ### Mutable References
 - References are immutable by default. **To modify the value without taking ownership of it**, we **use mutable references** as specified by **`&mut`**.
 
@@ -459,11 +471,16 @@ fn change(some_string: &mut String) {
 
 - <ins>RESTRICTION 1 OF MUTABLE REFERENCES</ins>: **you can only have ONE mutable reference to a particular piece of data in a particular scope**. Prevents data races at compile time (data race = two pointers pointing to the same piece of data, one pointer is used to write to the data, no mechanism to synchronize data access between the pointers, e.g., one pointer will try to read the data in the middle of the other pointer writing to the data).
 
+
 <img width="619" alt="Image" src="https://github.com/user-attachments/assets/5cfb5b31-3e63-4513-a731-2b43f50ad5a0" />
 ^^^ fix the above error by making both references immutable (&s)
 
+
 - <ins>RESTRICTION 2 OF MUTABLE REFERENCES</ins>: **you can’t have a mutable reference to a variable if an immutable reference already exists for it.** This is because immutable references don’t expect the underlying value to change, which is problematic if you have a mutable reference. BUT, you can have multiple immutable references to the same variable, because the underlying data is not going to change.
 
+<img width="531" alt="Image" src="https://github.com/user-attachments/assets/48bf94d4-42f3-434a-a361-9d2b09ac8076" />
+
+- 
 
 
 
