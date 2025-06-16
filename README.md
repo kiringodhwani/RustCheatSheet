@@ -158,6 +158,7 @@ let f = false;
 let c = 'k';
 ```
 
+
 ## Compound Data Types
 
 ## Tuple (0-indexed)
