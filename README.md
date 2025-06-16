@@ -32,12 +32,15 @@ fn main() {
     loop{
         println!("Please enter a number: ");
 
-        // **In rust, variables are immutable by default. 'mut' makes it mutable.**
-        // **new() returns an empty string we can use.**
+        // In rust, variables are immutable by default. 'mut' makes it mutable.
+        //
+        // new() returns an empty string we can use.
+        //
         let mut guess = String::new();
 
         io::stdin()
-            // no named parameters in rust so type in value then "param_name:" shows up
+            // no named parameters in rust so type in value then "param_name:" shows up.
+            //
 
             // read_line takes in the user's input and appends it to the specified buffer
             // we specify the buffer to be guess (which is initialized to '').
@@ -46,6 +49,7 @@ fn main() {
             // ownership of it. Returns a result type that either returns 'Ok' holding
             // the return value (i.e., user input) or 'Err' holding an error object.
             .read_line(&mut guess)
+
             // If an error is returned, probably a system error. If Ok is returned, then expect
             // returns the value stored in Ok. Otherwise error message.
             .expect("Failed to read line");
@@ -55,11 +59,15 @@ fn main() {
 
         // Smarter way to convert user's input from String to unsigned 32-bit int
         // that also handles invalid input:
+        //
         // let guess: u32 = ... - declares a variable of type u32
-        // guess.trim().parse() - takes string guess, removes whitespace, parse to #. 
+        //
+        // guess.trim().parse() - takes string guess, removes whitespace, parse to #.
+        //
         // parse() returns a Result enum, which is either:
         //      Ok(value) if parsing succeeded
         //      Err(error) if parsing failed
+        //
         // match allows us to handle different cases based on the result:
         //     If parsing is successful (Ok(num)), it assigns the parsed number to guess
         //
