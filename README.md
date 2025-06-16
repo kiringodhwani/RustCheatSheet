@@ -289,4 +289,9 @@ for number in 1..4 {
 
 ---
 
+# Memory in Rust
+
+## Pros and Cons of Different Ways of Handling Memory
+
+
 
