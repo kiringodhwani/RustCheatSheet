@@ -153,7 +153,7 @@ let t = true;
 let f = false;
 ```
 
-### Character (USE SINGLE QUOTES)
+### Character (use single quotes)
 ```Rust
 let c = 'k';
 ```
