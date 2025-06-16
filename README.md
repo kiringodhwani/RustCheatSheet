@@ -96,6 +96,8 @@ fn main() {
 
 ```
 
+---
+
 # Variables
 
 - **Variables in Rust are immutable by default**. You have to specify "mut" to make mutable.
@@ -130,4 +132,50 @@ const SUBSCRIBER_COUNT: u32 = 1000;
 let a = 98332;
 let b = 98_332;    // '_' is a visual separator, like a comma, so `b` is same as `a`
 println!("My value: {}", b);
+
+let f: u8 = 256; // this value is to big for u8 --> get error about overflow
 ```
+
+### Floating-point Numbers
+```Rust
+let f = 5.0;
+
+let sum = 5 + 10;
+let difference = 98.3 - 4.2;
+let product = 4 * 30;
+let quotient = 9.3 / 2.9;
+let remainder = 99 / 5;
+```
+
+### Booleans
+```Rust
+let t = true;
+let f = false;
+```
+
+### Character (USE SINGLE QUOTES)
+```Rust
+let c = 'k';
+```
+
+## Compound Data Types
+
+## Tuple (0-indexed)
+```Rust
+let tup = ("kirin", 23);
+let (name, age) = tup;     // destructing to access tuple values
+let name = tup.0;          // dot notation to access tuple values
+let age = tup.1;
+```
+
+## Array (0-indexed, fixed length)
+```Rust
+let error_codes = [200, 404, 500];
+let not_found = error_codes[1];     // 404
+
+let byte = [0; 8];     // create an array with 8 values all set to 0
+```
+
+---
+
+# Functions
