@@ -104,6 +104,7 @@ fn main() {
 let mut x = 5;    // make `x` mutable with `mut`
 
 println!("This is the value of my variable: {}", x);
+
 x = 6;     // we can reassign `x` bc we marked it as mutable
 println!("This is the new value of my variable after reassignment: {}", x);
 ```
