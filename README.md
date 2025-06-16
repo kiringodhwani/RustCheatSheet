@@ -296,4 +296,29 @@ for number in 1..4 {
 <img width="503" alt="Image" src="https://github.com/user-attachments/assets/6851b889-f267-4c03-b8cd-1bdeb258a09f" />
 
 ## Stack and Heap
+Rust is a systems programming language, so it is important to understand how our memory is laid out during runtime. 
+- Rust makes certain decisions depending on whether our memory is stored on the stack or on the heap
+- During runtime, our program has access to both the stack and the heap
+
+### The Stack
+- The stack is **fixed size** **(can’t grow or shrink during runtime)**.
+- - The stack stores stack frames, which are created for every function that executes. 
+- The stack frames store the local variables of the function being executed. 
+- **The size of a stack frame is calculated at compile time, so the variables inside a stack frame must have a known, fixed size.**
+- Variables inside of a stack frame only live as long as the stack frame lives.  
+
+### The Heap
+- The heap is less organized: **can grow or shrink at runtime**, the **data stored** in the heap **can be dynamic in size**, can be large amounts of data, and **we control the lifetime of the data**.
+
+### Stack vs. Heap
+- **Pushing to the stack is faster than allocating memory on the heap**, because the heap has to spend time looking for a place to store the new data.
+- **Accessing data on the stack is faster than accessing data on the heap**, because with heap you have to follow the pointer in the stack frame. 
+
+### Example
+<img width="697" alt="Image" src="https://github.com/user-attachments/assets/fd055671-7f3f-4e69-b306-623f990556a4" />
+Looking at the above code, the following happens in order…
+
+1. The function a() is executed first because it comes first. So, we add a stack frame for a() to the stack. a() initializes the variable `x`, which is a string literal (fixed size, stored in our binary), and `y` (signed 32 bit integer, fixed size). In the stack frame, `x` is a reference to the string literal in our binary and `y` is stored directly in the stack frame because it is fixed size.
+
+2. The function b() is executed (it is called in a). This creates a new stack frame that is added to the top of the stack. b() creates its own variable `x`, which is of type `String`. As a `String`, `x` can be dynamic in size, so can’t store it directly in the stack frame; instead, we ask the heap to allocate memory for `x`. The heap does this and passes back a pointer which is what we store in the stack frame. 
 
