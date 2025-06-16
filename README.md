@@ -197,6 +197,77 @@ fn my_function(name: &str, age: i32, in_x_years: i32) -> i32{
 fn main() {
     // Call the function in `main`
     let sum = my_function("Kirin", 23, 5);
+
     println!("In five years, he will be {}", sum)
+}
+```
+
+---
+
+# Control Flow
+
+## If statements
+
+- **Conditions** in the if statement must **explicitly** be **booleans**
+
+```Rust
+let number = 5;
+
+// conditions in the if statement must explicitly be booleans
+if number < 10 {
+    println!("number is less than 10");
+} else if number > 10 {
+    println!("number is greater than 10");
+} else {
+    println!("number is equal to 10")
+}
+```
+
+## Loops
+
+### `loop`
+
+- execute the code in the loop over and over again until we call 'break'
+
+```Rust
+loop {
+    println!("again!");
+    break;
+}
+```
+
+- You can use `loop` to return a value...
+
+```Rust
+let mut counter = 0;
+let result = loop {
+    counter += 1;
+    if counter == 10 {
+        break counter;    // This returns `counter` when the loop breaks.
+                          // Value is stored in `result`.
+    }
+};
+println!("{}", result)
+```
+
+### `while`
+```Rust
+let mut number = 3;
+while number != 0 {
+    println!("{}", number);
+    number -= 1;
+}
+println!("LIFTOFF!!!")
+```
+
+### `for`
+```Rust
+let a = [10, 20, 30, 40, 50];
+for element in a.iter() {
+    println!("{}", element);
+}
+
+for number in 1..4 {        // just like Python range(), `..` doesn't include upper bound unless you use `..=`.
+    println!{"{}", number};
 }
 ```
