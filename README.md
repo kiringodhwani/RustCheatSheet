@@ -52,7 +52,7 @@ fn main() {
             .read_line(&mut guess)
 
             // If an error is returned, probably a system error. If Ok is returned, then expect
-            // returns the value stored in Ok. Otherwise error message.
+            // returns the value stored in Ok. Otherwise panic with an error message.
             .expect("Failed to read line");
 
         // Convert user's input from String to unsigned 32-bit int
