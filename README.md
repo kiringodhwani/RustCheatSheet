@@ -293,5 +293,5 @@ for number in 1..4 {
 
 ## Pros and Cons of Different Ways of Handling Memory
 
-
+<img width="503" alt="Image" src="https://github.com/user-attachments/assets/6851b889-f267-4c03-b8cd-1bdeb258a09f" />
 
