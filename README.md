@@ -332,7 +332,7 @@ Looking at the above code, the following happens in order…
 3. **When the owner goes out of scope, the value will be dropped.**
 
 
-<ins>Examples</ins> with a scope (we define a new scope here using curly brackets):
+<ins>Examples with a scope</ins> (we define a new scope here using curly brackets):
 - Ex 1:
 ```Rust
 {  // `s` is not valid here, it’s not yet declared
