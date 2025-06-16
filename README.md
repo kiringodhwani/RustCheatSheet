@@ -1,7 +1,7 @@
 # RustCheatSheet
 
 ## Cargo
-- **\underline{cargo}** = build system, package manager, important for managing dependencies (this is a pain point with other low-level programming languages so it is really nice that rust has it built in).
+- **<u>cargo</u>** = build system, package manager, important for managing dependencies (this is a pain point with other low-level programming languages so it is really nice that rust has it built in).
 
 When you add dependencies to `cargo.toml`, you have to run `cargo build` to install:
 
