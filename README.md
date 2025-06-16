@@ -181,7 +181,7 @@ let byte = [0; 8];     // create an array with 8 values all set to 0
 
 # Functions
 - The **naming convention** for functions in Rust is **all lowercase and underscores for spaces**.
-// **Have to specify return type**, e.g., "-> i32".
+- **Have to specify return type**, e.g., "-> i32".
 
 ```Rust
 fn my_function(name: &str, age: i32, in_x_years: i32) -> i32{
