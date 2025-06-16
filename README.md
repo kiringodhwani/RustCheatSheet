@@ -21,7 +21,7 @@
 
 # Guessing Game
 
-```python
+```rust
 fn main() {
     println!("Guess the number!");
 
