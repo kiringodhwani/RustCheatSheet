@@ -405,3 +405,64 @@ println!("{}", temp);
 println!("{:?}", vec_num);
 ```
 
+---
+
+# References and Borrowing
+
+## Borrowing
+
+- **Borrowing** — passing in references as function parameters. This is because we borrow the value and don’t actually take ownership of it. <ins>NOTE:</ins> references are immutable by default.
+
+```Rust
+fn main() {
+    let s1 = String::from("hello");
+
+    // We pass a reference to `s1` into calculate_length().
+    let len = calculate_length(&s1);
+
+    // In calculate_length() below, the `s` parameter is a reference to a string and references don't take
+    // ownership of the underlying value, so `s1` keeps ownership in main and we can print it. 
+    // i.e., calculate_length() borrows a reference to the data owned by `s1`.
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize {
+    let length = s.len(); // len() returns the length of a String
+    length
+}
+```
+
+## Rules of References
+
+1. **At any given time, you can either have one mutable reference OR any number of immutable references.** SO, you can’t have a mutable reference to a variable if an immutable reference already exists for it.
+**
+2. **References must always be valid** (i.e., the data they point to must be valid).
+
+### Mutable References
+- References are immutable by default. **To modify the value without taking ownership of it**, we **use mutable references** as specified by **`&mut`**.
+
+```Rust
+fn main() {
+    // make s1 a mutable variable
+    let mut s1 = String::from("hello");
+
+    // pass a mutable reference into change()
+    change(&mut s1);
+}
+
+// With `&mut`, change() can mutate the value of the s1 string without taking ownership
+// of the underlying value. 
+fn change(some_string: &mut String) {
+    some_string.push_str(", world");
+}
+```
+
+- RESTRICTION OF MUTABLE REFERENCES: **you can only have ONE mutable reference to a particular piece of data in a particular scope**. Prevents data races at compile time (data race = two pointers pointing to the same piece of data, one pointer is used to write to the data, no mechanism to synchronize data access between the pointers, e.g., one pointer will try to read the data in the middle of the other pointer writing to the data).
+
+
+
+
+
+
+
+
