@@ -2573,9 +2573,21 @@ impl<T: Display> ToString for T {
 
 # Lifetimes
 
+- **Dangling References**: references that point to invalid data. Ex:
 
+```Rust
+let r;
+{
+    let x = 5;
+    r = &x;
 
+} // When this scope ends, `x` gets dropped. So `r` is pointing to
+  // invalid data when print is called below.
 
+println!("r: {}", r);
+```
+
+- ^^^Rust won’t let this code with a dangling reference compile…
 
 
 
