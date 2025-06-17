@@ -2870,6 +2870,7 @@ where
 <img width="681" alt="Image" src="https://github.com/user-attachments/assets/ded72e5e-ddbf-4f8f-bc64-85ea129afc09" />
 
 **Example Test:**
+```Rust
 mod tests {	// Test Module
     use super::*;
 
@@ -2882,10 +2883,19 @@ mod tests {	// Test Module
         assert_eq!(result, 4);	// the function asserts that 2 + 2 = 4
     }
 }
+```
 
 2. **To run the tests in lib.rs:** `cargo test`
+<img width="696" alt="Image" src="https://github.com/user-attachments/assets/cf3ed6f3-31d1-488f-8926-a9c3aa76b0e8" />
 
+To summarize the screenshot above:
 
+1. First, we see each test that Rust ran. In this case, there is only one test called it_works, which we discussed above. The status of the it_works test is ok, meaning it was successful.
+
+2. Next, the first “test result” section gives a summary of all the tests that were run. In this case, we only had one test, so the status is ok because this one test passed. 
+    - “measured” tests are performance tests
+
+3. The next section (after the full summary of all tests) is similar to parts 1 and 2, but it’s specific to document tests. In Rust, you can write tests in your documentation. Currently, we don’t have any documentation or tests in our documentation, so we can 0 documentation tests, no individual documentation test results show up, and the summary of documentation tests contains all 0s. 
 
 
 
