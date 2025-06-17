@@ -2391,7 +2391,7 @@ pub trait Summary {
 impl Summary for NewsArticle { }
 ```
 
-- **Default implenentations can call other methods inside our trait definition:**
+- **Default implementations can call other methods inside our trait definition:**
 
 ```Rust
 pub struct NewsArticle {
