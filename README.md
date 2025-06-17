@@ -1016,7 +1016,7 @@ fn main() {
 // optional integer.
 fn plus_one(x: Option<i32>) -> Option<i32> {
     match x {
-        Some(i) => Some(i + 1),      // can't just return i + 1 bc
+        Some(i) => Some(i + 1),      // can't just return i + 1 bc plus_one()
                                      // return value is an optional integer
         None => None,
     }
