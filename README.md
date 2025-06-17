@@ -2589,6 +2589,13 @@ println!("r: {}", r);
 
 - ^^^Rust won’t let this code with a dangling reference compile…
 
+<img width="607" alt="Image" src="https://github.com/user-attachments/assets/148e9021-e81e-4111-9775-5a00db39b5cd" />
+
+^^^ Rust knows this at compile time, and it is able to do so using the **Borrow Checker**.
+
+- **Borrow Checker** — Runs at compile time, checks to make sure that all borrowed values (references) are valid.
+
+- **Lifetime of a variable** — **how long the variable lives for**
 
 
 
