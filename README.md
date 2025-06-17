@@ -2081,11 +2081,11 @@ fn get_largest(number_list: Vec<i32>) -> i32 {
  
 - Once we have our generic type defined, we can use it inside the function. In get_largest() below, we do the following…
   
-    - FIRST, we **specify that number_list is a vector of a generic type T (Vec<T>) instead of a vector of integers (Vec<i32>)**
+    - FIRST, we **specify that number_list is a vector of a generic type T (`Vec<T>`) instead of a vector of integers (`Vec<i32>`)**
       
-    - SECOND, we **change the return value**. Instead of returning an integer (i32), we **return whatever the generic type is**.
+    - SECOND, we **change the return value**. Instead of returning an integer (`i32`), we **return T**.
  
--**Using traits:** As explained in the comment in the code below, to allow comparison, T can't be of any type; instead, T must be a type that can be compared. To enforce this, we use traits... T: PartialOrd + Copy. This says that our **type T has to be a type that can be ordered and copied** (primitive types like ints and chars). 
+-**Using traits:** As explained in the comment in the code below, to allow comparison, `T` can't be of any type; instead, `T` must be a type that can be compared. To enforce this, we use traits... `T: PartialOrd + Copy`. This says that our **type `T` has to be a type that can be ordered and copied** (primitive types like ints and chars). 
 
 ```Rust
 fn get_largest<T: PartialOrd + Copy>(number_list: Vec<T>) -> T {
