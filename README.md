@@ -1663,8 +1663,8 @@ OR
 
 ```Rust
 let score = match scores.get(&team_name) {
-	Some(val) => val,
-	None => &0,
+    Some(val) => val,
+    None => &0,
 };
 ```
 
@@ -1674,7 +1674,7 @@ let score = match scores.get(&team_name) {
 
 ```Rust
 for (key, value) in &scores {
-	println!("{}: {}", key, value);
+    println!("{}: {}", key, value);
 }
 ```
 
@@ -1718,14 +1718,14 @@ let mut map = HashMap::new();
 //
 for word in text.split_whitespace() {  
 
-	// If word does not yet exist as a key in the hashmap, insert (word, 0) into the map.
-	// If word already exists as a key in the hashmap, do nothing.
-	// or_insert() returns a mutable reference to the key's corresponding value in the hashmap.
-	//
-	let count = map.entry(word).or_insert(0);
+    // If word does not yet exist as a key in the hashmap, insert (word, 0) into the map.
+    // If word already exists as a key in the hashmap, do nothing.
+    // or_insert() returns a mutable reference to the key's corresponding value in the hashmap.
+    //
+    let count = map.entry(word).or_insert(0);
 
-	// Dereference the mutable reference and increment it by 1. 
-	*count += 1;
+    // Dereference the mutable reference and increment it by 1. 
+    *count += 1;
 }
 ```
 
@@ -1764,16 +1764,16 @@ pub enum Result<T, E> {
 use std::fs::File;
 
 fn main() {
-	let f = File::open("hello.txt");
+    let f = File::open("hello.txt");
 
-	// Use shadowing to redeclare f, 
-	// If opening the file is successful, then the file is returned and stored in f
-	// Otherwise, panic. 
-	// 
-	let f = match f {
-			Ok(file) => file,
-			Err(error) => panic!("Problem opening the file: {:?})", error),
-	};
+    // Use shadowing to redeclare f, 
+    // If opening the file is successful, then the file is returned and stored in `f`
+    // Otherwise, panic. 
+    // 
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => panic!("Problem opening the file: {:?})", error),
+    };
 }
 ```
 
@@ -1784,35 +1784,35 @@ use std::fs::File;
 use std::io::ErrorKind;    // let’s us match on the type of error we get
 
 fn main() {
-	let f = File::open("hello.txt");
+    let f = File::open("hello.txt");
 
-	let f = match f {
-		// If opening the file is successful, then the file is returned and stored in f
-		Ok(file) => file,
+    let f = match f {
+        // If opening the file is successful, then the file is returned and stored in f
+        Ok(file) => file,
 
-		// match on the type of error we get… error.kind() returns an enum representing the kind 
-		// error we got
-		Err(error) => match error.kind() {    
+        // match on the type of error we get… error.kind() returns an enum representing the kind 
+        // error we got
+        Err(error) => match error.kind() {    
 			
-			// Handle the NotFound error case. If the file is not found, then we attempt to create the 
-			// file. However, attempting to create a new file can fail, so we match on the result type 
-			// returned from File::create(). If File::create() is successful (Ok), then we map the
-			// created file to the fc variable and return it so that it is stored in f. If File::create() fails /
-			// errors, then panic. 
-			// 
-			ErrorKind::NotFound => match File::create("hello.txt") { 
-				Ok(fc) => fc,                                                                       // successful file creation
-				Err(e) => panic!("Problem creating the file: {:?}", e),     // failure creating file
-			},
+            // Handle the NotFound error case. If the file is not found, then we attempt to create the 
+            // file. However, attempting to create a new file can fail, so we match on the result type 
+            // returned from File::create(). If File::create() is successful (Ok), then we map the
+            // created file to the fc variable and return it so that it is stored in f. If File::create() fails /
+            // errors, then panic. 
+            // 
+            ErrorKind::NotFound => match File::create("hello.txt") { 
+                Ok(fc) => fc,	// successful file creation
+                Err(e) => panic!("Problem creating the file: {:?}", e),	// failure creating file
+            },
 			
-			// If the error is not NotFound, bind the error to the other_error variable and then panic 
-			// about there being a problem opening the file (include other_error in the message)
-			//
-			other_error => {
-				panic!("Problem opening the file: {:?}", other_error)
-			},
-		}
-	};
+            // If the error is not NotFound, bind the error to the other_error variable and then panic 
+            // about there being a problem opening the file (include other_error in the message)
+            //
+            other_error => {
+                panic!("Problem opening the file: {:?}", other_error)
+            },
+        }
+    };
 }
 ```
 
@@ -1822,13 +1822,13 @@ fn main() {
 let f = File::open("hello.txt");
 
 let f = File::open("hello.txt").unwrap_or_else(|error| {
-	if error.kind() == ErrorKind::NotFound {
-		File::create("hello.text").unwrap_or_else(|error| {
-			panic!("Problem creating the file: {:?}", error);
-		})
-	} else {
-		panic!("Problem opening the file: {:?}", error);
-	}
+    if error.kind() == ErrorKind::NotFound {
+        File::create("hello.text").unwrap_or_else(|error| {
+            panic!("Problem creating the file: {:?}", error);
+        })
+    } else {
+        panic!("Problem opening the file: {:?}", error);
+    }
 });
 ```
 
@@ -1842,8 +1842,8 @@ let f = File::open("hello.txt").unwrap_or_else(|error| {
 ```Rust
 let f = File::open("hello.txt");
 let f = match f {
-	Ok(file) => file,
-	Err(error) => panic!("Problem opening the file: {:?}", error),
+    Ok(file) => file,
+    Err(error) => panic!("Problem opening the file: {:?}", error),
 };
 ```
 
