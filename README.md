@@ -1376,11 +1376,16 @@ mod front_of_house;
 ```
 
 ## SUMMARY:
-- We can declare modules in Rust using the mod keyword.
-- We can define the contents of our module inline if we use curly brackets.
-- But, if we want the contents of the module to be in a different file, then we can just use a semi colon (mod module_name;) and put the contents of the module in a file with the same name as the module. 
-    - In our example, we declare mode front_of_house; in src/lib.rs and put the contents of the module in a file called src/front_of_house.rs. 
-- Similarly, we can declare child modules and have their content live in a different file. But, for child modules, we need to have the corresponding file live in a directory with the same name as the parent module. 
+- We can declare modules in Rust using the **`mod`** keyword.
+
+- We can **define the contents of our module inline if we use curly brackets**.
+
+- But, **if we want the contents of the module to be in a different file**, then we can just **use a semi colon** (mod module_name;) and **put the contents of the module in a file with the same name as the module**.
+
+    - In our example, we declare mode front_of_house; in src/lib.rs and put the contents of the module in a file called src/front_of_house.rs.
+
+- Similarly, we **can declare child modules and have their content live in a different file**. But, for child modules, we **need to have the corresponding file live in a directory with the same name as the parent module**.
+
     - In our example, the content of the child module (hosting) is stored in src/front_of_house/hosting.rs. This is because the parent module of hosting is called front_of_house, so hosting.rs must live in a directory called front_of_house.
  
 ---
