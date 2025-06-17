@@ -1506,4 +1506,171 @@ match &row[1] {
 
 ## Strings
 
+- **Strings are stored as a collection of UTF-8 encoded bytes** (so in memory, a string is just a collection of 1s and 0s). A program needs to interpret the 1s and 0s and print out the correct characters. This is where encoding comes into play.
+-**UTF-8 Encoding:** 
+    - Universal Character Set (UCS) (i.e., represents characters from all the well-known languages and also things like emojis). Backwards compatible with ASCII (first 128 symbols of unicode are ASCII characters). 
+    - UTF-8: A variable-width character encoding for unicode. Variable-width because each character in UTF-8 could be represented as one byte, two bytes, three bytes, or four bytes. This is very important; in comparison, each character in ASCII is represented by one byte. In UTF-8, each character could be a different size in terms of bytes. The most popular encoding of unicode.
+ 
+### Creating a New String
+
+1. **Creating an empty string**
+
+```Rust
+let s1 = String::new();
+```
+
+2. **Creating a borrowed string slice / string literal (`&str`) and converting it to an owned string (`String`)**
+
+```Rust
+let s2 = "initial contents";
+let s3 = s2.to_string();
+```
+
+3. **Creating an owned string (String) from a borrowed string slice (&str)**
+
+```Rust
+let s4 = String::from("initial contents");
+```
+
+### Appending to a String
+
+**Just like a vector, a String can grow or shrink in size.**
+
+```Rust
+let mut s = String::from("foo");
+```
+
+1. **Append a borrowed string slice to the end of a String (don’t take ownership of string being passed in):**
+
+```Rust
+s.push_str("bar");
+```
+
+2. **Append a character to the end of a String**
+
+```Rust
+s.push('!');
+```
+
+At the end of the above two operations, we have "foo" —> “foobar!”  
+
+3. **Combine / append strings using the ‘+’ operator**
+
+```Rust
+let s1 = String::from("Hello, ");
+let s2 = String::from("world!");
+let s3 = s1 + &s2;   // move ownership of s1’s value into s3, then take all the characters in s2 and
+		     // append them to s3 without taking ownership of s2’s value. Saves memory 
+		     // compared to copying both of them. Bc we move ownership of s1’s value into
+		     // s3, we can’t use s1 after we’ve declared s3. 
+
+// If we want to concatenate without taking ownership of s1 or s2…
+let s3 = format!("{}{}", s1, s2);
+```
+
+### Indexing into a String
+
+- **In Rust, Strings can’t be indexed by an integer.** This is because **Strings are a collection of bytes**.
+
+	- UTF-8, as we explained before, is a variable-width character encoding, and each character in UTF-8 could be represented as one byte, two bytes, three bytes, or four bytes. Therefore, as an example, when we index into a String with an index of 0, we are specifying the first byte in our collection of bytes (the String), but the first character may be two bytes so we would be trying to get half of the first character. This is not what we want.
+
+- **A word is represented in unicode in three different ways: bytes, scalar values** (building blocks in unicode, can represent a full character or parts of a character, what the char type refers to), and **grapheme cluster**s (what we consider a character). **When you index into a string with an integer**, **Rust doesn’t know which of these three** we want to receive.
+
+```Rust
+let hello = String::from("Hello");
+```
+
+1. **Access the bytes of a string:** the **bytes()** method returns a collection of bytes. In the below, we iterate over every byte and print it out.
+
+```Rust
+for b in hello.bytes() {
+    println!("{}", b);  // 72 -> 101 -> 108 -> 108 -> 111
+};
+```
+
+2. **Access the scalar values of a string:** The **chars()** method returns a collection of the string’s scalar values, we iterate over them below.
+
+```Rust
+for c in hello.chars() {
+    println!("{}", c);	// H -> e -> l -> l -> o
+};
+```
+
+3. **Access the grapheme clusters of a string:** The ability to iterate over grapheme clusters is not included by default. To iterate over grapheme clusters, we have to import a crate. **In dependencies in Cargo.toml, add unicode-segmentation = “1.7.1”**. Then, bring it into scope…
+
+```Rust
+use unicode_segmentation::UnicodeSegmentation;
+							
+// Call the graphemes() method on our string to get a collection of graphemes.
+// Pass in true to get extended grapheme clusters.
+for g in hello.graphemes(true) {
+    println!("{}", g);	// H -> e -> l -> l -> o
+}	
+```
+
+## Hashmaps
+- Allow you to **store key-value pairs**
+- The keys and values can be of any type
+- Uses a hashing function to determine how to place the keys and values in memory
+
+### Creating a Hashmap
+- To create a new hashmap, we need to bring the hashmap type into scope from the standard library…
+
+```Rust
+use std::collections::HashMap;
+```
+
+<ins>Ex:</ins> In this example, we are tracking a game where keys = team name and the values = team’s score.
+
+1. **Define the keys.**
+
+```Rust
+// Keys
+let blue = String::from("Blue"); // team Blue
+let yellow = String::from("Yellow"); // team Yellow
+```
+
+2. **Create the hashmap** (we name the hashmap “scores”)
+
+```Rust
+let mut scores = HashMap::new();
+```
+
+3. **Populate the hashmap with key-value pairs using the `insert(key, value)` method**
+
+```Rust
+scores.insert(blue, 10);	// “Blue”:10 (team Blue has a score of 10)
+scores.insert(yellow, 50);}	// “Yellow”:50 (team Yellow has a score of 50)
+```
+
+^^^^<ins>NOTE:</ins> When we use `insert(key, value)`, we are **not passing in the “Blue” and “Yellow” strings by reference**. **Passing in the ‘blue’ and ‘yellow’ variables moves the ownership of the “Blue” and “Yellow” strings into the hashmap**. Therefore, after the insert() calls, the **‘blue’ and ‘yellow’ variables are dropped** and can’t be used. If we don’t want the hashmap to take ownership of the Strings, then we could pass references to the Strings, but this would require the use of lifetimes.
+
+### Accessing Values in a Hashmap
+
+- **Use the get() method and specify a key:** **get() method takes a reference to a key and returns an Optional value (Some(val) or None) that may contain a reference to the value corresponding to the key**. Returns an Option because we can’t guarantee that a value will be returned. For example, if you pass in an invalid key that doesn’t exist in the hashmap, then we want to return None.
+
+```Rust
+let team_name = String::from("Blue");	// the key of the value we want
+let score = scores.get(&team_name);	// Returns an Optional value — Some(val) or None 
+```
+
+To access the value from the Option...
+```Rust
+let score = scores.get(&team_name).unwrap_or(&0);
+```
+
+OR
+
+```Rust
+let score = match scores.get(&team_name) {
+	Some(val) => val,
+	None => &0,
+};
+```
+
+### Iterating Over the Elements in Hashmap
+
+
+
+
 
