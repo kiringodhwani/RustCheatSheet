@@ -1082,11 +1082,213 @@ if let Some(3) = some_value {
 
 - <ins>Goal:</ins> Create a library that will help run a restaurant. Think about a restaurant as two parts: the front of the house (the area where the customers are) and the back of the house (where the food is being made, where dishes being washed, and where the manager would typically be).
 
-- Module tree (for this goal):
+- **Module tree** (for this goal):
 	- crate is a module that gets created by default for our crate root (lib.rs)
 	- Inside the crate module, we have the front_of_house module, which contains two modules, hosting and serving. Both hosting and serving have functions defined in them.
 
+<img width="217" alt="Image" src="https://github.com/user-attachments/assets/b6f58dc2-043b-4833-8c1c-6528b7104fcb" />
+
+- <ins>Defining this module tree in code...</ins> Structuring our code this way keeps it organized. If in the future, we wanted to add the ability to seat people at a VIP table, we know exactly where to put this option (in serving module). 
+
+```Rust
+// Module (mod keyword) called front_of_house
+mod front_of_house {
+    // front_of_house module contains two other modules: hosting and serving
+    mod hosting {
+        // hosting module has two functions related to hosting duties
+        fn add_to_waitlist() {}
+
+        fn seat_at_table() {}
+    }
+
+    mod serving {
+        // serving module has three functions related to serving duties
+        fn take_order() {}
+
+        fn serve_order() {}
+
+        fn take_payment() {}
+    }
+}
+```
    
+- **Modules can contain other modules inside of them, can also contain structs, enums, constants, traits, and so on. **
+
+### Paths and Module Privacy Rules
+
+- If you wanted to reference a file inside your directory tree, then you would need to specify a path to that file. In the same way, if you wanted to reference an item in your module tree, let’s say a function, then you would need to specify a path to that function. 
+
+- By default, **a child module (like `hosting` below) and everything inside of it is private from the perspective of the parent module**. So, in this case, **`front_of_house` can't see `hosting` or anything inside of `hosting`**.
+
+- However, **child modules are able to see anything that's defined in their parent modules**. This system allows us to hide implementation details by default and only expose the functions we need to to the outside world.
+  
+- In this case, <ins>we want to expose our add_to_waitlist() function. First, we expose the hosting module using the pub keyword</ins>…
+```Rust
+mod front_of_house {
+    // Expose the hosting module using the pub keyword.
+    pub mod hosting {
+        // Expose the add_to_waitlist() function using the public keyword.
+        pub fn add_to_waitlist() {}
+    }
+}
+```
+Inside the eat_at_restaurant() function below, we want to call the add_to_waitlist() function To do so, we need to specify the path to that function.
+```Rust
+pub fn eat_at_restaurant() {
+    // Absolute path, starts at root of module tree (crate)
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // Relative path, starts from the current module (eat_at_restaurant() is
+    // inside of the crate module, so can start from front_of_house.
+    front_of_house::hosting::add_to_waitlist();
+}
+```
+
+- <ins>Example 2:</ins> **super**
+
+// serve_order() function defined in top crate module.
+fn serve_order() {}
+
+// back_of_house module with two functions.
+mod back_of_house {
+    // In fix_incorrect_order(), we are able to call cook_order (since it's
+    // defined in the same module), and we can call serve_order() by using
+    // the relative path. We specify super, which allows us to reference the
+    // parent module (crate).
+    fn fix_incorrect_order() {
+        cook_order();
+        super::serve_order();
+    }
+
+    fn cook_order() {}
+}
+
+## Privacy Rules with Structs and Enums
+- <ins>Ex 1: Structs</ins>
+```Rust
+// back_of_house module contains a struct called Breakfast, which contains two
+// attributes (toast and seasonal_fruit) and an associated function called summer()
+mod back_of_house {
+    // Expose the Breakfast struct with the pub keyword
+    pub struct Breakfast {
+        pub toast: String, // explicitly mark toast as a public attribute
+        seasonal_fruit: String,
+    }
+
+    impl Breakfast {
+        // Expose the summer() associated function with the pub keyword
+	// summer(), takes in a string called toast and creates a new Breakfast object with
+	// toast=toast and seasonal_fruit="peaches".
+        pub fn summer(toast: &str) -> Breakfast {
+            Breakfast {
+                toast: String::from(toast),
+                seasonal_fruit: String::from("peaches"),
+            }
+        }
+    }
+}
+// Calls the summer() associated function of Breakfast to create a new
+// breakfast meal. But, Breakfast struct is private by default and the 
+// summer() associated function is also private by default. Mark public above.
+pub fn eat_at_restaurant() {
+    let mut meal = back_of_house::Breakfast::summer("Rye");
+
+    // In order to create a new Breakfast struct, we have to use the summer()
+    // associated function, we can't create a Breakfast struct directly inside
+    // eat_at_restaurant() because the Breakfast struct includes a private
+    // attribute (seasonal_fruit).
+    let meal2 = back_of_house::Breakfast {
+        toast: String::from("white"),
+        seasonal_fruit: String::from("apple"),
+    };
+
+    // Reassign the toast attribute in our meal variable. By default, the toast
+    // attribute is private, even thought the Breakfast struct is public. 
+    // NOTE: Even when the struct is public, by default, the fields within the
+    // struct are private. 
+    meal.toast = String::from("Wheat");
+}
+```
+
+- <ins>Example 2:</ins>
+```Rust
+// back_of_house module contains Appetizer enum with two variants (Soup, Salad)
+mod back_of_house {
+    pub enum Appetizer {
+        Soup,
+        Salad,
+    }
+}
+
+pub fn eat_at_restaurant() {
+    // Create two orders, one of each variant of Appetizer.
+    // Appetizer is private by default, have to add pub above. However, we
+    // don't have to explicitly make each variant public. By default, if you
+    // make an enum public, all of its variants become public as well.
+    let order1 = back_of_house::Appetizer::Soup;
+    let order2 = back_of_house::Appetizer::Salad;
+}
+```
+
+## Use keyword
+
+- When there are a lot of nested modules, specifying full paths to functions is not pretty. The use keyword allows you to bring a path into scope.
+
+- **Before using `use` keyword...**
+```Rust
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+pub fn eat_at_restaurant() {
+    // Specifying the full path isn't pretty... 
+    front_of_house::hosting::add_to_waitlist();
+    front_of_house::hosting::add_to_waitlist();
+    front_of_house::hosting::add_to_waitlist();
+}
+```
+
+- **After using `use` keyword...**
+```Rust
+// Bring the hosting module into scope
+use crate::front_of_house::hosting;  
+	// OR "use self::front_of_house::hosting" (relative path)
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+}
+```
+
+- In the above example, we could have gone further and brought the add_to_waitlist() function into scope. However, **in Rust, the idiomatic way to bring functions into scope is to bring the function’s parent module into scope.** This makes it clear that the add_to_waitlist() function is not a local function, it’s actually defined inside of another module.
+
+- **If you are bringing enums, structs, or other items into scope, it’s idiomatic to specify the full path (i.e., use with entire path to enum/struct/other item so you can just use the enum/struct/other item with no path)**.
+	- However, if you have two structs from different modules with the same name, then bring the parents into scope so that the names don’t conflict. <ins>Ex</ins>:
+```Rust
+use std::fmt;
+use std::io;
+
+fn function1() -> fmt::Result {}
+
+fn function2() -> io::Result<()> {}
+```
+
+## Re-Exporting
+- Suppose that we want something that’s external to this file to also have access to the add_to_waitlist() function in the below. Currently, it would not have access. If we want external code to be able to call the add_to_waitlist() function directly, then we **need to re-export the hosting module**. To do so, we add pub in front of the use statement…
+```Rust
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+// We bring the hosting module into scope using the use keyword, and we mark this as
+// public so external code could reference hosting as well. 
+pub use crate::front_of_house::hosting;
+
+- **The use keyword allows us to bring items into scope within our program, and it also allows us to bring in items from external dependencies into scope.**
 
 
 
