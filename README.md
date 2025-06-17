@@ -896,8 +896,8 @@ Many languages have null values. **Null values represent a useful concept: a val
 
 ```Rust
 enum Option<T> {
-	Some(T),
-        None,
+    Some(T),
+    None,
 }
 ```
 
@@ -919,5 +919,5 @@ let absent_number: Option<i32> = None;
 
 - <ins>Example 2:</ins> You can't add an optional integer to an integer because they are different types.
 
-
+<img width="628" alt="Image" src="https://github.com/user-attachments/assets/a6c418f8-4edc-41cb-8089-9214eb8f5730" /> 
 
