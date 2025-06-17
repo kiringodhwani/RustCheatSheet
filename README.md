@@ -2458,6 +2458,124 @@ fn main() {
 }
 ```
 
+## Trait Bounds
+
+- **Traits as parameters**
+
+- We can **use generics with traits to create trait bounds**, which **allow us to use a generic type that specifies some set of functionality** (instead of using concrete types).
+
+- <ins>Example:</ins>
+	- **notify() uses a generic type T**
+ 	- **<T: Summary>** says that the **generic type T is limited to types that implement the Summary trait.**
+  	- Then **use the generic type T in the parameter definition**… (item: &T)
+```Rust
+pub fn notify<T: Summary>(item: &T) {
+    println!("Breaking news! {}", item.summarize());
+}
+```
+
+- <ins>Example 2:</ins> **Force two parameters to be the same generic type that implements a specific trait**.
+
+// With the trait bound syntax, we can make `item1` and `item2` be the exact same type that implements 
+// the Summary trait. This is because the generic type `T` is ONE type, and both `item1` and `item2` are type `T`.
+
+```Rust
+pub fn notify<T: Summary>(item1: &T, item2: &T) { {
+    //
+}
+```
+
+- <ins>Example 3:</ins> **Specifying a trait bound with multiple traits**.
+
+```Rust
+// The type T has to implement both the Summary and Display traits
+pub fn notify<T: Summary + Display>(item1: &T, item2: &T) { {
+    //
+}
+```
+
+- <ins>Example 4:</ins> **Specifying multiple trait bounds using a `where` clause**
+  
+```Rust
+// Generic type T that implements the Display and Clone traits
+// Generic type U that implements the Clone and Debug traits
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {
+    //
+}
+
+// MORE READABLE with the where clause
+fn some_function<T, U>(t: &T, u: &U) -> i32
+    where 
+        T: Display + Clone,
+        U: Clone + Debug,
+{
+    //
+}
+```
+
+### Returning Types that Implement Traits
+
+- **See the trait objects section later... command-f**
+
+## Using Trait Bounds to Conditionally Implement Methods
+
+- **We use two implementation blocks in the below (one with trait bounds) to conditionally implement methods**.
+
+- **In the first implementation block**, we **make it so that every Pair instance, regardless of what type T is, has the new() method.**
+
+- However, **in the second implementation block**, we **use trait bounds to restrict to Pair instances where T implements the Display and PartialOrd traits**. As a result, the **cmp_display() method in this second implementation block is only available to Pair instances where T implements the Display and PartialOrd traits**. This is necessary because the cmp_display() method only works when x and y have these two traits implemented.
+
+```Rust
+use std::fmt::Display;
+
+// The Pair struct has two fields, x and y. Both take the generic type T.
+struct Pair<T> {
+    x: T,
+    y: T,
+}
+
+// This implementation block is on the Pair struct with generic type T (i.e., for any Pair struct).
+// Contains new() method that creates a new instance of Pair.
+impl<T> Pair<T> {
+    fn new(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
+// This implementation block uses trait bounds to say that T has to implement the Display and
+// PartialOrd traits. So this implementation block only applies to Pair instances where the
+// type T (i.e., the type of fields x and y) implements the Display and PartialOrd traits.
+impl<T: Display + PartialOrd> Pair<T> {
+    // The cmp_display() method compares x and y. We can do this because know x and y implement
+    // the Display and PartialOrder traits. 
+    fn cmp_display(&self) {
+        if self.x >= self.y {
+            println!("The largest number is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y)
+        }
+    }
+}
+```
+
+## Blanket Implementations
+
+- We can implement a trait on a type that implements another trait.
+
+- In the below, we **Implement the ToString trait on any type T that implements the Display trait**...
+
+```Rust
+impl<T: Display> ToString for T {
+    //
+}
+```
+
+---
+
+# Lifetimes
+
+
+
 
 
 
