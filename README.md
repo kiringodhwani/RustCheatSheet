@@ -921,3 +921,142 @@ let absent_number: Option<i32> = None;
 
 <img width="628" alt="Image" src="https://github.com/user-attachments/assets/a6c418f8-4edc-41cb-8089-9214eb8f5730" /> 
 
+- ^^^In order to do this addition, we **have to extract our integer out of the Some variant**. In general, **to extract values out of the sum variant, we would write code that handles all possible variants**: If the variant is None, then run this set of code. If the variant is Some, then we can safely use the value and run this set of code. Option enum also has very useful methods…
+	- **unwrap_or**: In this case, if y (the optional integer) has a value (Some variant), then we’d like to use the value. But if it doesn’t have a value (None variant), we’d like to use a default value. To do this, we can call the unwrap_or method on our y variable.
+```Rust
+let x = 5;	     // integer
+let y = Some(5);     // optional integer
+
+let sum = x + y.unwrap_or(0);   // for unwrap_or(), default value = 0
+```
+
+## Match Expression
+
+- The match expression allows you to **compare a value against a set of patterns**. These patterns could be literals, variables, wildcards, and many other types.
+
+- The match expression is **exhaustive** — have to match all possible cases. This makes it very useful for enums.
+
+- <ins>Example 1:</ins>
+```Rust
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    // match expression on coin, matches all possible cases for all variants of Coin
+    match coin {
+         Coin::Penny => {
+            println!("Lucky penny!");
+            1
+        },
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter => 25,
+    }
+}
+```
+
+- <ins>Example 2:</ins> The **patterns in the match expression can also bind to values.**
+```Rust
+// enum representing the state minted on each quarter
+#[derive(Debug)]
+enum UsState {
+    Alabama,
+    Alaska,
+    Arizona, 
+    Arkansas,
+    California,
+    //...
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState), 	// Quarter variant stores the UsState
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => {
+            println!("Lucky penny!");
+            1
+        },
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+
+        // Match on the Quarter variant, `state` variable here binds to
+        // the `UsState` stored inside the Quarter variant.
+        Coin::Quarter(state) => {
+            println!("State quarter from {:?}!", state);
+            25
+        },
+    }
+}
+
+fn main() {
+    // Passing in a Quarter that contains the US State "California"
+    value_in_cents(Coin::Quarter(UsState::California));
+}
+```
+
+- **Using a match expression with an Option enum...**
+```Rust
+fn main() {
+    let five = Some(5);
+
+    let six = plus_one(five); // returns Some(6)
+    let none = plus_one(None); // returns None
+}
+
+// Takes in an optional integer (x) and adds 1 to it. Also returns an 
+// optional integer.
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        Some(i) => Some(i + 1),      // can't just return i + 1 bc
+                                     // return value is an optional integer
+        None => None,
+    }
+}
+```
+
+- In our above case with the Option enum, we only have two possible variants/values to match. However, there are cases where we may have many different types of values to match. We can use the **underscore** placeholder to match all other patterns besides the ones we explicitly specify. The following match expression says to match x. If x matches Some, execute Some(i + 1). Otherwise, **if it’s any other pattern**, execute None.
+```Rust
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        Some(i) => Some(i + 1), 
+        _ => None,    // if it's any other pattern, return None variant
+    }
+}
+```
+
+### If let syntax
+
+- Rare, but you can use the `if let` syntax when you are matching a value and you **only care about one condition / variant**...
+```Rust
+// Match on some_value. If some_value is exactly 3, then we print 'three'. Otherwise, we do nothing.
+// In this case, we only care about one variant, Some(3), so it is verbose to write the entire match expression. 
+match some_value {
+    Some(3) => println!("three"),
+    _ => (),
+}
+
+// More succinct way using 'if let'
+if let Some(3) = some_value {
+    println!("three");
+}
+```
+
+---
+
+# Rust's Module System
+
+
+
+
+
+
+
