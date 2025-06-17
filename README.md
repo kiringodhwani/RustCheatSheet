@@ -1329,7 +1329,7 @@ use std::io::*;
 
 ## Modules in Separate Files
 
-- In **src/lib.rs**:
+1. <ins>BEFORE:</ins> In **src/lib.rs**:
 
 ```Rust
 mod front_of_house {
@@ -1339,7 +1339,7 @@ mod front_of_house {
 }
 ```
 
-- Move the contents of our `front_of_house` module into a different file… So, in **src/front_of_house.rs** we have...
+2. <ins>AFTER 1:</ins> Move the contents of our `front_of_house` module into a different file… So, in **src/front_of_house.rs** we have...
 
 ```Rust
 pub mod hosting {
@@ -1356,7 +1356,7 @@ In **lib.rs** we now only have...
 mod front_of_house;
 ```
 
-- Move the contents of the `hosting` module into a different file... So, we have...
+3. <ins>AFTER 2:</ins> Move the contents of the `hosting` module into a different file... So, we have...
 
 <img width="201" alt="Image" src="https://github.com/user-attachments/assets/bc128981-b708-4614-9220-06cd16d055d7" />
 
