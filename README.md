@@ -1839,7 +1839,7 @@ let f = File::open("hello.txt").unwrap_or_else(|error| {
 
 - **unwrap()**: in the below example, unwrap() does the same thing as our match expression…
 	- **In the success case (Ok)** , it **takes the thing stored in Ok(T)** (Ok(file) in this case) and **returns it**.
-        - **In the Error case, it panics** (panic!). 
+ 	- **In the Error case, it panics** (panic!). 
 
 <ins>Before</ins>:
 ```Rust
