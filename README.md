@@ -2740,7 +2740,63 @@ fn longest<'a>(x: &'a str, y: & str) -> &'a str {
 
 ## Lifetime Annotations in Struct Definitions
 
+- Previously, **when we used structs, we always used owned data types**. But, **if we want to use a reference, then we have to specify lifetime annotations**.
 
+```Rust
+// The ImportantExcerpt struct has a reference to a string in its `part` field.
+// For this to work, we have to specify a lifetime annotation.
+struct ImportantExcerpt<'a> {
+    part: &'a str,
+}
+
+fn main() {
+    let novel = String::from("Call me Ishmael. Some years ago...");
+
+    // first_sentence is a reference to a string slice that's the first sentence of the novel.
+    let first_sentence = novel.split('.').next().expect("Could not find");
+
+    // New instance of the struct, pass it first_sentence.
+    // Our lifetime annotation in the Struct declaration says that the struct cannot outlive the reference
+    // passed into the `part` field. So, if we tried to use 'i' (the instance of ImportantExcerpt) after first_sentence
+    // goes out of scope, then we would get an error. 
+    let i = ImportantExcerpt {
+        part: first_sentence,
+    };
+}
+```
+
+## Lifetime Elision Rules
+
+```Rust
+// first_word() takes a reference to a string slice and returns the first word in it
+fn first_word<'a>(s: &'a str) -> &'a str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+    &s[..]
+}
+```
+^^^**The above function still works when you remove the lifetime annotation.** This is because **there are scenarios when the compiler can deterministically infer the lifetime annotations.** It does this by checking the <ins>Three Lifetime Elision rules</ins>.
+
+**<ins>Three Lifetime Elision rules</ins>** -- the compiler will try to follow these three rules when assigning lifetimes. But **if at the end of these three rules, it still can’t figure out what the lifetimes are, then we have to manually specify them.**
+
+<ins>Note:</ins>
+Input Lifetimes = lifetimes of arguments being passed in   
+Output Lifetimes = lifetimes of return values  
+
+1. **Each parameter that is a reference gets its own lifetime parameter**. So, in first_word() above, `s` will get a lifetime parameter. 
+
+2. **If there is exactly one input lifetime parameter, that lifetime is assigned to all output lifetime parameters.** So, in first_word(), because there is exactly one input lifetime parameter (`s` with `‘a`), the return type will get this lifetime parameter (`‘a`).
+
+3. **If there are multiple input lifetime parameters, but one of them is &self or &mut self, then the lifetime of self is assigned to all output lifetime parameters.** This rule only applies to methods.
+
+^^^We can see from rules 1 and 2 how the compiler is able to generate the lifetimes for first_word() on its own without us having to specify them. However, if we have multiple input lifetimes (like with longest() from earlier), then we have to specify the lifetimes manually because rule 2 is broken. 
+
+## Lifetime Annotations Inside of Methods
 
 
 
