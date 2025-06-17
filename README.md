@@ -1819,8 +1819,6 @@ fn main() {
 - <ins>Example 3:</ins>  It can be hard to read with all the nested match expressions —> use closures
 
 ```Rust
-let f = File::open("hello.txt");
-
 let f = File::open("hello.txt").unwrap_or_else(|error| {
 
     if error.kind() == ErrorKind::NotFound {
