@@ -1670,6 +1670,68 @@ let score = match scores.get(&team_name) {
 
 ### Iterating Over the Elements in Hashmap
 
+- Use a **`for in`** loop and **extract out a tuple that contains the key and value.**
+
+```Rust
+for (key, value) in &scores {
+	println!("{}: {}", key, value);
+}
+```
+
+### Updating the Hashmap
+
+```Rust
+// Create an empty HashMap
+let mut scores = HashMap::new();
+```
+
+1. **Update a value by overwriting an existing key-value pair**
+
+```Rust
+scores.insert(String::from("Blue"), 10);        // Insert the key-value pair (“Blue”, 10) into hashmap
+scores.insert(String::from("Blue"), 20);       // Overwrite the “Blue” key with the value 20
+```
+
+2. **If we don’t want to overwrite existing values**, use the below code. **`scores.entry(key)`** **gives us an Entry enum that tells us if the key already exists in the hashmap or not (Occupied or Vacant)**. In the below, the key is “Yellow”. Then, we **call the or_insert(val) method on this Entry enum**. What this code does is the following:
+
+	-**If the key “Yellow” does not exist in the hashmap:** A new key-value pair (“Yellow”, val) is inserted into the hashmap.
+
+	-**If the key “Yellow” already exists in the HashMap:** Do nothing, the existing value corresponding to the key “Yellow” remains unchanged.
+
+```Rust
+scores.entry(String::from("Yellow")).or_insert(30);	// Inserts the key-value pair (“Yellow”, 30) 
+							// bc the key “Yellow” does not exist yet in the hashmap.
+
+scores.entry(String::from("Yellow")).or_insert(40);	// Does nothing bc a key-value pair already 
+																	// exists in the hashmap with key=“Yellow”.
+```
+
+- <ins>Updating a value in our hashmap based on an old value</ins>. In this example, we have a string of text and we want to populate a hashmap with (word, count) key-value pairs. The text is "hello world wonderful world”. One example key-value pair would be ("hello" : 1) because the word "hello" appears once in the string. Another example is ("world" : 2) because the word "world" appears twice in the string.
+
+```Rust
+let text = "hello world wonderful world";
+
+let mut map = HashMap::new();
+
+// split_whitespace() splits the text into a collection of words, split by spaces
+// ["hello", "world", "wonderful", "world”]. We iterate over this collection of words.
+//
+for word in text.split_whitespace() {  
+
+	// If word does not yet exist as a key in the hashmap, insert (word, 0) into the map.
+	// If word already exists as a key in the hashmap, do nothing.
+	// or_insert() returns a mutable reference to the key's corresponding value in the hashmap.
+	//
+	let count = map.entry(word).or_insert(0);
+
+	// Dereference the mutable reference and increment it by 1. 
+	*count += 1;
+}
+```
+
+---
+
+# Error Handling in Rust
 
 
 
