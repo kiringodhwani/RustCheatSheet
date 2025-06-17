@@ -2887,8 +2887,8 @@ mod tests {	// Test Module
 
 2. **To run the tests in lib.rs:** `cargo test`
 <img width="696" alt="Image" src="https://github.com/user-attachments/assets/cf3ed6f3-31d1-488f-8926-a9c3aa76b0e8" />
-
-To summarize the screenshot above:
+  
+^^^To summarize the screenshot above:
 
 1. First, we see each test that Rust ran. In this case, there is only one test called it_works, which we discussed above. The status of the it_works test is ok, meaning it was successful.
 
@@ -2897,5 +2897,27 @@ To summarize the screenshot above:
 
 3. The next section (after the full summary of all tests) is similar to parts 1 and 2, but it’s specific to document tests. In Rust, you can write tests in your documentation. Currently, we don’t have any documentation or tests in our documentation, so we can 0 documentation tests, no individual documentation test results show up, and the summary of documentation tests contains all 0s. 
 
+### Adding a Test that Fails
+
+- **In Rust, a test fails if something inside the test function <ins>panics</ins>.** Each test is ran in a new thread, and if the main thread sees that the test thread has died, then it fails the test.
+
+- In the below, we add a failing test called `failing_test`.
+```Rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+    #[test]
+    fn failing_test() {
+        panic!("Make this test fail.”)      // a test fails is something inside the test function panics
+    }
+}
+```
+^^^^^
 
 
