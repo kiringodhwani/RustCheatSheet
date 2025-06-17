@@ -1145,7 +1145,7 @@ pub fn eat_at_restaurant() {
 ```
 
 - <ins>Example 2:</ins> **super**
-
+```Rust
 // serve_order() function defined in top crate module.
 fn serve_order() {}
 
@@ -1162,6 +1162,7 @@ mod back_of_house {
 
     fn cook_order() {}
 }
+```
 
 ## Privacy Rules with Structs and Enums
 - <ins>Ex 1: Structs</ins>
