@@ -2609,19 +2609,21 @@ fn main() {
     let string1 = String::from("abcd");
     let string2 = String::from("xyz");
 
-    // Call longest() to determine the longer String out of string1 and string2.
+    // Call longest() to determine the longer String out of `string1` and `string2`.
     let result = longest(string1.as_str(), string2.as_str());
-    println!("The longest string is {}", result);	// How would the borrow checker know that result 
+    println!("The longest string is {}", result);	// How would the borrow checker know that `result` 
 							// (when we print it here) is not a dangling 
-							// reference? What is the lifetime of result?
+							// reference? What is the lifetime of `result`?
 }
 
-// Takes in two references to string slices, x and y. Returns the longest of the two string slices.
+// Takes in two string slices, `x` and `y`. Returns the longest of the two string slices.
 fn longest(x: &str, y: &str) -> &str {	// longest() returns a reference here, but we have no idea what the
-					// lifetime of this reference is 
+					// lifetime of this reference is
+
+    // We return either `x` or `y` based on which is longer. But, `x` could have a 
+    // different lifetime than `y`… 
     if x.len() > y.len() {
-        x	// We return either x or y based on which is longer. But, x could have a 
-		// different lifetime than y… 
+        x
     } else {
         y
     }
