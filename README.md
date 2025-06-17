@@ -2393,6 +2393,7 @@ impl Summary for NewsArticle { }
 
 - **Default implenentations can call other methods inside our trait definition:**
 
+```Rust
 pub struct NewsArticle {
     pub author: String,
     pub headline: String,
@@ -2455,7 +2456,7 @@ fn main() {
     println!("Tweet summary: {}", tweet.summarize());
     println!("Article summary: {}", article.summarize());
 }
-
+```
 
 
 
