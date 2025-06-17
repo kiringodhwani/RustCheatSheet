@@ -2998,7 +2998,30 @@ impl Rectangle {
 
 <img width="694" alt="Image" src="https://github.com/user-attachments/assets/89c5d435-88a1-45d3-9759-52893c013faa" />
 
-^^^^Our test suite caught the bug. The larger_can_hold_smaller test panicked because the assert!() macro panics when the expression passed into it evaluates to false. 
+^^^^Our test suite caught the bug. The larger_can_hold_smaller test panicked because the `assert!()` macro panics when the expression passed into it evaluates to false. 
+
+## `assert_eq!` Macro
+
+- The **`assert_eq!` macro allows you to compare two values.**
+
+```Rust
+// add_two() takes in an integer, adds 2 to it, and then returns the result. 
+pub fn add_two(a: i32) -> i32 {
+    a + 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_adds_two() {
+        assert_eq!(4, add_two(2));	// asserts that if we pass 2 into add_two(), like add_two(2), then
+					// it returns 4. 
+	}
+}
+```
+
 
 
 
