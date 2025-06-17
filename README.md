@@ -1061,6 +1061,17 @@ if let Some(3) = some_value {
 
 ## Crates
 - **Creating a new package:** cargo new my-project
+<img width="231" alt="Image" src="https://github.com/user-attachments/assets/57e1cb62-c1b4-4ed4-9acc-f9ebb5493ccf" />
+
+- Packages store crates, we can **define crates inside the Cargo.toml file**. **Even though we don’t have any crates defined in the above screenshot, our package starts with a binary crate (src/main.rs)**. Rust follows the convention that **if you have main.rs defined in your src directory, then a binary crate with the same name as your package will be automatically created and main.rs will be the crate root.**
+	- The crate root is the src file that the Rust compiler starts at when building your crate. It also makes up the root module of your crate.
+
+- Similarly, **if lib.rs is defined in the root of your src directory, then Rust will automatically create a library crate with the same name as your package and lib.rs will be the crate root.** THUS, even though we don’t have any crates defined in our Cargo.toml file, our package has two crates following the lib.rs and main.rs convention.
+
+### Rules around Crates:
+1. A package **must have at least one crate**
+2. A package could have **either 0 library crates or 1 library crate**
+3. A package could have **any number of binary crates**. If we wanted more binary crates in our example above, then we would create a folder called bin in the src directory, and each file in this folder would represent another binary crate.
 
 
 
