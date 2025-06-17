@@ -1390,4 +1390,64 @@ mod front_of_house;
  
 ---
 
+# Common Collections in Rust
+
+- Collections **allow you to store multiple values**.
+
+- **Unlike arrays or tuples, collections are allocated on the heap**, meaning the **size of the collection could grow or shrink as needed**.
+
+## Vectors
+- **Arrays that can grow or shrink in size.**
+- **Only store one type of data.**
+- **Stored on the heap**, so just like any other type stored on the heap, will be dropped when they go out of scope. All of the values stored inside of the vector will also be dropped. 
+
+### Initializing Vectors
+1. Initialize empty Vector of unsigned 32-bit integers, push 3 values to it
+```Rust
+let mut v: Vec<i32> = Vec::new();    // make mutable bc we want to change it (add / remove values)
+v.push(1);
+v.push(2);
+v.push(3);
+```
+
+2. Initialize vector with three unsigned 32-bit integers (1, 2, 3)
+```Rust
+let v2 = vec![1, 2, 3];
+```
+
+### Accessing Values in Vectors
+
+```Rust
+let v = vec![1, 2, 3, 4, 5];
+```
+
+1. Directly reference an index in the vector.
+
+```Rust
+let third_value = &v[2];	// THIS WOULD GET 3
+```
+
+	- **PROBLEM WITH DIRECTLY REFERENCING AN INDEX**: **If we use an invalid index (e.g., index 20 for our vector), then we get a <ins>runtime</ins> error**. If this were an array and we used an invalid index, then we’d get a compile time error, so the program wouldn’t even run until we fixed the error. This is because arrays are fixed size (so we know array size at compile time), but with a vector, we don’t know the size at compile time (stored on the heap so could be of variable size). Thus, if you directly reference an element in a vector, then your program can crash at runtime if an invalid index is used. Solution (if don’t want program to crash if invalid index is used and instead want to handle that case gracefully)…
+
+2. **The Get Method:** Returns an **Option** enum — Some(value) or None. **Use `match`** expression to handle both cases.
+
+```Rust
+match v.get(2) {
+    Some(third_elem) => println!("The third element is {}", third_elem),
+    None => println!("There is no third element"),
+}
+```
+
+- <ins>NOTE:</ins> **When we access elements in a vector, we are getting a reference to that element.** From our rules about references, you can’t have an immutable reference and a mutable reference to the same thing at the same time. The following code **ERRORS**...
+
+```Rust
+let mut v = vec![1, 2, 3, 4, 5];
+let third_value = &v[2];
+v.push(6);	// This borrows `v` as mutable, which is problematic since we took
+		// an immutable reference in the previous line.
+println!("The third element is {}", third_value);
+```
+
+
+
 
