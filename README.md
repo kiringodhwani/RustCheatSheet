@@ -2083,7 +2083,7 @@ fn get_largest(number_list: Vec<i32>) -> i32 {
   
     - FIRST, we **specify that number_list is a vector of a generic type T (`Vec<T>`) instead of a vector of integers (`Vec<i32>`)**
       
-    - SECOND, we **change the return value**. Instead of returning an integer (`i32`), we **return T**.
+    - SECOND, we **change the return value**. Instead of returning an integer (`i32`), we **return `T`**.
  
 -**Using traits:** As explained in the comment in the code below, to allow comparison, `T` can't be of any type; instead, `T` must be a type that can be compared. To enforce this, we use traits... `T: PartialOrd + Copy`. This says that our **type `T` has to be a type that can be ordered and copied** (primitive types like ints and chars). 
 
@@ -2117,6 +2117,52 @@ fn main() {
 
 ## Generics with Structs
 
+- This `Point` struct has two attributes, `x` and `y`, and both are 32-bit integers…
+```Rust
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
+    let pl = Point { x: 5, y: 10, };
+}
+```
+
+- **Use generics** if we also want our Point to be able to have floating point numbers instead of integers...
+
+```Rust {
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+fn main() {
+    let p1 = Point { x: 5, y: 10, };	// integers
+
+    let p2 = Point { x: 5.0, y:10.0, };	// floating point numbers
+}
+```
+
+- **In the example above, the `Point` struct says that both `x` and `y` are of type `T`**. So, `x` and `y` are **generic** **but** they have to **have the same type as each other**. To fix this, we can **define multiple generic types so we have another generic type besides `T`**…
+
+```Rust
+struct Point<T, U> {
+    x: T,	// `x` is of a generic type `T`
+    y: U,	// `y` is of another generic type `U`. This could be the same type as
+		// type T, or it could be different
+}
+
+fn main() {
+    let p1 = Point { x: 5, y: 10, };	// `x` and `y` could be the same type
+
+    let p2 = Point { x: 5.0, y:10.0, };
+
+    let p3 = Point { x: 5, y: 10.0, };	// `x` and `y` can now also be different types
+}
+```
+
+## Generics with Enums
 
 
 
