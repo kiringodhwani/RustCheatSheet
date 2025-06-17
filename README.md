@@ -2476,10 +2476,9 @@ pub fn notify<T: Summary>(item: &T) {
 
 - <ins>Example 2:</ins> **Force two parameters to be the same generic type that implements a specific trait**.
 
+```Rust
 // With the trait bound syntax, we can make `item1` and `item2` be the exact same type that implements 
 // the Summary trait. This is because the generic type `T` is ONE type, and both `item1` and `item2` are type `T`.
-
-```Rust
 pub fn notify<T: Summary>(item1: &T, item2: &T) { {
     //
 }
