@@ -1180,6 +1180,8 @@ mod back_of_house {
 	// summer(), takes in a string called toast and creates a new Breakfast object with
 	// toast=toast and seasonal_fruit="peaches".
         pub fn summer(toast: &str) -> Breakfast {
+            // As an associated function of the `Breakfast` struct, summer() has full access to all of
+            // the struct's fields, regardless of their pub or private status.
             Breakfast {
                 toast: String::from(toast),
                 seasonal_fruit: String::from("peaches"),
