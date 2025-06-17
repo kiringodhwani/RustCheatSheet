@@ -3040,7 +3040,7 @@ mod tests {
     }
 }
 ```
-
+<img width="692" alt="Image" src="https://github.com/user-attachments/assets/57add128-159a-4423-be09-5ddd33554bc4" />
 
 ^^^As is shown in the test output, **our test failed because assert_eq!() panics because left (4) is not equal to right (add_two(2)=5).**
 
