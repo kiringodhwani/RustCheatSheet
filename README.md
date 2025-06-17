@@ -2170,20 +2170,121 @@ fn main() {
 // One generic, T. Used in the Some variant. So, if we get the Some variant, then something is returned, but we
 // don’t want to specify the exact type of what that thing is. None case doesn’t return anything.
 enum Option<T> {
-	Some(T),
-	None,
+    Some(T),
+    None,
 }
 
 // Two generics, T and E.
-// T specifies the Ok value being returned, but doesn’t define an exact type of what the value is.
-// E specifies the error, so if we get an error, then we return E which also has a generic type.
+// T specifies the type of the Ok value being returned, but doesn’t define an exact type of what the value is.
+// E specifies the type of the error value in Err variant.
 enum Result<T, E> {
-	Ok(T),
-	Err(E)
+    Ok(T),
+    Err(E)
 }
 ```
 
 ## Generics in Method Definitions
+
+- In the below code, the **first implementation block is available to Point instances of any type**. As a result, the x() method in this implementation block is available to Point instances of any type. HOWEVER, the **second implementation block is only for Point instances where the type is f64**. As a result, the y() method in this implementation block is only available to points where the x and y values are f64.
+
+```Rust
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+// Want our implementation block to use generics, so add <T> or <U> or <S>, etc.
+// We can use a different letter than T, like U, because the generic defined here is not tied to
+// the generic specified above in our struct definition. 
+//
+// impl<U> says that we have an implementation block that uses a generic and we're going to call it U.
+//
+// Point<U> says that this implementation block is for a Point with a type parameter that is set to our generic.
+//
+impl<U> Point<U> {
+
+    // x() takes a reference to self, which is the point instance we're operating on, and then
+    // returns a reference to the `x` field, which is a generic type (so we return a reference to U).
+    fn x(&self) -> &U {
+        &self.x	
+    }
+}
+
+// This implementation block is only for Point instances that have a type parameter f64 (64-bit floating point 
+// number), and we define a function in it called y() which returns the y-value of the point. 
+//
+impl Point<f64> {
+    fn y(&self) -> f64 {
+        self.y
+    }
+}
+```
+
+- <ins>More Complex Example:</ins>
+
+```Rust
+// Two generics, T and U.
+struct Point<T, U> {
+    x: T,	// x is type T
+    y: U,	// y is type U, which may be the same type as type T or different
+}
+
+// Implementation block with generics T and U. 
+// Implementation block for our Point struct (Point<T, U>)
+impl<T, U> Point<T, U> {
+
+    // The mixup() method has its own set of generics, V and W. These generics are scoped
+    // to the mixup() method.
+    //
+    // mixup() takes self as the first argument. The second argument, other, is another
+    // Point instance, which is going to use the V and W generics defined in mixup<V, W>. We
+    // use V and W here instead of T and U, because the 'other' Point potentially has different
+    // types than self (the point we're calling the function on).
+    // 
+    // The return type of mixup() is also a Point instance. The generics are T and W, Point<T,W>.
+    // This is because the point instance returned by mixup() takes the x value of self (which has type T)
+    // and the y value of other (which has type W).
+    //
+    fn mixup<V, W>(self, other: Point<V, W>) -> Point<T, W> {
+        Point {
+            x: self.x,
+            y: other.y,
+        }
+    }
+}
+
+fn main() {
+    let p1 = Point { x: 5, y: 10.4, };     // Point<i32, f64>
+    let p2 = Point { x : "Hello", y: 'c', };    // Point<&str, char>
+
+    let p3 = p1.mixup(p2); // Point<i32, char>
+
+    println!("p3.x = {}, p3.y = {}", p3.x, p3.y) // 5, c
+}
+```
+
+## Performance Impact of Using Generics
+
+- Generics are great because they allow us to **reduce duplication**: Instead of having to define multiple functions / structs / enums to allow for different types, we can use generics and define one function / structure / enum that serves all of the types we want. Example:
+
+```Rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+fn main() {
+    let integer = Option::Some(5);
+    let float = Option::Some(5.0);
+}
+```
+
+- **This does not incur a performance hit**. This is because, for the above example WLOG, at compile time, Rust turns the Option enum into two Option enums, one for 32-bit integers and one for 64-bit floating point numbers. This is called **monomorphization**.
+
+---
+
+# Traits
+
+
 
 
 
