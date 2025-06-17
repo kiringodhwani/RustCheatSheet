@@ -337,10 +337,10 @@ Looking at the above code, the following happens in order…
 ```Rust
 {  // `s` is not valid here, it’s not yet declared
 
-	let s = "hello";  // `s` is valid from this point forward.
-			  // `s` is a string literal stored directly in the binary, fixed size.
+    let s = "hello"; 	// `s` is valid from this point forward.
+			// `s` is a string literal stored directly in the binary, fixed size.
 
-	// do stuff with `s`
+    // do stuff with `s`
 
 }  // this scope is now over, and `s` is no longer valid
 ```
@@ -349,12 +349,12 @@ Looking at the above code, the following happens in order…
 ```Rust
 {  // s is not valid here, it’s not yet declared
 
-	let s = String::from("hello");  // `s` is valid from this point forward.
-					// `s` is `String` type, dynamic in size, can be mutated, so it is automatically stored on the heap.
+    let s = String::from("hello"); 	// `s` is valid from this point forward.
+				    	// `s` is `String` type, dynamic in size, can be mutated, so it is automatically stored on the heap.
 					// Rust automatically allocates memory on the heap for the `String`, and when the scope ends, Rust
 					// drops the value and automatically deallocates memory on the heap.
 
-	// do stuff with `s`
+    // do stuff with `s`
 
 }  // this scope is now over, and `s` is no longer valid
 ```
