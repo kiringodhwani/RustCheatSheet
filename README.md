@@ -2085,7 +2085,7 @@ fn get_largest(number_list: Vec<i32>) -> i32 {
       
     - SECOND, we **change the return value**. Instead of returning an integer (`i32`), we **return `T`**.
  
--**Using traits:** As explained in the comment in the code below, to allow comparison, `T` can't be of any type; instead, `T` must be a type that can be compared. To enforce this, we use traits... `T: PartialOrd + Copy`. This says that our **type `T` has to be a type that can be ordered and copied** (primitive types like ints and chars). 
+- **Using traits:** As explained in the comment in the code below, to allow comparison, `T` can't be of any type; instead, `T` must be a type that can be compared. To enforce this, we use traits... `T: PartialOrd + Copy`. This says that our **type `T` has to be a type that can be ordered and copied** (primitive types like ints and chars). 
 
 ```Rust
 fn get_largest<T: PartialOrd + Copy>(number_list: Vec<T>) -> T {
@@ -2129,7 +2129,7 @@ fn main() {
 }
 ```
 
-- **Use generics** if we also want our Point to be able to have floating point numbers instead of integers...
+- **Use generics** if we want to allow a Point instance to have floating point numbers instead of integers...
 
 ```Rust {
 struct Point<T> {
@@ -2164,7 +2164,26 @@ fn main() {
 
 ## Generics with Enums
 
+- We can use Generics inside of enum definitions… In fact, **both the Option enum and and Result enum use Generics**…
 
+```Rust
+// One generic, T. Used in the Some variant. So, if we get the Some variant, then something is returned, but we
+// don’t want to specify the exact type of what that thing is. None case doesn’t return anything.
+enum Option<T> {
+	Some(T),
+	None,
+}
+
+// Two generics, T and E.
+// T specifies the Ok value being returned, but doesn’t define an exact type of what the value is.
+// E specifies the error, so if we get an error, then we return E which also has a generic type.
+enum Result<T, E> {
+	Ok(T),
+	Err(E)
+}
+```
+
+## Generics in Method Definitions
 
 
 
