@@ -1975,11 +1975,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 - In general, **the default should be using the Result enum and error propagation**, this **prevents your program from crashing**. Also, error propagation **allows the caller to decide how best to handle the error**.
 
 - **Only use panic! in exceptional circumstances.**
-    - These include circumstances in which recovering from the error is not possible and your program cannot continue because it’s in a bad state, so you must end the program. 
-    - It is also appropriate to use panic! in example code. In example code, methods like unwrap() and expect() are used for brevity. Also, in example code, there’s no context for determining how to deal with errors. 
-    - You may also use unwrap() and expect() in prototype code. If you are trying to get something out really quickly to see if it works and you don’t want to deal with error handling. However, if the code is moving past the prototype phase, you can find all the expect() and unwrap() statements and easily introduce error handling. 
-    - unwrap() and expect() can also be used in test code. This is because in test code, you want your test to fail if something that you expect to succeed actually fails. 
-    - You may want to use unwrap() or expect() when you know a call to a function will succeed. This allows you to easily get the result from the Option / Result enum. <ins>Example:</ins>
+    - These include **circumstances in which recovering from the error is not possible and your program cannot continue** because it’s in a bad state, so you must end the program. 
+    - It is also appropriate to use panic! in **example code**. In example code, methods like unwrap() and expect() are used for brevity. Also, in example code, there’s no context for determining how to deal with errors. 
+    - You **may** also **use unwrap() and expect() in prototype code**. If you are trying to get something out really quickly to see if it works and you don’t want to deal with error handling. However, if the code is moving past the prototype phase, you can find all the expect() and unwrap() statements and easily introduce error handling. 
+    - **unwrap() and expect() can also be used in test code**. This is because in test code, you want your test to fail if something that you expect to succeed actually fails. 
+    - You **may want to use unwrap() or expect() when you know a call to a function will succeed**. This allows you to easily get the result from the Option / Result enum. <ins>Example:</ins>
 
 ```Rust
 use std::net::IpAddr;
