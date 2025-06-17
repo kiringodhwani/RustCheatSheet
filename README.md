@@ -1421,7 +1421,7 @@ let v2 = vec![1, 2, 3];
 let v = vec![1, 2, 3, 4, 5];
 ```
 
-1. Directly reference an index in the vector.
+1. **Directly reference an index in the vector.**
 
 ```Rust
 let third_value = &v[2];	// THIS WOULD GET 3
@@ -1450,8 +1450,60 @@ println!("The third element is {}", third_value);
 ```
 <img width="516" alt="Image" src="https://github.com/user-attachments/assets/d5fe2415-75fb-4524-a453-1e48001e8f62" />
   
-^^^^In our example, we take an immutable reference to a value in the vector when we do let third_value = &v[2]. Afterwards, we take a mutable reference to push a new element onto the vector v.push(6). And then, we use the immutable reference that we created println!("The third element is {}", third_value). This is a problem, because when we take an immutable reference to something, we expect the underlying value to not change, but if we have a mutable reference to the same thing, then the underlying value could change. With vectors, when we push a new element onto the vector, then we may need to allocate more memory to make room for that new value, and when we do this, we need to move all of the elements in our vector to new memory locations. If this were to happen, then our variable we declared with let third_value = &v[2] would be pointing to something else.
+^^^^In our example, we take an **immutable reference** to a value in the vector when we do let **`third_value = &v[2]`**. Afterwards, we take a **mutable reference** to push a new element onto the vector **`v.push(6)`**. And then, we **use the immutable reference** that we created **in `println!("The third element is {}", third_value)`**. This is a problem, because when we take an immutable reference to something, we expect the underlying value to not change, but if we have a mutable reference to the same thing, then the underlying value could change. With vectors, when we push a new element onto the vector, then we may need to allocate more memory to make room for that new value, and when we do this, we need to move all of the elements in our vector to new memory locations. If this were to happen, then our variable we declared with let third_value = &v[2] would be pointing to something else.
 
 ### Iterating Over Elements in a Vector
+
+- **`for in`**: **Loops through all of the elements in the v vector and takes an immutable reference to each element**. NOTE: must take some sort of reference to the vector or else the values will be moved.
+
+```Rust
+let v = vec![1, 2, 3, 4, 5];
+for elem in &v {
+	println!("{}", elem);
+};
+```
+
+- Can also use **`for in`** to take **mutable reference** to each element and then modify the value...
+
+```Rust
+let mut v = vec![1, 2, 3, 4, 5];
+for elem in &mut v {
+	*elem += 50;  // use the dereference operator to get the underlying value and add 50 to it
+ };
+
+for elem in &v {
+	println!("{}", elem)
+ }
+```
+
+### Storing Different Types of Data in Vectors
+
+- Vectors are designed to only store one type of data. However, you **can store different types of data in vectors using enum variants**.
+
+- <ins>Example:</ins> We want our vector to represent a row of cells in a spreadsheet. Each cell can store either an integer, floating point number, or string. In order to represent this in a vector, we can **create an enum that represents the cell and variants within the enum for each type of data**. **Each of these variants are all under the same type** (the name of the enum)…
+
+```Rust
+enum SpreadsheetCell {
+	Int(i32),
+	Float(f64),
+	Text(String),
+}
+
+let row = vec![
+	SpreadsheetCell::Int(3),
+	SpreadsheetCell::Text(String::from("blue")),
+	SpreadsheetCell::Float(10.12),
+];
+
+// When you reference a specific element inside of the vector, you have
+// to use a match expression to figure out which variant of the enum it is.
+// This is because the vector is of type SpreadsheetCell.
+match &row[1] {
+	SpreadsheetCell::Int(i) => println!("{}", i),
+	_ => println!("Not an integer!"),
+}
+```
+
+## Strings
 
 
