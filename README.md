@@ -1196,7 +1196,7 @@ pub fn eat_at_restaurant() {
     // In order to create a new Breakfast struct, we have to use the summer()
     // associated function, we can't create a Breakfast struct directly inside
     // eat_at_restaurant() because the Breakfast struct includes a private
-    // attribute (seasonal_fruit). THE BELOW TO CREATE `meal2` ERRORS !!!
+    // attribute (seasonal_fruit). THE BELOW ERRORS !!!
     let meal2 = back_of_house::Breakfast {
         toast: String::from("white"),
         seasonal_fruit: String::from("apple"),
