@@ -1438,7 +1438,8 @@ match v.get(2) {
 }
 ```
 
-- <ins>NOTE:</ins> **When we access elements in a vector, we are getting a reference to that element.** From our rules about references, you can’t have an immutable reference and a mutable reference to the same thing at the same time. The following code **ERRORS**...
+
+<ins>NOTE:</ins> **When we access elements in a vector, we are getting a reference to that element.** From our rules about references, you can’t have an immutable reference and a mutable reference to the same thing at the same time. The following code **ERRORS**...
 
 ```Rust
 let mut v = vec![1, 2, 3, 4, 5];
