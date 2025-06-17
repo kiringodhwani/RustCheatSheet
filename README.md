@@ -1072,6 +1072,13 @@ if let Some(3) = some_value {
 1. A package **must have at least one crate**
 2. A package could have **either 0 library crates or 1 library crate**
 3. A package could have **any number of binary crates**. If we wanted more binary crates in our example above, then we would create a folder called bin in the src directory, and each file in this folder would represent another binary crate.
+<img width="207" alt="Image" src="https://github.com/user-attachments/assets/9a849043-978b-40a6-8bfb-6a546fb7597b" />
+
+## Modules
+
+- **Create new package with library crate:** cargo new --lib restaurant
+
+
 
 
 
