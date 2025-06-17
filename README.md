@@ -3027,7 +3027,7 @@ mod tests {
 
 ```Rust
 pub fn add_two(a: i32) -> i32 {
-    a + 3
+    a + 3	// changed this to add 3 instead of 2
 }
 
 #[cfg(test)]
@@ -3050,7 +3050,7 @@ mod tests {
 
 - **In the failure example just above**, **changing to `assert_ne!()`** instead of `assert_eq!()`, would give **`assert_ne!(4, add_two(2)=5)`** which evaluates to **true** and **doesn't panic.**
 
-- <ins>NOTE:</ins> **Both parameters passed into assert_eq! and assert_ne!() must implement the PartialEq and Debug traits**. **All of the primitive values and most of the standard library implement these two traits.** However, if we create our own structs and enums, then we will have to implement them ourselves.
+- **<ins>IMPORTANT NOTE:</ins>** **Both parameters passed into assert_eq! and assert_ne!() must implement the PartialEq and Debug traits**. **All of the primitive values and most of the standard library implement these two traits.** However, if we create our own structs and enums, then we will have to implement them ourselves.
 
 ## Custom Failure Messages
 
