@@ -2995,5 +2995,9 @@ impl Rectangle {
 }
 ```
 
+<img width="694" alt="Image" src="https://github.com/user-attachments/assets/89c5d435-88a1-45d3-9759-52893c013faa" />
+
+^^^^Our test suite caught the bug. The larger_can_hold_smaller test panicked because the assert!() macro panics when the expression passed into it evaluates to false. 
+
 
 
