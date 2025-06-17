@@ -2782,11 +2782,11 @@ fn first_word<'a>(s: &'a str) -> &'a str {
 ```
 ^^^**The above function still works when you remove the lifetime annotation.** This is because **there are scenarios when the compiler can deterministically infer the lifetime annotations.** It does this by checking the <ins>Three Lifetime Elision rules</ins>.
 
-**<ins>Three Lifetime Elision rules</ins>** -- the compiler will try to follow these three rules when assigning lifetimes. But **if at the end of these three rules, it still can’t figure out what the lifetimes are, then we have to manually specify them.**
-
 <ins>Note:</ins>
-Input Lifetimes = lifetimes of arguments being passed in   
-Output Lifetimes = lifetimes of return values  
+- **Input Lifetimes** = lifetimes of arguments being passed in   
+- **Output Lifetimes** = lifetimes of return values 
+
+**<ins>Three Lifetime Elision rules</ins>** -- the compiler will try to follow these three rules when assigning lifetimes. But **if at the end of these three rules, it still can’t figure out what the lifetimes are, then we have to manually specify them.** 
 
 1. **Each parameter that is a reference gets its own lifetime parameter**. So, in first_word() above, `s` will get a lifetime parameter. 
 
