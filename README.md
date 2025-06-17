@@ -2041,7 +2041,81 @@ fn main() {
 
 ---
 
+# Generics
 
+## Motivation
+
+```Rust
+fn main() {
+    let number_list: Vec<i32> = vec![34, 50, 25, 100, 65];
+
+    let largest = get_largest(number_list);
+    println!("The largest number is {}", largest);
+}
+
+fn get_largest(number_list: Vec<i32>) -> i32 {
+    let mut largest = number_list[0];
+    for number in number_list {
+        if number > largest {
+            largest = number
+        }
+    }
+    largest
+}
+```
+- In the above code, **the `get_largest()` function is tied to a concrete set of arguments: number_list, which has to be a vector of signed 32-bit integers.**
+
+- **What happens if we want to use our same logic of finding the largest number on a slightly different set of arguments (e.g., the largest character in a vector)?** This will **ERROR** because get_largest expects a Vector of signed 32-bit integers but we are passing it a vector of characters.
+
+- Possible Solution 1 (**BAD**): Duplicate the get_largest() function and change the type of number_list to Vec<char> and change the return type to char. This works, but we want to reduce duplication and only have one get_largest() function.
+
+- <ins>Solution:</ins> **Generics** -- we can **use generics to modify our original get_largest() function to take in both sets of arguments (Vec<i32> and Vec<char>).**
+
+## Defining Generic Types
+
+- Generic types are **specified inside of angle brackets right after the function name**, like **`get_largest<T>`**. This specifies that we have a generic type called T.
+  
+    - If you have one generic type, you call it `T`.
+      
+    - To specify **multiple generic types**, use a comma to separate them in the angled brackets (e.g., **`get_largest<T, U>`**).
+ 
+- Once we have our generic type defined, we can use it inside the function. In get_largest() below, we do the following…
+  
+    - FIRST, we **specify that number_list is a vector of a generic type T (Vec<T>) instead of a vector of integers (Vec<i32>)**
+      
+    - SECOND, we **change the return value**. Instead of returning an integer (i32), we **return whatever the generic type is**.
+ 
+-**Using traits:** As explained in the comment in the code below, to allow comparison, T can't be of any type; instead, T must be a type that can be compared. To enforce this, we use traits... T: PartialOrd + Copy. This says that our **type T has to be a type that can be ordered and copied** (primitive types like ints and chars). 
+
+```Rust
+fn get_largest<T: PartialOrd + Copy>(number_list: Vec<T>) -> T {
+    let mut largest = number_list[0];
+    for number in number_list {
+        // We can't use the '>' operator on our type T because T is generic (i.e., it could be
+        // anything, including something that we cannot compare). To fix this, we have to restrict
+        // our generic type. Instead of saying T could be of any type, we want to say T could be of 
+        // of any type that can be compared. To do this, we use traits, as explained above.
+        // 
+        if number > largest {
+            largest = number
+        }
+    }
+    largest
+}
+
+// Now, get_largest() can be used with characters and numbers...
+fn main() {
+    let number_list: Vec<i32> = vec![34, 50, 25, 100, 65];
+    let largest = get_largest(number_list);
+    println!("The largest number is {}", largest);
+
+    let char_list: Vec<char> = vec!['y', 'm', 'a', 'q'];
+    let largest = get_largest(char_list);
+    println!("The largest char is {}", largest);
+}
+```
+
+## Generics with Structs
 
 
 
