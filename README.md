@@ -1852,7 +1852,7 @@ let f = match f {
 
 <ins>After</ins>:
 ```Rust
-let f = File::open("hello.txt").unwrap().expect();
+let f = File::open("hello.txt").unwrap();
 ```
 
 2. **expect()**: **Same as unwrap()** with the additional feature that it **allows you to specify the error message that gets sent to the panic! macro**.
@@ -1860,6 +1860,196 @@ let f = File::open("hello.txt").unwrap().expect();
 ```Rust
 let f = File::open("hello.txt").expect("Failed to open hello.txt");
 ```
+
+## Error Propagation
+
+- **When you have a function that calls something that may fail, then you want to return that error back to the caller instead of handling it within the function.**
+
+- **This gives more control to the caller who can then decide what to do with the error.** This is called **<ins>error propagation</ins>**.
+
+```Rust
+use std::fs::File;
+use std::io;
+use std::io::Read;
+
+// read_username_from_file() return a Result type (either a String (the username) or an error) 
+fn read_username_from_file() -> Result<String, io::Error> {
+    let f = File::open("hello.txt");
+
+    // Opening the "hello.txt" file could fail...
+    let mut f = match f {
+
+        // If opening the file is successful, then the file is returned and stored in `f`
+        Ok(file) => file,
+
+        // If opening the file fails, then return the error to the caller (error propagation)
+        Err(e) => return Err(e),
+    };
+
+    let mut s = String::new();
+
+    // Calling read_to_string() on our file reads the contents of the file and 
+    // stores it within the passed in String. read_to_string() returns a Result type.
+    match f.read_to_string(&mut s) {
+
+        // In the success case, return the string (contents of the file are stored in this string)
+        Ok(_) => Ok(s),
+
+        // In the error case, return the error to the caller (error propagation)
+        Err(e) => Err(e), // specifying return not necessary bc last expression in fxn
+    }
+}
+```
+
+- By doing the error propagation in the above, the code calling the read_username_from_file() function is able to determine how best to handle the different errors.
+
+## The `?` Operator
+
+- `?` does something very similar to the unwrap() or expect() methods.
+
+- **If we succeed in opening the file, then the file is returned and stored in `f`.**
+
+- **If we fail to open the file, then INSTEAD OF PANICKING, the read_username_from_file() function ends early and returns the error.**
+
+- We can simplify the code in the previous example using the ? operator…
+
+```Rust
+fn read_username_from_file() -> Result<String, io::Error> {
+
+    let mut f = File::open("hello.txt")?;
+
+    let mut s = String::new();
+
+    // If read_to_string() succeeds, then the contents of f are read and stored within s.
+    //
+    // If read_to_string() fails, then read_username_from_file() ends and returns the error. 
+    //
+    f.read_to_string(&mut s)?;
+    Ok(s)	// If we get to this line in the function, then we know read_to_string()
+		// succeeded, so we can return `s` (which contains the contents of f).
+}
+```
+
+-^^^We can simplify this code even more by **chaining** method calls...
+
+```Rust
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut s = String::new();
+
+    // We have two related method calls: opening the file and reading from the file.
+    // Instead of creating an `f` variable when you read in the file, chain the method calls.
+    File::open("hello.txt")?.read_to_string(&mut s)?;
+    
+    Ok(s)
+}
+```
+
+-^^^Technically, we can simplify even more using different built-ins...
+
+```Rust
+use std::fs::{self, File};
+use std::io;
+use std::io::Read;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    fs::read_to_string("hello.text")
+}
+```
+
+- **NOTE:** The **`?`** operator **can only be used in a function that returns Result or Option.**
+
+	- The main() function is special — it has restriction on what type it can return. It can return a Result type, which allows you to **use the ? operator in main()**…
+
+ ```Rust
+use std::error::Error;
+use std::fs::File;
+
+fn main() -> Result<(), Box<dyn Error>> {
+    let f = File::open("hello.text")?;
+
+    Ok(())
+}
+```
+
+## `panic!` vs. `Result`
+- In general, **the default should be using the Result enum and error propagation**, this **prevents your program from crashing**. Also, error propagation **allows the caller to decide how best to handle the error**.
+
+- **Only use panic! in exceptional circumstances. **
+    - These include circumstances in which recovering from the error is not possible and your program cannot continue because it’s in a bad state, so you must end the program. 
+    - It is also appropriate to use panic! in example code. In example code, methods like unwrap() and expect() are used for brevity. Also, in example code, there’s no context for determining how to deal with errors. 
+    - You may also use unwrap() and expect() in prototype code. If you are trying to get something out really quickly to see if it works and you don’t want to deal with error handling. However, if the code is moving past the prototype phase, you can find all the expect() and unwrap() statements and easily introduce error handling. 
+    - unwrap() and expect() can also be used in test code. This is because in test code, you want your test to fail if something that you expect to succeed actually fails. 
+    - You may want to use unwrap() or expect() when you know a call to a function will succeed. This allows you to easily get the result from the Option / Result enum. <ins>Example:</ins>
+
+```Rust
+use std::net::IpAddr;
+
+fn main() {
+    // Bc the String "127.0.0.1" is hardcoded here, we know the parse function will 
+    // always succeed and convert it to an IP address. Thus, we can safely call unwrap()
+    // without having to worry about the possibility of panicking.
+    //
+    // However, if the String were dynamic and came from something like user input, then
+    // we wouldn’t want to call unwrap() bc may panic, so would want to handle the potential
+    // error case.
+    //
+    let home: IpAddr = "127.0.0.1".parse().unwrap();    
+}
+```
+
+## Custom Types
+
+- **You can create custom types for validation.**
+
+- <ins>Example:</ins> **In our guessing game, we can create a custom type for the user’s guess that validates that their guess is between 1 and 100.**
+
+```Rust
+pub struct Guess {
+    value: i32, // store the integer (i.e., the guess)
+}
+
+impl Guess {
+    // Associated function that takes in a value and validates that it's between 1 and 100.
+    // If the value is between 1 and 100, then returns a new instance of the Guess struct with the value.
+    pub fn new(value: i32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must be between 1 and 100, got {}.", value);
+        }
+
+        Guess { value } // Same as Guess { value: value }
+    }
+
+    // Returns the value stored in the Guess struct.
+    // We want this function because we don't want the value field to be manipulated directly (at all).
+    pub fn value(&self) -> i32 {
+        self.value
+    }
+}
+
+fn main() { 
+    // Defining a new guess 
+    let my_guess = Guess::new(42);  // Creates a new Guess instance with the value 42 
+
+    // Attempting to create an invalid guess will cause a panic
+    let invalid_guess = Guess::new(150);   // This line would panic at runtime
+}
+```
+
+^^^Now, our guessing game can use this new Guess type, and **any code dealing with Guess can be confident that the value stored inside of it is between 1 and 100.**
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
