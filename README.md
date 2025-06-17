@@ -1907,15 +1907,15 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
 - `?` does something very similar to the unwrap() or expect() methods.
 
-- **If we succeed in opening the file, then the file is returned and stored in `f`.**
-
-- **If we fail to open the file, then INSTEAD OF PANICKING, the read_username_from_file() function ends early and returns the error.**
-
 - We can simplify the code in the previous example using the ? operator…
 
 ```Rust
 fn read_username_from_file() -> Result<String, io::Error> {
 
+    // If we succeed in opening the file, then the file is returned and stored in `f`.
+    //
+    // If we fail to open the file, then INSTEAD OF PANICKING, the read_username_from_file() function ends early and returns the error.
+    //
     let mut f = File::open("hello.txt")?;
 
     let mut s = String::new();
