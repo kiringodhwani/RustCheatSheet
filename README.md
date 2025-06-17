@@ -11,11 +11,11 @@
     [dependencies]
     rand = "0.5.5"  // added this dependency
 
-- **TO make new project**: cargo new {project_name}
+- **TO make new project**: `cargo new {project_name}`
 
-- **TO check code for errors without producing an executable:** cargo check
+- **TO check code for errors without producing an executable:** `cargo check`
 
-- **TO compile (if necessary) and run project:** cargo run
+- **TO compile (if necessary) and run project:** `cargo run`
 
 ---
 
@@ -1053,14 +1053,14 @@ if let Some(3) = some_value {
 ---
 
 # Rust's Module System
-- Rust’s module system starts with a **package**. When you type in “cargo new” you create a new package. 
+- Rust’s module system starts with a **package**. When you type in `cargo new` you create a new package. 
 - A package stores **crates**. A crate could either be a binary crate (code you can execute) or a library crate (code that can be used by other programs). 
 - Crates contain **modules**. Modules allow you to organize a chunk of code and control the privacy rules. 
     - E.g., suppose you have a library crate that contains an authentication module. You can make the code inside your authentication module private but expose one public login method. If we want code outside the authentication module to call the public login method, then we have specify a path to the login method. 
 - **Workspaces** are meant for very large projects and allow you to store interrelated packages inside the workspace.
 
 ## Crates
-- **Creating a new package:** cargo new my-project
+- **Creating a new package:** `cargo new my-project`
 <img width="231" alt="Image" src="https://github.com/user-attachments/assets/57e1cb62-c1b4-4ed4-9acc-f9ebb5493ccf" />
 
 - Packages store crates, we can **define crates inside the Cargo.toml file**. **Even though we don’t have any crates defined in the above screenshot, our package starts with a binary crate (src/main.rs)**. Rust follows the convention that **if you have main.rs defined in your src directory, then a binary crate with the same name as your package will be automatically created and main.rs will be the crate root.**
@@ -1076,7 +1076,7 @@ if let Some(3) = some_value {
 
 ## Modules
 
-- **Create new package with library crate:** cargo new --lib restaurant
+- **Create new package with library crate:** `cargo new --lib restaurant`
 
 <img width="210" alt="Image" src="https://github.com/user-attachments/assets/4f95e33f-d7d4-444d-8a45-7f26c8290c55" />
 
@@ -1743,7 +1743,7 @@ for word in text.split_whitespace() {
 panic!("crash and burn");
 ```
 
-- Run with `RUST_BACKTRACE=1` environment variable to display a backtrace… RUST_BACKTRACE=1 cargo run
+- Run with `RUST_BACKTRACE=1` environment variable to display a backtrace… `RUST_BACKTRACE=1 cargo run`
 
 ## Result Enum
 
@@ -2857,6 +2857,33 @@ where
 ---
 
 # Testing
+
+## Why do we want to write Tests? 
+
+- Rust does a great job making sure our program is correct with a powerful type system and things like the borrow checker — so **Rust checks that we’re passing around the right types and we’re not mismanaging memory.**
+ 
+- But, **Rust doesn’t really check that our functions are doing the right thing — can’t check our business logic, intent of our code.**
+
+## Writing Tests
+1. **Create a new library** called ‘adder’: `cargo new adder --lib` 
+	- Test module and a test already created and written for us in lib.rs
+<img width="681" alt="Image" src="https://github.com/user-attachments/assets/ded72e5e-ddbf-4f8f-bc64-85ea129afc09" />
+
+**Example Test:**
+mod tests {	// Test Module
+    use super::*;
+
+    #[test]	// the function has its own attribute called test. In Rust, functions are tests 
+		// if they have this #[test] attribute. We could have other helper functions in this
+		// test module that are not tests and they wouldn’t have the #[test] 
+  
+    fn it_works() {	// This test is called it_works.
+        let result = add(2, 2);
+        assert_eq!(result, 4);	// the function asserts that 2 + 2 = 4
+    }
+}
+
+2. **To run the tests in lib.rs:** `cargo test`
 
 
 
