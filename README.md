@@ -1974,7 +1974,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 ## `panic!` vs. `Result`
 - In general, **the default should be using the Result enum and error propagation**, this **prevents your program from crashing**. Also, error propagation **allows the caller to decide how best to handle the error**.
 
-- **Only use panic! in exceptional circumstances. **
+- **Only use panic! in exceptional circumstances.**
     - These include circumstances in which recovering from the error is not possible and your program cannot continue because it’s in a bad state, so you must end the program. 
     - It is also appropriate to use panic! in example code. In example code, methods like unwrap() and expect() are used for brevity. Also, in example code, there’s no context for determining how to deal with errors. 
     - You may also use unwrap() and expect() in prototype code. If you are trying to get something out really quickly to see if it works and you don’t want to deal with error handling. However, if the code is moving past the prototype phase, you can find all the expect() and unwrap() statements and easily introduce error handling. 
