@@ -1427,7 +1427,7 @@ let v = vec![1, 2, 3, 4, 5];
 let third_value = &v[2];	// THIS WOULD GET 3
 ```
 
-	- **PROBLEM WITH DIRECTLY REFERENCING AN INDEX**: **If we use an invalid index (e.g., index 20 for our vector), then we get a <ins>runtime</ins> error**. If this were an array and we used an invalid index, then we’d get a compile time error, so the program wouldn’t even run until we fixed the error. This is because arrays are fixed size (so we know array size at compile time), but with a vector, we don’t know the size at compile time (stored on the heap so could be of variable size). Thus, if you directly reference an element in a vector, then your program can crash at runtime if an invalid index is used. Solution (if don’t want program to crash if invalid index is used and instead want to handle that case gracefully)…
+- ^^^^^**PROBLEM WITH DIRECTLY REFERENCING AN INDEX**: **If we use an invalid index (e.g., index 20 for our vector), then we get a <ins>runtime</ins> error**. If this were an array and we used an invalid index, then we’d get a compile time error, so the program wouldn’t even run until we fixed the error. This is because arrays are fixed size (so we know array size at compile time), but with a vector, we don’t know the size at compile time (stored on the heap so could be of variable size). Thus, if you directly reference an element in a vector, then your program can crash at runtime if an invalid index is used. Solution (if don’t want program to crash if invalid index is used and instead want to handle that case gracefully)…
 
 2. **The Get Method:** Returns an **Option** enum — Some(value) or None. **Use `match`** expression to handle both cases.
 
@@ -1448,7 +1448,10 @@ v.push(6);	// This borrows `v` as mutable, which is problematic since we took
 		// an immutable reference in the previous line.
 println!("The third element is {}", third_value);
 ```
+<img width="516" alt="Image" src="https://github.com/user-attachments/assets/d5fe2415-75fb-4524-a453-1e48001e8f62" />
+  
+^^^^In our example, we take an immutable reference to a value in the vector when we do let third_value = &v[2]. Afterwards, we take a mutable reference to push a new element onto the vector v.push(6). And then, we use the immutable reference that we created println!("The third element is {}", third_value). This is a problem, because when we take an immutable reference to something, we expect the underlying value to not change, but if we have a mutable reference to the same thing, then the underlying value could change. With vectors, when we push a new element onto the vector, then we may need to allocate more memory to make room for that new value, and when we do this, we need to move all of the elements in our vector to new memory locations. If this were to happen, then our variable we declared with let third_value = &v[2] would be pointing to something else.
 
-
+### Iterating Over Elements in a Vector
 
 
