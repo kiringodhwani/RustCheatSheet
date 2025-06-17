@@ -3021,6 +3021,25 @@ mod tests {
 	}
 }
 ```
+<img width="670" alt="Image" src="https://github.com/user-attachments/assets/6fd2deaa-293d-4131-a859-4b67507ee9ce" />
+
+<ins>We can make the above test fail...</ins>
+
+```Rust
+pub fn add_two(a: i32) -> i32 {
+    a + 3
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_adds_two() {
+        assert_eq!(4, add_two(2));
+    }
+}
+```
 
 
 
