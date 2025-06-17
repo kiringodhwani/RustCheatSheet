@@ -2919,5 +2919,69 @@ mod tests {
 }
 ```
 ^^^^^
+<img width="697" alt="Image" src="https://github.com/user-attachments/assets/df2489f7-e024-4b30-a519-6670f3a18ae2" />
+
+## Testing Product Code
+
+```Rust
+#[derive(Debug)]
+struct Rectangle {    // Rectangle struct that stores the width and height of a rectangle.
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    // can_hold() takes in another Rectangle and returns true if the current Rectangle can hold in the
+    // passed in rectangle inside itself (i.e., wider and taller).
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    // Our product code is in the default module.
+    // Our tests are in the tests module .
+    // Thus, to test our product code, we have to bring it into scope. 
+    // We use the 'use' keyword and a relative path with 'super' to reference the parent module.
+    use super::*;
+
+    // TEST 1: test that larger_can_hold_smaller() correctly shows that a larger Rectangle CAN
+    // hold a smaller Rectangle
+    #[test]
+    fn larger_can_hold_smaller() {          
+        let larger = Rectangle {
+            width: 8,
+            height: 7
+        };
+	// smaller Rectangle has smaller width and height than larger Rectangle
+        let smaller = Rectangle {
+            width: 5,
+            height: 1,
+        };
+        // assert!() asserts that a given expression evaluates to true.
+        // larger.can_hold(&smaller) should return true, so... assert!(larger.can_hold(&smaller));
+    }
+
+    // TEST 2: test that larger_can_hold_smaller() correctly shows that a smaller Rectangle CANNOT hold
+    //  a larger Rectangle.
+    fn smaller_cannot_hold_larger() {
+        let larger = Rectangle {
+            width: 8,
+            height: 7,
+        };
+        let smaller = Rectangle {
+            width: 5,
+            height: 1,
+        };
+
+        // smaller.can_hold(&larger) should evaluate to false bc a smaller Rectangle should not be able to hold 
+        // a larger Rectangle. To verify this, we add ! before smaller.can_hold(&larger) so that the expression 
+        // evaluates to true when false is returned from can_hold(). Necessary bc assert!() asserts that a given
+        // expression evaluates to true. 
+        assert!(!smaller.can_hold(&larger));
+    } 
+}
+```
 
 
