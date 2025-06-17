@@ -2797,8 +2797,66 @@ fn first_word<'a>(s: &'a str) -> &'a str {
 ^^^We can see from rules 1 and 2 how the compiler is able to generate the lifetimes for first_word() on its own without us having to specify them. However, if we have multiple input lifetimes (like with longest() from earlier), then we have to specify the lifetimes manually because rule 2 is broken. 
 
 ## Lifetime Annotations Inside of Methods
+- **Lifetime Annotations are a type of Generic**, so **just like with generics**, we have to **include the lifetime annotation inside of angle brackets after `impl` and after the name of our struct**.
 
+```Rust
+struct ImportantExcerpt<'a> {
+    part: &'a str,
+}
 
+impl<'a> ImportantExcerpt<'a> {
+    fn return_part(&self, announcement: &str) -> &str {	// We don’t need to specify lifetime annotations here
+							// bc of rule 3 of our elision rules. I.e., we have two 
+							// input lifetimes here but one of them is &self, so the
+							// lifetime of self is assigned to all output lifetime parameters
+        println!("Attention please: {}", announcement);
+        self.part
+    }
+}
+```
+
+## Static Lifetimes
+
+- **The static lifetime means that the reference could live as long as the duration of the program. All string literals have a static lifetime.** This is because string literals are stored in the program’s binary, so they live for the duration of the program. <ins>Ex:</ins>
+
+```Rust
+let s: &'static str = "I have a static lifetime.";
+```
+
+---
+
+# Generics, Traits, Trait Bounds, and Lifetimes All Together
+
+The longest_with_an_announcement() function below…
+- **Takes two string references**, `x` and `y`.
+- **Takes a generic type `T`**. The `ann` parameter, which is an announcement, has this type. 
+- Prints the announcement and returns the longest string slice out of `x` and `y`.
+- **Use of Generics and Trait Bounds:** The parameter `ann` is of type T, so it is a generic type. But, we use a trait bound in the `where` clause to limit `T` to any type that implements the `Display` trait (i.e., types that can be printed to the screen).
+- **Use of Lifetime Annotations:** We take in two parameters `x` and `y`, which are both references to string slices (`&str`), and we return a reference to a string slice (`&str`). Bc we have two references and no self, the compiler can’t do automatic lifetime elision, so we have to manually specify the lifetime. In this case, the lifetime we specify is `‘a` on `x`, `y`, and the return value. Therefore, the lifetime of the return value is equal to the smallest lifetime being passed in out of `x` and `y`.
+
+```Rust
+use std::fmt::Display;
+
+fn longest_with_an_announcement<'a, T>(
+    x:&'a str,
+    y:&'a str,
+    ann: T,
+) -> &'a str
+where 
+    T: Display,
+{
+    println!("Announcement! {}", ann);
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+```
+
+---
+
+# Testing
 
 
 
