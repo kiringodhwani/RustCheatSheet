@@ -2401,8 +2401,8 @@ pub struct NewsArticle {
 }
 // Implement the Summary trait for our NewsArticle type
 impl Summary for NewsArticle {
-    // summarize_author() has no default implementation, so must specify custom implementation here
-    // Return the author (author field of NewsArticle struct)
+    // summarize_author() has no default implementation, so we must specify a custom implementation here.
+    // Return the author (author field of NewsArticle struct).
     fn summarize_author(&self) -> String {
         format!("{}", self.author)
     }
@@ -2419,23 +2419,23 @@ pub struct Tweet {
 }
 // Implement the Summary trait for our Tweet type
 impl Summary for Tweet {
-    // summarize_author() has no default implementation, so must specify custom installation here
+    // summarize_author() has no default implementation, so we must specify custom installation here.
     // Return the username because the author of the tweet is the Twitter user.
     fn summarize_author(&self) -> String {
         format!("@{}", self.username)
     }
 	
-    // custom summarize() implementation that override the default implementation
+    // custom summarize() implementation that overrides the default implementation.
     fn summarize(&self) -> String {
         format!("{}: {}", self.username, self.content)
     }
 }
 
 pub trait Summary {
-    // summarize_author() returns the name of the author, has no default implementation
+    // summarize_author() returns the name of the author, has no default implementation.
     fn summarize_author(&self) -> String;
 
-    // summarize() has a default implementation, which uses the summarize_author() method
+    // summarize() has a default implementation, which uses the summarize_author() method.
     fn summarize(&self) -> String {
         format!("(Read more from {}...)", self.summarize_author())
     }
