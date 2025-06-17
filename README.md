@@ -1053,6 +1053,16 @@ if let Some(3) = some_value {
 ---
 
 # Rust's Module System
+- Rust’s module system starts with a **package**. When you type in “cargo new” you create a new package. 
+- A package stores **crates**. A crate could either be a binary crate (code you can execute) or a library crate (code that can be used by other programs). 
+- Crates contain **modules**. Modules allow you to organize a chunk of code and control the privacy rules. 
+    - E.g., suppose you have a library crate that contains an authentication module. You can make the code inside your authentication module private but expose one public login method. If we want code outside the authentication module to call the public login method, then we have specify a path to the login method. 
+- **Workspaces** are meant for very large projects and allow you to store interrelated packages inside the workspace.
+
+## Crates
+- **Creating a new package:** cargo new my-project
+
+
 
 
 
