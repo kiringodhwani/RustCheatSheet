@@ -1735,7 +1735,9 @@ for word in text.split_whitespace() {
 
 ## panic! Macro
 
-- **If your program fails in a way that is unrecoverable or you can’t handle the error gracefully**, then you can call the **panic! macro** which will **immediately quit your program and print out an error message**. 
+- **If your program fails in a way that is unrecoverable or you can’t handle the error gracefully**, then you can call the **panic! macro** which will **immediately quit your program and print out an error message**.
+
+- This crashes the program at **runtime**.
 
 ```Rust
 panic!("crash and burn");
