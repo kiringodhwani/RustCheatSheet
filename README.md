@@ -1837,7 +1837,7 @@ let f = File::open("hello.txt").unwrap_or_else(|error| {
 
 ### Useful Functions on the Result Enum
 
-- **unwrap()**: in the below example, unwrap() does the same thing as our match expression…
+1. **unwrap()**: in the below example, unwrap() does the same thing as our match expression…
 	- **In the success case (Ok)** , it **takes the thing stored in Ok(T)** (Ok(file) in this case) and **returns it**.
  	- **In the Error case, it panics** (panic!). 
 
@@ -1855,7 +1855,7 @@ let f = match f {
 let f = File::open("hello.txt").unwrap().expect();
 ```
 
-- **expect()** — **Same as unwrap()** with the additional feature that it **allows you to specify the error message that gets sent to the panic! macro**.
+2. **expect()**: **Same as unwrap()** with the additional feature that it **allows you to specify the error message that gets sent to the panic! macro**.
 
 ```Rust
 let f = File::open("hello.txt").expect("Failed to open hello.txt");
