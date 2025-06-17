@@ -2998,7 +2998,7 @@ impl Rectangle {
 
 <img width="694" alt="Image" src="https://github.com/user-attachments/assets/89c5d435-88a1-45d3-9759-52893c013faa" />
 
-^^^^Our test suite caught the bug. The larger_can_hold_smaller test panicked because the `assert!()` macro panics when the expression passed into it evaluates to false. 
+^^^^Our test suite caught the bug. The `larger_can_hold_smaller` test panicked because the `assert!()` macro panics when the expression passed into it evaluates to false: "assertion failed: larger.can_hold(&smaller)".
 
 ## `assert_eq!` Macro
 
@@ -3053,6 +3053,26 @@ mod tests {
 - **<ins>IMPORTANT NOTE:</ins>** **Both parameters passed into assert_eq! and assert_ne!() must implement the PartialEq and Debug traits**. **All of the primitive values and most of the standard library implement these two traits.** However, if we create our own structs and enums, then we will have to implement them ourselves.
 
 ## Custom Failure Messages
+```Rust
+// greeting() takes in a name that's a string slice and prints "Hello {name}!"
+pub fn greeting(name: &str) -> String {
+    //format!("Hello {}!", name)
+    format!("Hello!")	// modify greeting() to make it fail test
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    // Calls greeting() with the name "Carol" and asserts that the returned string contains "Carol".
+    fn greeting_contains_name() {
+        let result = greeting("Carol");
+        assert!(result.contains("Carol"));
+    }
+}
+```
+
 
 
 
