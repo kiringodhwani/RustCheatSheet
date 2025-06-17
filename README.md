@@ -1112,7 +1112,7 @@ mod front_of_house {
 }
 ```
    
-- **Modules can contain other modules inside of them, can also contain structs, enums, constants, traits, and so on. **
+- **Modules can contain other modules inside of them, can also contain structs, enums, constants, traits, and so on.**
 
 ### Paths and Module Privacy Rules
 
