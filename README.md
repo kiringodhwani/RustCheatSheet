@@ -2632,11 +2632,113 @@ fn longest(x: &str, y: &str) -> &str {	// longest() returns a reference here, bu
 ^^^
 In the above code…
 
-- PROBLEM 1: **We don’t know if we are returning x or y, and they could have different lifetimes !**
+- PROBLEM 1: **We don’t know if we are returning `x` or `y`, and they could have different lifetimes !**
  
-- PROBLEM 2: **We don’t know the exact lifetime of x or y because they are placeholders in the function. If the function gets called in many places, then x and y will take many different values and thus have many different lifetimes.**
+- PROBLEM 2: **We don’t know the exact lifetime of `x` or `y` because they are placeholders in the function. If the function gets called in many places, then `x` and `y` will take many different values and thus have many different lifetimes.**
   
 **THE BORROW CHECKER DOESN’T KNOW HOW TO HANDLE THIS AMBIGUITY…**
+
+<img width="732" alt="Image" src="https://github.com/user-attachments/assets/57459e20-f27a-4257-a4b9-76c1dc87b995" />
+
+^^^This error says that `x` and `y` could have different lifetimes, and the borrow checker needs to know which of these lifetimes is being used as the lifetime of the return value. To fix this, we have to use a generic lifetime annotation…
+
+- **Generic Lifetime Annotations**: **Describe the relationship between the lifetimes of multiple references and how they relate to each other.**
+
+	- **DO NOT actually change the lifetime of a reference.** Rather, they just explain the relationship between different lifetimes.
+
+ 	- Most people just refer to Generic Lifetime Annotations as **Lifetimes**.
+ 
+- **How you specify Generic Lifetime Annotations (lifetimes):**
+	- **`&i32`** — a reference
+	- **`&’a i32`** — a reference with an **explicit lifetime**
+	- **`&’a mut i32`** — a mutable reference with an **explicit lifetime**
+
+- <ins>Fixing the error code with a Generic Lifetime Annotation (Lifetime):</ins> In the below, we **declare a generic lifetime `a`**, then we **annotate `x`, `y`, and the return value with `a`**. This means that there is a relationship between `x`, `y`, and the return value. The relationship is the following: **the lifetime of the return reference will be the same as the smallest lifetime of the arguments (`x` and `y`)**. So, **if `x` has a smaller lifetime than `y`, then the lifetime of the return reference will be the same as `x`, and vice versa.**
+
+```Rust
+fn main() {
+    let string1 = String::from("abcd");
+    let string2 = String::from("xyz");
+
+    let result = longest(string1.as_str(), string2.as_str());
+    println!("The longest string is {}", result);
+}
+
+
+// Generic lifetime annotations in angled brackets. Start with an apostrophe followed by the name of the lifetime.
+// `x` uses the lifetime - `x: &'a`
+// `y` uses the lifetime - `y: &'a`
+// the return type uses the same lifetime - `&'a`
+//
+// Result: the lifetime of the return reference will be the same as the smallest lifetime of the arguments (`x` and `y`).
+//
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+```
+^^^So, in the above, <ins>how does the borrow checker know that result is not a dangling reference?</ins> **By adding our generic lifetime annotations** in the above, we **told the borrow checker that whatever gets returned from longest() and saved in result will have the lifetime that is equal to the smallest lifetime being passed into longest()**. Then, **all the borrow checker has to do is determine the smallest lifetime being passed in: `string1`'s lifetime or `string2`’s? Then, when result is printed, is the smallest lifetime still valid?** If it is, then we’re good. In our example, `string1` and `string2` have the same lifetime, and both are valid when print is called with result. 
+
+- <ins>Two examples with the above lifetime code:</ins>
+```Rust
+// Example 1: Different lifetimes but SUCCESS
+fn main() {
+    // `string1`'s lifetime is until the end of the main() function
+    let string1 = String::from("abcd");
+
+    {
+        // `string2`’s lifetime is only until the end of the inner scope it is defined in
+        let string2 = String::from("xyz");
+
+        // `result`'s lifetime = smallest lifetime being passed into longest()
+        // `string2` has the smallest lifetime being passed in, so `result`'s lifetime = `string2`'s lifetime
+        let result = longest(string1.as_str(), string2.as_str());
+
+        // The borrow checker says this print is valid because `string2` is still valid so result is valid
+        println!("The longest string is {}", result)
+    }
+}
+
+// Example 2: Different lifetimes and FAILURE
+fn main() {
+    // `string1`'s lifetime is until the end of the main() function
+    let string1 = String::from("abcd");
+    let result;
+
+    {
+        // `string2`’s lifetime is only until the end of the inner scope it is defined in
+        let string2 = String::from("xyz");
+
+        // `result`'s lifetime = smallest lifetime being passed into longest()
+        // `string2` has the smallest lifetime being passed in, so `result`'s lifetime = `string2`'s lifetime
+        result = longest(string1.as_str(), string2.as_str());
+    }
+
+    // The borrow checker says this print is INVALID because `string2` does not live to this point — it is
+    // invalidated when the inner scope above ends. Thus, `result` does not live to this point.
+    println!("The longest string is {}", result)
+}
+```
+
+- **You can specify different lifetime annotations depending on what your function is doing**… Suppose we want the **longest() function to always return `x` no matter what**. In this case, we **don’t care about the lifetime of `y`**, so we can remove `‘a` from `y`.
+
+```Rust
+fn longest<'a>(x: &'a str, y: & str) -> &'a str {
+    x
+}
+```
+
+^^^Now the FAILURE example above is valid, because longest() is always going to return a reference that has the same lifetime as `x`.  `x` in this case is `string1`, and `string1` lives until the end of main(), so the print statement for result is valid. 
+
+- <ins>NOTE:</ins> **If the return value is a reference, then the lifetime of the return value always has to be tied to the lifetime of one of our parameters.** This is because if we return a reference from a function, then it has to be a reference to something that is passed into the function. This is because we can’t return a reference to something created/declared inside the function, as this item would be dropped when the function ends. 
+	- Of course, you can return an owned type from a function without worrying about this stuff (e.g., return a String). In this case, even though we create the the item inside of the function, ownership of the item transfers when it is returned.
+
+## Lifetime Annotations in Struct Definitions
+
+
 
 
 
