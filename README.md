@@ -1078,8 +1078,15 @@ if let Some(3) = some_value {
 
 - **Create new package with library crate:** cargo new --lib restaurant
 
+<img width="210" alt="Image" src="https://github.com/user-attachments/assets/4f95e33f-d7d4-444d-8a45-7f26c8290c55" />
 
+- <ins>Goal:</ins> Create a library that will help run a restaurant. Think about a restaurant as two parts: the front of the house (the area where the customers are) and the back of the house (where the food is being made, where dishes being washed, and where the manager would typically be).
 
+- Module tree (for this goal):
+	- crate is a module that gets created by default for our crate root (lib.rs)
+	- Inside the crate module, we have the front_of_house module, which contains two modules, hosting and serving. Both hosting and serving have functions defined in them.
+
+   
 
 
 
