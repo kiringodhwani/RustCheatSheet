@@ -1733,6 +1733,130 @@ for word in text.split_whitespace() {
 
 # Error Handling in Rust
 
+## panic! Macro
+
+- **If your program fails in a way that is unrecoverable or you can’t handle the error gracefully**, then you can call the **panic! macro** which will **immediately quit your program and print out an error message**. 
+
+```Rust
+panic!("crash and burn");
+```
+
+- Run with `RUST_BACKTRACE=1` environment variable to display a backtrace… RUST_BACKTRACE=1 cargo run
+
+## Result Enum
+
+- **For errors that are recoverable, we have the Result enum**… similar to the Option enum.
+
+- Very common so brought into scope by default.
+
+- Represents **Success (Ok variant)** or **Failure (Err variant)**
+
+```Rust
+pub enum Result<T, E> {
+    Ok(T),	// Ok(T) represents the Success case and stores some generic value
+    Err(E),	// Err(E) represents the Failure / Error case and stores some generic error value
+}
+```
+
+- <ins>Example 1:</ins> Opening a file and panicking if we have the Err variant
+
+```Rust
+use std::fs::File;
+
+fn main() {
+	let f = File::open("hello.txt");
+
+	// Use shadowing to redeclare f, 
+	// If opening the file is successful, then the file is returned and stored in f
+	// Otherwise, panic. 
+	// 
+	let f = match f {
+			Ok(file) => file,
+			Err(error) => panic!("Problem opening the file: {:?})", error),
+	};
+}
+```
+
+- <ins>Example 2:</ins> Opening a file, but instead of panicking if open fails, create a new file.
+
+```Rust
+use std::fs::File;
+use std::io::ErrorKind;    // let’s us match on the type of error we get
+
+fn main() {
+	let f = File::open("hello.txt");
+
+	let f = match f {
+		// If opening the file is successful, then the file is returned and stored in f
+		Ok(file) => file,
+
+		// match on the type of error we get… error.kind() returns an enum representing the kind 
+		// error we got
+		Err(error) => match error.kind() {    
+			
+			// Handle the NotFound error case. If the file is not found, then we attempt to create the 
+			// file. However, attempting to create a new file can fail, so we match on the result type 
+			// returned from File::create(). If File::create() is successful (Ok), then we map the
+			// created file to the fc variable and return it so that it is stored in f. If File::create() fails /
+			// errors, then panic. 
+			// 
+			ErrorKind::NotFound => match File::create("hello.txt") { 
+				Ok(fc) => fc,                                                                       // successful file creation
+				Err(e) => panic!("Problem creating the file: {:?}", e),     // failure creating file
+			},
+			
+			// If the error is not NotFound, bind the error to the other_error variable and then panic 
+			// about there being a problem opening the file (include other_error in the message)
+			//
+			other_error => {
+				panic!("Problem opening the file: {:?}", other_error)
+			},
+		}
+	};
+}
+```
+
+- <ins>Example 3:</ins>  It can be hard to read with all the nested match expressions —> use closures
+
+```Rust
+let f = File::open("hello.txt");
+
+let f = File::open("hello.txt").unwrap_or_else(|error| {
+	if error.kind() == ErrorKind::NotFound {
+		File::create("hello.text").unwrap_or_else(|error| {
+			panic!("Problem creating the file: {:?}", error);
+		})
+	} else {
+		panic!("Problem opening the file: {:?}", error);
+	}
+});
+```
+
+### Useful Functions on the Result Enum
+
+1. **unwrap()** — in the below example, unwrap() does the same thing as our match expression…
+        - **In the success case (Ok)** , it **takes the thing stored in Ok(T)** (Ok(file) in this case) and **returns it**.
+        - **In the Error case, it panics** (panic!). 
+
+<ins>Before</ins>:
+```Rust
+let f = File::open("hello.txt");
+let f = match f {
+	Ok(file) => file,
+	Err(error) => panic!("Problem opening the file: {:?}", error),
+};
+```
+
+<ins>After</ins>:
+```Rust
+let f = File::open("hello.txt").unwrap().expect();
+```
+
+2. **expect()** — **Same as unwrap()** with the additional feature that it **allows you to specify the error message that gets sent to the panic! macro**.
+
+```Rust
+let f = File::open("hello.txt").expect("Failed to open hello.txt");
+```
 
 
 
