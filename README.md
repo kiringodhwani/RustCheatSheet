@@ -2597,6 +2597,47 @@ println!("r: {}", r);
 
 - **Lifetime of a variable** — **how long the variable lives for**
 
+## Generic Lifetime Annotations
+
+- **Generic Lifetime Annotations** — **Help the borrow checker understand the relationship between the lifetimes of multiple references**, which in turn, **helps the borrow checker identify dangling references**.
+
+- There are situations in which we need to help the compiler using generic lifetime annotations. <ins>In the below example</ins>, how does the Borrow Checker know that ‘result’ in main() is not a dangling reference?
+
+```Rust
+fn main() {
+    // Define two Strings
+    let string1 = String::from("abcd");
+    let string2 = String::from("xyz");
+
+    // Call longest() to determine the longer String out of string1 and string2.
+    let result = longest(string1.as_str(), string2.as_str());
+    println!("The longest string is {}", result);	// How would the borrow checker know that result 
+							// (when we print it here) is not a dangling 
+							// reference? What is the lifetime of result?
+}
+
+// Takes in two references to string slices, x and y. Returns the longest of the two string slices.
+fn longest(x: &str, y: &str) -> &str {	// longest() returns a reference here, but we have no idea what the
+					// lifetime of this reference is 
+    if x.len() > y.len() {
+        x	// We return either x or y based on which is longer. But, x could have a 
+		// different lifetime than y… 
+    } else {
+        y
+    }
+}
+```
+^^^
+In the above code…
+
+- PROBLEM 1: **We don’t know if we are returning x or y, and they could have different lifetimes !**
+ 
+- PROBLEM 2: **We don’t know the exact lifetime of x or y because they are placeholders in the function. If the function gets called in many places, then x and y will take many different values and thus have many different lifetimes.**
+  
+**THE BORROW CHECKER DOESN’T KNOW HOW TO HANDLE THIS AMBIGUITY…**
+
+
+
 
 
 
