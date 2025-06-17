@@ -3040,6 +3040,15 @@ mod tests {
     }
 }
 ```
+<img width="692" alt="Image" src="https://github.com/user-attachments/assets/57add128-159a-4423-be09-5ddd33554bc4" />
+^^^As is shown in the test output, **our test failed because assert_eq!() panics because left (4) is not equal to right (add_two(2)=5).**
+
+### `assert_ne!` Macro
+
+- assert_ne!() does the opposite of `assert_eq!()` and asserts that the two parameters passed into it are not equal.
+
+- **In the failure example just above**, **changing to `assert_ne!()`** instead of `assert_eq!()`, would give **`assert_ne!(4, add_two(2)=5)`** which evaluates to **true** and **doesn't panic.**
+
 
 
 
