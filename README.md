@@ -2642,6 +2642,8 @@ In the above code…
 
 ^^^This error says that `x` and `y` could have different lifetimes, and the borrow checker needs to know which of these lifetimes is being used as the lifetime of the return value. To fix this, we have to use a generic lifetime annotation…
 
+## Writing Generic Lifetime Annotations
+
 - **Generic Lifetime Annotations**: **Describe the relationship between the lifetimes of multiple references and how they relate to each other.**
 
 	- **DO NOT actually change the lifetime of a reference.** Rather, they just explain the relationship between different lifetimes.
