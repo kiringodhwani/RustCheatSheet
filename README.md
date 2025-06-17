@@ -2925,14 +2925,14 @@ mod tests {
 
 ```Rust
 #[derive(Debug)]
-struct Rectangle {    // Rectangle struct that stores the width and height of a rectangle.
+struct Rectangle {    // Rectangle struct that stores the `width` and `height` of a rectangle.
     width: u32,
     height: u32,
 }
 
 impl Rectangle {
-    // can_hold() takes in another Rectangle and returns true if the current Rectangle can hold in the
-    // passed in rectangle inside itself (i.e., wider and taller).
+    // can_hold() takes in another Rectangle and returns true if the current Rectangle can hold the
+    // passed in Rectangle inside itself (i.e., wider and taller).
     fn can_hold(&self, other: &Rectangle) -> bool {
         self.width > other.width && self.height > other.height
     }
@@ -2941,7 +2941,7 @@ impl Rectangle {
 #[cfg(test)]
 mod tests {
     // Our product code is in the default module.
-    // Our tests are in the tests module .
+    // Our tests are in the tests module.
     // Thus, to test our product code, we have to bring it into scope. 
     // We use the 'use' keyword and a relative path with 'super' to reference the parent module.
     use super::*;
@@ -2960,7 +2960,8 @@ mod tests {
             height: 1,
         };
         // assert!() asserts that a given expression evaluates to true.
-        // larger.can_hold(&smaller) should return true, so... assert!(larger.can_hold(&smaller));
+        // larger.can_hold(&smaller) should return true, so...
+        assert!(larger.can_hold(&smaller));
     }
 
     // TEST 2: test that larger_can_hold_smaller() correctly shows that a smaller Rectangle CANNOT hold
@@ -2976,12 +2977,23 @@ mod tests {
         };
 
         // smaller.can_hold(&larger) should evaluate to false bc a smaller Rectangle should not be able to hold 
-        // a larger Rectangle. To verify this, we add ! before smaller.can_hold(&larger) so that the expression 
+        // a larger Rectangle. To verify this, we add ! (negate) before smaller.can_hold(&larger) so that the expression 
         // evaluates to true when false is returned from can_hold(). Necessary bc assert!() asserts that a given
         // expression evaluates to true. 
         assert!(!smaller.can_hold(&larger));
     } 
 }
 ```
+<img width="682" alt="Image" src="https://github.com/user-attachments/assets/b34c9f73-ee81-45fd-a91b-790750ebabd4" />
+
+- If we add a bug to our product code:
+```Rust
+impl Rectangle {
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width < other.width && self.height > other.height // flipped the first `>` to `<`. 
+    }
+}
+```
+
 
 
