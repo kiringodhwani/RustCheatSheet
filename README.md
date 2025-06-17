@@ -1702,8 +1702,8 @@ scores.insert(String::from("Blue"), 20);       // Overwrite the “Blue” key w
 scores.entry(String::from("Yellow")).or_insert(30);	// Inserts the key-value pair (“Yellow”, 30) 
 							// bc the key “Yellow” does not exist yet in the hashmap.
 
-scores.entry(String::from("Yellow")).or_insert(40);	// Does nothing bc a key-value pair already 
-																	// exists in the hashmap with key=“Yellow”.
+scores.entry(String::from("Yellow")).or_insert(40);	// Does nothing bc a key-value pair already
+							// exists in the hashmap with key=“Yellow”.
 ```
 
 - <ins>Updating a value in our hashmap based on an old value</ins>. In this example, we have a string of text and we want to populate a hashmap with (word, count) key-value pairs. The text is "hello world wonderful world”. One example key-value pair would be ("hello" : 1) because the word "hello" appears once in the string. Another example is ("world" : 2) because the word "world" appears twice in the string.
