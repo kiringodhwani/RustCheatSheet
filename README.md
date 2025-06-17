@@ -2284,8 +2284,177 @@ fn main() {
 
 # Traits
 
+- **Traits allow you to define shared behavior across multiple types**.
 
+- <ins>Example:</ins> Say we have a program which aggregates different types of text content. In this example, we have a news article and a tweet. The news article has author, headline, and content. The tweet has a username, content, and two booleans, reply and retweet, that indicate whether the tweet is a reply or a retweet.
 
+```Rust
+pub struct NewsArticle {
+    pub author: String,
+    pub headline: String,
+    pub content: String,
+}
+
+pub struct Tweet {
+    pub username: String,
+    pub content: String,
+    pub reply: bool,
+    pub retweet: bool,
+}
+```
+
+- We want the ability to summarize a news article and the ability to summarize a tweet… **we can use a <ins>trait</ins> to define this shared behavior between a news article and a tweet**. In this case, the shared behavior is summarization.
+
+- **By shared behavior, we mean <ins>methods</ins>**… **<ins>traits allow us to define a set of methods that are shared across different types.</ins>**
+
+```Rust
+pub struct NewsArticle {
+    pub author: String,
+    pub headline: String,
+    pub content: String,
+}
+// Implement the Summary trait for our NewsArticle type
+impl Summary for NewsArticle {
+    // For a NewsArticle, summarize() returns a String that contains the headline of the news
+    // article and the author.
+    fn summarize(&self) -> String {
+        format!("{}, by {}", self.headline, self.author)
+    }
+}
+
+pub struct Tweet {
+    pub username: String,
+    pub content: String,
+    pub reply: bool,
+    pub retweet: bool,
+}
+// Implement the Summary trait for our Tweet type
+impl Summary for Tweet {
+    // For a Tweet, summarize() returns a String that contains the username and the content of
+    // the tweet (bc tweet content <280 characters). 
+    fn summarize(&self) -> String {
+        format!("{}: {}", self.username, self.content)
+    }
+}
+
+// use pub to make the trait public
+pub trait Summary {
+
+    // Inside the curly brackets, we can define the shared methods under this trait
+    //
+    // We only specify the method signature, we don't actually have a method body, because we don't want
+    // to dictate the implementation. We only want to say that for every type that implements the Summary trait,
+    // they should have this summarize() method that returns a String.
+    fn summarize(&self) -> String;
+}
+
+fn main() {
+    let tweet = Tweet {
+        username: String::from("@johndoe"),
+        content: String::from("Hello World!"),
+        reply: false,
+        retweet: false,
+    };
+    let article = NewsArticle {
+        author: String::from("John Doe"),
+        headline: String::from("The Sky is Falling!"),
+        content: String::from("The sky is not actually falling.")
+    };
+    println!("Tweet summary: {}", tweet.summarize());
+    println!("Article summary: {}", article.summarize());
+}
+```
+
+## Default Implementations
+
+- In our example above, **instead of specifying the summarize() method signature inside of the Summary trait and expecting every type that implements the Summary trait to specify the body of summarize(), we may want a default implementation of summarize()**… 
+
+```Rust
+pub trait Summary {
+    // To add a default implementation of summarize(), we can simply add a method body.
+    //
+    // Here we are saying that our Summary trait has a summarize() method and its default implementation
+    // is to return this "(Read more...)" string. 
+    //
+    fn summarize(&self) -> String {
+        String::from("(Read more...)")
+    }
+}
+```
+
+- NOTE: as we showed previously, **the NewsArticle and Tweet structs both specify their own custom implementation of summarize(), which overrides the default implementation.** However, **if we remove the custom implementation of summarize() from NewsArticle, like below, then NewsArticle will use this default summarize() implementation...**
+  
+```Rust
+// This line of code is necessary to implement the Summary trait for the NewsArticle type.
+// Bc Summary is implemented for NewsArticle, and NewsArticle doesn't override the default summarize() implementation,
+// calling summarize() on a NewsArticle instance will call the default implementation.
+impl Summary for NewsArticle { }
+```
+
+- **Default implenentations can call other methods inside our trait definition:**
+
+pub struct NewsArticle {
+    pub author: String,
+    pub headline: String,
+    pub content: String,
+}
+// Implement the Summary trait for our NewsArticle type
+impl Summary for NewsArticle {
+    // summarize_author() has no default implementation, so must specify custom implementation here
+    // Return the author (author field of NewsArticle struct)
+    fn summarize_author(&self) -> String {
+        format!("{}", self.author)
+    }
+
+    // Don't have to specify summarize() because it has a default implementation defined inside
+    // the Summary trait block.
+}
+
+pub struct Tweet {
+    pub username: String,
+    pub content: String,
+    pub reply: bool,
+    pub retweet: bool,
+}
+// Implement the Summary trait for our Tweet type
+impl Summary for Tweet {
+    // summarize_author() has no default implementation, so must specify custom installation here
+    // Return the username because the author of the tweet is the Twitter user.
+    fn summarize_author(&self) -> String {
+        format!("@{}", self.username)
+    }
+	
+    // custom summarize() implementation that override the default implementation
+    fn summarize(&self) -> String {
+        format!("{}: {}", self.username, self.content)
+    }
+}
+
+pub trait Summary {
+    // summarize_author() returns the name of the author, has no default implementation
+    fn summarize_author(&self) -> String;
+
+    // summarize() has a default implementation, which uses the summarize_author() method
+    fn summarize(&self) -> String {
+        format!("(Read more from {}...)", self.summarize_author())
+    }
+}
+
+fn main() {
+    let tweet = Tweet {
+        username: String::from("@johndoe"),
+        content: String::from("Hello World!"),
+        reply: false,
+        retweet: false,
+    };
+    let article = NewsArticle {
+        author: String::from("John Doe"),
+        headline: String::from("The Sky is Falling!"),
+        content: String::from("The sky is not actually falling.")
+    };
+    println!("Tweet summary: {}", tweet.summarize());
+    println!("Article summary: {}", article.summarize());
+}
 
 
 
