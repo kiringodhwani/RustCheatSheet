@@ -884,3 +884,40 @@ fn main() {
 
 ## Option Enum
 
+Many languages have null values. **Null values represent a useful concept: a value could either exist or it could be null (i.e.,  there is no value)**. The problem with null values is that the type system can’t guarantee that if you use a value, it’s not null…
+
+- **The type system doesn't differentiate between a value that can be null and a value that is guaranteed to exist**. If a variable is declared to be of a certain type (e.g., String, Integer, User), the type system often doesn't inherently know whether that variable might actually hold a null instead of a valid instance of that type.
+
+- **This means you can try to perform operations on a potentially null value as if it were a valid value.** For example, if you have a variable of type String that might be null, you could try to call a method on it like .length() without first checking if it's actually a string.
+
+- **If the variable is indeed null at runtime, this will lead to a "NullPointerException"** (or a similar error depending on the language). These errors often **crash the program or cause unexpected behavior**, and they can be difficult to track down because the type system didn't warn you about the possibility of a null value in the first place.
+
+- **In Rust, there are no null values**. Instead, Rust uses the **<ins>Option</ins> enum** to explicitly represent the possibility of a **value being present (Some(value))** or **absent (None)**. The type system forces you to handle both cases, preventing null pointer exceptions. The Option enum and its variants are **included in program scope by default**. 
+
+```Rust
+enum Option<T> {
+	Some(T),
+        None,
+}
+```
+
+- **If you have a value that could potentially be null or not exist, then you would wrap it in the Option enum**. This allows the type system to enforce that we handle the None case when a value doesn't exist, and guarantee in the Some case that our value is present.
+
+- <ins>Example 1:</ins>
+```Rust
+// For some_number, some_string, and some_splice, we don't have to 
+// annotate the type because Rust can infer the type from the values
+// being passed in.
+let some_number = Some(5);
+let some_string = Some(String::from("a string"));
+let some_splice = Some("a string");
+
+// For the None case, no value is being passed in so we have to 
+// annotate the type.
+let absent_number: Option<i32> = None;
+```
+
+- <ins>Example 2:</ins> You can't add an optional integer to an integer because they are different types.
+
+
+
