@@ -1357,6 +1357,8 @@ mod front_of_house;
 
 - Move the contents of the `hosting` module into a different file... So, we have...
 
+<img width="201" alt="Image" src="https://github.com/user-attachments/assets/bc128981-b708-4614-9220-06cd16d055d7" />
+
 **src/front_of_house/hosting.rs:**
 ```Rust
 pub fn add_to_waitlist() {}
