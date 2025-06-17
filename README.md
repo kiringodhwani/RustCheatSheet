@@ -753,39 +753,39 @@ fn main() {
 
 ```Rust
 impl Rectangle {
-	fn area(&self) -> u32 {
-        		self.width * self.height
-    	}
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
 
-    	// Method that takes in multiple parameters.
-    	// The bigger_area_than() method takes in a reference to another rectangle and determines
-	// if the current rectangle instance has a bigger area than the passed in rectangle.
-    	fn bigger_area_than(&self, other_rect: &Rectangle) -> bool {
-        	let cur_area = self.area();
-        	let other_area = other_rect.area();
-        	if cur_area > other_area {
-            		return true;
-        	} else {
-            		return false;
-        	}
-    	}
+    // Method that takes in multiple parameters.
+    // The bigger_area_than() method takes in a reference to another rectangle and determines
+    // if the current rectangle instance has a bigger area than the passed in rectangle.
+    fn bigger_area_than(&self, other_rect: &Rectangle) -> bool {
+        let cur_area = self.area();
+        let other_area = other_rect.area();
+        if cur_area > other_area {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 fn main() {
-	let rect = Rectangle {
-        	width: 30,
-        	height: 50,
-    	};
-    	let rect1 = Rectangle {
-        	width: 5,
-        	height: 10,
-    	};
-    	let rect2 = Rectangle {
-        	width: 100,
-        	height: 120,
-    	};
-    	println!("rect is bigger than rect1? {}", rect.bigger_area_than(&rect1));	// true
-    	println!("rect is bigger than rect2? {}", rect.bigger_area_than(&rect2));	// false
+    let rect = Rectangle {
+        width: 30,
+        height: 50,
+    };
+    let rect1 = Rectangle {
+        width: 5,
+        height: 10,
+    };
+    let rect2 = Rectangle {
+        width: 100,
+        height: 120,
+    };
+    println!("rect is bigger than rect1? {}", rect.bigger_area_than(&rect1));	// true
+    println!("rect is bigger than rect2? {}", rect.bigger_area_than(&rect2));	// false
 }
 ```
 
