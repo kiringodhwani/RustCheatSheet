@@ -3046,7 +3046,7 @@ mod tests {
 
 ### `assert_ne!` Macro
 
-- assert_ne!() does the opposite of `assert_eq!()` and asserts that the two parameters passed into it are not equal.
+- assert_ne!() does the opposite of `assert_eq!()` and **asserts that the two parameters passed into it are not equal**.
 
 - **In the failure example just above**, **changing to `assert_ne!()`** instead of `assert_eq!()`, would give **`assert_ne!(4, add_two(2)=5)`** which evaluates to **true** and **doesn't panic.**
 
