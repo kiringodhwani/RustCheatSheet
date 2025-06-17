@@ -1177,7 +1177,7 @@ mod back_of_house {
 
     impl Breakfast {
         // Expose the summer() associated function with the pub keyword
-	// summer(), takes in a string called toast and creates a new Breakfast object with
+	// summer() takes in a string called toast and creates a new Breakfast object with
 	// toast=toast and seasonal_fruit="peaches".
         pub fn summer(toast: &str) -> Breakfast {
             // As an associated function of the `Breakfast` struct, summer() has full access to all of
