@@ -1196,7 +1196,7 @@ pub fn eat_at_restaurant() {
     // In order to create a new Breakfast struct, we have to use the summer()
     // associated function, we can't create a Breakfast struct directly inside
     // eat_at_restaurant() because the Breakfast struct includes a private
-    // attribute (seasonal_fruit).
+    // attribute (seasonal_fruit). THE BELOW TO CREATE `meal2` ERRORS !!!
     let meal2 = back_of_house::Breakfast {
         toast: String::from("white"),
         seasonal_fruit: String::from("apple"),
@@ -1205,7 +1205,7 @@ pub fn eat_at_restaurant() {
     // Reassign the toast attribute in our meal variable. By default, the toast
     // attribute is private, even thought the Breakfast struct is public. 
     // NOTE: Even when the struct is public, by default, the fields within the
-    // struct are private. 
+    // struct are private. The below only compiles after we make `toast` public.
     meal.toast = String::from("Wheat");
 }
 ```
@@ -1289,6 +1289,8 @@ mod front_of_house {
 pub use crate::front_of_house::hosting;
 
 - **The use keyword allows us to bring items into scope within our program, and it also allows us to bring in items from external dependencies into scope.**
+
+<img width="357" alt="Image" src="https://github.com/user-attachments/assets/a6205b98-6215-4e33-9f3b-af3a020b60cd" />
 
 
 
