@@ -1289,15 +1289,97 @@ mod front_of_house {
 // We bring the hosting module into scope using the use keyword, and we mark this as
 // public so external code could reference hosting as well. 
 pub use crate::front_of_house::hosting;
+```
 
-- **The use keyword allows us to bring items into scope within our program, and it also allows us to bring in items from external dependencies into scope.**
+- **The use keyword allows us to bring items into scope within our program, and it also allows us to bring in items from external dependencies into scope.** <ins>Example:</ins>
 
 <img width="357" alt="Image" src="https://github.com/user-attachments/assets/a6205b98-6215-4e33-9f3b-af3a020b60cd" />
 
+```Rust
+use rand::Rng;	// Bring the Rng trait into scope from the rand external dependency using `use`…
+		// Now we can use it to create a random number…
 
+pub fn eat_at_restaurant() {
+    let secret_number = rand::thread_rng().gen_range(1, 101);
+    //...
+}
+```
 
+- <ins>Example 2:</ins> Nested Paths
+```Rust
+use rand::Rng;
+use rand::ErrorKind::Transient;
+use rand::CryptoRng;
+```
+—>    `use rand::{Rng, ErrorKind::Transient, CryptoRng};`
 
+```Rust
+use std::io;
+use std::io::Write;
+```
+—>    `use std::io::{self, Write};`
 
+### Glob Operator (*)
+- Say we wanted to bring all of the public items underneath io into scope…
 
+```Rust
+use std::io::*;
+```
+
+## Modules in Separate Files
+
+- In **src/lib.rs**:
+
+```Rust
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+```
+
+- Move the contents of our `front_of_house` module into a different file… So, in **src/front_of_house.rs** we have...
+
+```Rust
+pub mod hosting {
+    pub fn add_to_waitlist() {}
+}
+```
+
+In **lib.rs** we now only have...
+
+```Rust
+// This line tells Rust to define the front_of_house module here, but get
+// the contents of the module from a DIFFERENT FILE with the SAME NAME as
+// the module (i.e., src/front_of_house.rs).
+mod front_of_house;
+```
+
+- Move the contents of the `hosting` module into a different file... So, we have...
+
+**src/front_of_house/hosting.rs:**
+```Rust
+pub fn add_to_waitlist() {}
+```
+
+**src/front_of_house.rs:** 
+```Rust
+pub mod hosting;
+```
+
+**src/lib.rs:**
+```Rust
+mod front_of_house;
+```
+
+## SUMMARY:
+- We can declare modules in Rust using the mod keyword.
+- We can define the contents of our module inline if we use curly brackets.
+- But, if we want the contents of the module to be in a different file, then we can just use a semi colon (mod module_name;) and put the contents of the module in a file with the same name as the module. 
+    - In our example, we declare mode front_of_house; in src/lib.rs and put the contents of the module in a file called src/front_of_house.rs. 
+- Similarly, we can declare child modules and have their content live in a different file. But, for child modules, we need to have the corresponding file live in a directory with the same name as the parent module. 
+    - In our example, the content of the child module (hosting) is stored in src/front_of_house/hosting.rs. This is because the parent module of hosting is called front_of_house, so hosting.rs must live in a directory called front_of_house.
+ 
+---
 
 
