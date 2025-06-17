@@ -2990,7 +2990,8 @@ mod tests {
 ```Rust
 impl Rectangle {
     fn can_hold(&self, other: &Rectangle) -> bool {
-        self.width < other.width && self.height > other.height // flipped the first `>` to `<`. 
+	// flipped the first `>` to `<`. 
+        self.width < other.width && self.height > other.height
     }
 }
 ```
