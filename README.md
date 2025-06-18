@@ -3144,10 +3144,50 @@ mod tests {
 <img width="668" alt="Image" src="https://github.com/user-attachments/assets/aa063345-4694-427a-a7af-4d2ae54c6c72" />
 ^^^The test passes!!
 
-<br>**If we modify the new() method to not panic when the value is greater than 100, then the test fails** bc the method does not panic when you run Guess::new(200):
+<br>**If we modify the new() method to not panic when the value is greater than 100, then the test fails** bc the method does not panic when you run Guess::new(200)...
+<img width="699" alt="Image" src="https://github.com/user-attachments/assets/35be9b8d-65fc-4f5b-9e17-0f31b39b548a" />
 
+^^^Testing that a function panics in this way works but is **imprecise**. All our test with **#[should_panic]** is saying is that the **function we call should panic, but it could panic for any reason**. We need to make our assertion more precise:
 
+1. **First, modify new() to have two different calls to panic with two different failure messages depending on if the value is greater than 100 or less than 1.**
+```Rust
+pub struct Guess {
+    value: i32,
+}
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 {
+            panic!(
+                "Guess value must be greater than or equal to 1, got {}.",
+                value,
+            );
+        } else if value > 100 {
+            panic!(
+                "Guess value must be less than or equal to 100, got {}.",
+                value,
+            );
+        }
+        Guess { value }
+    }
+}
+```
 
+2. Now, we can **modify our #[should_panic] attribute to only panic for a specific failure message…**
+
+```Rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    // The below change to the should_panic attribute says: assert that the code in this test function panics
+    // and the failure message is expected to be “Guess value must be less than or equal to 100”	
+    #[should_panic(expected = "Guess value must be less than or equal to 100”)].   
+    fn greater_than_100() {
+        Guess::new(200);
+    }
+}
+```
 
 
 
