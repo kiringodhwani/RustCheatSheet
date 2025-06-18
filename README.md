@@ -3358,9 +3358,55 @@ mod tests {
     }
 }
 ```
+<img width="670" alt="Image" src="https://github.com/user-attachments/assets/75066d00-d5d7-4947-aa68-9ce36d2b04cf" />
+^^^`**cargo test**` compiles your code in test mode and runs the resulting test binary. 
 
+So far, we’ve just been running `cargo tests` but we could specify command line options to change some of the defaults…
+- **By default, all tests get run in parallel in a separate thread**
+- **By default, all generated output is captured and not printed to the screen.** So, for example, in our test **if we had a print statement, then this print statement would not actually get printed out when we do `cargo test`**. 
 
+**There are two sets of command line options…**
+1. **One set goes to the `cargo test` command**
+2. **The other set goes to the resulting test binary**
 
+These two sets of command line options are separated by two dashes. For example…
+1. If we want to figure out which **options we could pass to the `cargo test`** command: **`cargo test --help`**
+2. If we want to figure out which **commands we could pass to the resulting test binary**: **`cargo test -- --help`**
+
+### Changing the number of threads
+The **`--test-threads`** command line option **allows you to set the number of threads used when running tests in parallel**. **By default, every test gets its own thread**. But, if we wanted to run tests serially, then we can set test-threads equal to 1…
+
+Ex: In the below we are using the command line options for the resulting test binary…
+	`cargo test -- --test-threads=1`
+ 
+^^^Generally, you wouldn’t want to do something like this because your tests would run slower, but may be useful in some cases. For example, you might have some tests that modify a file on disk and it happens to be the same file. If the tests run in parallel, then they’ll modify the file at the same time, which will cause tests to fail. You can solve this issue by having each test modify a different file, or you can run the tests serially instead of in parallel. 
+
+### Showing Output
+```Rust
+fn prints_and_returns_10(a: i32) -> i32 {
+    println!("I got the value {}", a);	// prints an integer, we want this output to show in the tests
+    10
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn this_test_will_pass() {
+        let value = prints_and_returns_10(4);
+        assert_eq!(10, value);	// passes bc prints_and_returns_10() always returns 10
+    }
+
+    #[test]
+    fn this_test_will_fail() {
+        let value = prints_and_returns_10(8);
+        assert_eq!(5, value);	// fails bc prints_and_returns_10() always returns 10
+    }
+}
+```
+^^^
+When we run `cargo test`, we **only see the print statement for the failing test.**
 
 
 
