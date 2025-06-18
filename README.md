@@ -3188,6 +3188,9 @@ mod tests {
     }
 }
 ```
+<img width="682" alt="Image" src="https://github.com/user-attachments/assets/4f1b0db2-f92f-40b9-bba4-06ff25761a12" />
+
+<br>But, if we change the value in new() to -2… The below shows that the t**est failed because the panic message we got does not contain “Guess value must be less than or equal to 100”**...
 
 
 
