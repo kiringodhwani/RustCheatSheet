@@ -3181,7 +3181,7 @@ mod tests {
 
     #[test]
     // The below change to the should_panic attribute says: assert that the code in this test function panics
-    // and the failure message is expected to be “Guess value must be less than or equal to 100”	
+    // and the failure message contains “Guess value must be less than or equal to 100”	
     #[should_panic(expected = "Guess value must be less than or equal to 100”)].   
     fn greater_than_100() {
         Guess::new(200);
@@ -3190,7 +3190,7 @@ mod tests {
 ```
 <img width="682" alt="Image" src="https://github.com/user-attachments/assets/4f1b0db2-f92f-40b9-bba4-06ff25761a12" />
 
-<br>But, if we change the value in new() to -2… The below shows that the t**est failed because the panic message we got does not contain “Guess value must be less than or equal to 100”**...
+<br>If we change the value in new() to -2, then the **test fails because the panic message we got does not contain “Guess value must be less than or equal to 100”**...
 <img width="702" alt="Image" src="https://github.com/user-attachments/assets/c499ade7-da2c-4281-beeb-0aa562d3043b" />
 
 ## Tests that Return a Result Type — 
