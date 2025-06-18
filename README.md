@@ -1939,7 +1939,7 @@ fn read_username_from_file() -> Result<String, io::Error> {
 }
 ```
 
--^^^We can simplify this code even more by **chaining** method calls...
+^^^We can simplify this code even more by **chaining** method calls...
 
 ```Rust
 fn read_username_from_file() -> Result<String, io::Error> {
@@ -1953,7 +1953,7 @@ fn read_username_from_file() -> Result<String, io::Error> {
 }
 ```
 
--^^^Technically, we can simplify even more using different built-ins...
+^^^Technically, we can simplify even more using different built-ins...
 
 ```Rust
 use std::fs::{self, File};
