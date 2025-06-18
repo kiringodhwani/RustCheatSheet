@@ -2876,7 +2876,7 @@ where
 	- Test module and a test already created and written for us in lib.rs
 <img width="681" alt="Image" src="https://github.com/user-attachments/assets/ded72e5e-ddbf-4f8f-bc64-85ea129afc09" />
 
-### Example Test
+**Example Test Written For Us in lib.rs**
 ```Rust
 mod tests {	// Test Module
     use super::*;
