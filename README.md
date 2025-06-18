@@ -3073,13 +3073,13 @@ mod tests {
 }
 ```
 
-<br>
-
 <img width="697" alt="Image" src="https://github.com/user-attachments/assets/d8d684ac-8b9b-4d28-be22-aa559fff1fb2" />
 
-^^^ The test thread panicked because assertion failed at `result.contains(“Carol”)`, which is as expected. It also gives us the line number for this (line 15). This is okay, but it’s <ins>not the most useful failure message</ins>. **We can improve this by adding our own custom failure message the `greeting_contains_name` test**.
+^^^ The test thread panicked because assertion failed at `result.contains(“Carol”)`, which is as expected. It also gives us the line number for this (line 15). This is okay, but it’s <ins>not the most useful failure message</ins>. 
 
 <br>
+
+**We can improve this by adding our own custom failure message the `greeting_contains_name` test**.
 
 ```Rust
 #[test]
