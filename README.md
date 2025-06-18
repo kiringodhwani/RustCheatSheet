@@ -940,7 +940,7 @@ let sum = x + y.unwrap_or(0);   // for unwrap_or(), default value = 0
 
 - The `match` expression is **exhaustive** — have to match all possible cases. This makes it very useful for enums.
 
-- <ins>Example 1:</ins>
+<ins>Example 1:</ins>
 ```Rust
 enum Coin {
     Penny,
@@ -965,7 +965,7 @@ fn value_in_cents(coin: Coin) -> u8 {
 
 <br>
 
-- <ins>Example 2:</ins> The **patterns in the match expression can also bind to values.**
+<ins>Example 2:</ins> The **patterns in the match expression can also bind to values.**
 ```Rust
 // enum representing the state minted on each quarter
 #[derive(Debug)]
@@ -1010,7 +1010,7 @@ fn main() {
 ```
 <br>
 
-- **Using a `match` expression with an Option enum...**
+**Using a `match` expression with an Option enum...**
 ```Rust
 fn main() {
     let five = Some(5);
