@@ -3565,7 +3565,7 @@ fn it_adds_two() {
 
 **`cargo test --test integration_test`**
 
-<ins>Defining Shared Code Amongst Our Integration Tests</ins>
+<br><ins>Defining Shared Code Amongst Our Integration Tests</ins>
 
 - <ins>NOTE:</ins> Because every file in the ’tests’ directory is treated as a separate crate, this could lead to unexpected behavior. For example, if you have multiple integration test files and you want to share some code between those files.
 
