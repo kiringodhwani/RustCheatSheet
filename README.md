@@ -1172,7 +1172,7 @@ mod back_of_house {
 ```
 
 ## Privacy Rules with Structs and Enums
-- <ins>Example 1: **Structs**</ins>
+<ins>Example 1: **Structs**</ins>
 ```Rust
 // back_of_house module contains a struct called Breakfast, which contains two
 // attributes (toast and seasonal_fruit) and an associated function called summer()
@@ -1221,7 +1221,7 @@ pub fn eat_at_restaurant() {
 ```
 <br>
 
-- <ins>Example 2: **Enums**</ins>
+<ins>Example 2: **Enums**</ins>
 ```Rust
 // back_of_house module contains Appetizer enum with two variants (Soup, Salad)
 mod back_of_house {
