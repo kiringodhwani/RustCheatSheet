@@ -2787,9 +2787,9 @@ fn first_word<'a>(s: &'a str) -> &'a str {
     &s[..]
 }
 ```
-^^^**The above function still works when you remove the lifetime annotation.** This is because **there are scenarios when the compiler can deterministically infer the lifetime annotations.** It does this by checking the <ins>**Three Lifetime Elision rules**</ins>.
+^^^**The above function still works when you remove the lifetime annotation.** This is because **there are scenarios when the compiler can deterministically infer the lifetime annotations.** It does this by checking the **Three Lifetime Elision rules**.
 
-<ins>Note:</ins>
+<ins>Note before the specifying the rules:</ins>
 - **Input Lifetimes** = lifetimes of arguments being passed in   
 - **Output Lifetimes** = lifetimes of return values 
 
