@@ -3541,6 +3541,7 @@ mod tests {
 
 <ins>**integration_test.rs file**</ins>
 
+```Rust
 // At the top of our integration_test.rs file, we have to bring our adder library into scope (see lib.rs
 // file above which contains our product code, i.e., the adder library). This is because every
 // file in the ‘tests’ directory is going to be a new crate.
@@ -3551,6 +3552,7 @@ use adder;
 fn it_adds_two() {
     assert_eq!(4, adder::add_two(2));	// have to call the public add_two(), can’t call private internal_adder()
 } 
+```
 
 **`cargo run`** => 
 <img width="696" alt="Image" src="https://github.com/user-attachments/assets/149696de-1c86-41bb-b43f-261c4e23c813" />
