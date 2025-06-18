@@ -3194,7 +3194,7 @@ mod tests {
 <img width="702" alt="Image" src="https://github.com/user-attachments/assets/c499ade7-da2c-4281-beeb-0aa562d3043b" />
 
 ## Tests that Return a Result Type — 
-- **Tests that return a Result type allow you to use the ? operator**, which can be **convenient if you have multiple operations within the test that could return an error type and you want the test to fail if any of those return an error type.**
+- **Tests that return a Result type allow you to use the ? operator**, which can be **convenient if you have multiple operations within the test that could return an error type and <ins>you want the test to fail if any of those return an error type.</ins>**
 ```Rust
 #[cfg(test)]
 mod tests {
