@@ -3407,6 +3407,15 @@ mod tests {
 ```
 ^^^
 When we run `cargo test`, we **only see the print statement for the failing test.**
+<img width="689" alt="Image" src="https://github.com/user-attachments/assets/87926b7a-c56b-4779-b2f0-3a0cea1b0b7a" />
+BUT, **for the test that succeeded, we don’t see the print statement.** This is because **by default, standard output is captured for passing tests and we don’t see it on the screen**. We can change this with command line options.
+
+We can fix this by giving an argument to the resulting test binary called **`show-output`**:
+
+**`cargo test -- --show-output`**
+
+
+ 
 
 
 
