@@ -3359,7 +3359,7 @@ mod tests {
 }
 ```
 <img width="670" alt="Image" src="https://github.com/user-attachments/assets/75066d00-d5d7-4947-aa68-9ce36d2b04cf" />
-^^^ **`cargo test`** compiles your code in test mode and runs the resulting test binary. 
+^^^**`cargo test`** compiles your code in test mode and runs the resulting test binary. 
 
 So far, we’ve just been running `cargo tests` but we could specify command line options to change some of the defaults…
 - **By default, all tests get run in parallel in a separate thread**
