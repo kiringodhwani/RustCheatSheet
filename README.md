@@ -3285,7 +3285,7 @@ mod tests {
     use super::*;
 
 
-    // TEST THAT PASSES BC NO ERROR RETURNED FROM safe_divide_result
+    // 1. TEST THAT PASSES BC NO ERROR RETURNED FROM safe_divide_result
 
     #[test]
     // This test now returns Result<(), String>
@@ -3303,7 +3303,7 @@ mod tests {
     }
 
 
-    // TEST FAILS BC ERROR RETURNED FROM safe_divide_result
+    // 2. TEST FAILS BC ERROR RETURNED FROM safe_divide_result
 
     #[test]
     fn test_divide_by_zero_with_result() -> Result<(), String> {
@@ -3319,7 +3319,7 @@ mod tests {
     }
 
 
-    // TEST TO MAKE SURE safe_divide_result RETURNS CORRECT ERROR IN ERROR CASE
+    // 3. TEST TO MAKE SURE safe_divide_result RETURNS CORRECT ERROR IN ERROR CASE
 
     #[test]
     fn test_divide_by_zero_and_check_error_message() -> Result<(), String> {
