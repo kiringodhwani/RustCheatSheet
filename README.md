@@ -1862,6 +1862,7 @@ let f = match f {
 ```Rust
 let f = File::open("hello.txt").unwrap();
 ```
+<br>
 
 2. **expect()**: Same as unwrap() with the additional feature that it **allows you to specify the error message that gets sent to the panic! macro**.
 
