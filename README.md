@@ -3079,7 +3079,7 @@ mod tests {
 
 <br>
 
-**We can improve this by adding our own custom failure message the `greeting_contains_name` test**.
+**We can improve this by adding our own custom failure message in the `greeting_contains_name` test**.
 
 ```Rust
 #[test]
