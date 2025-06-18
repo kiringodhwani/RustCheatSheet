@@ -3512,7 +3512,7 @@ fn internal_adder(a: i32, b: i32) -> i32 {
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // OUR TESTS -- In Rust, it's convention that in the same file as your product code, you have
-// a module called tests which holds your tests for the product code. 
+// a module called `tests` which holds your tests for the product code. 
 
 #[cfg(test)]	// this attribute says the configuration of the module is test, meaning
 		// cargo only compiles the code in this module when we run `cargo test`.
