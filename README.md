@@ -3561,11 +3561,9 @@ fn it_adds_two() {
 2. The second section is for our integration tests
 3. The third section is for our document tests
 
-**If we want to run JUST our integration tests:**
+**If we want to run JUST our integration tests:** **`cargo test --test integration_test`**
 
-**`cargo test --test integration_test`**
-
-#### Defining Shared Code Among Our Integration Tests
+#### Defining Shared Code Amongst Our Integration Tests
 
 <ins>NOTE:</ins> Because every file in the ’tests’ directory is treated as a separate crate, this could lead to unexpected behavior. For example, if you have multiple integration test files and you want to share some code between those files.
 
