@@ -3480,11 +3480,14 @@ mod tests {
 The Rust community thinks about tests as falling into two main categories: **unit tests** and **integration tests**
 
 ### Unit Tests
+
 - **small, focused, test one module in isolation, and could test private interfaces.**
+  
 - We **have only been writing unit tests thus far.**
+  
 - In Rust, unit tests **live in the same file as our product code**
  
-<ins>lib.rs file</ins> — 
+<ins>**lib.rs file**</ins> — 
 ```Rust
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
@@ -3526,8 +3529,31 @@ mod tests {
 ```
 
 ### Integration Tests
+
 - **Completely external to your library and thus test the public interface of your library.**
+
 - **Live in a folder called `tests` at the root of your project.**
+<img width="206" alt="Image" src="https://github.com/user-attachments/assets/724a1a0c-d074-4d9f-ac37-ca961b5268d8" />
+
+- **Cargo knows to look for integration tests inside the ‘tests’ directory at the root of our project.** **Cargo will turn each of the files in the ‘tests’ directory into a crate.**
+
+- 
+
+<ins>**integration_test.rs file**</ins>
+
+// At the top of our integration_test.rs file, we have to bring our adder library into scope (see lib.rs
+// file above which contains our product code, i.e., the adder library). This is because every
+// file in the ‘tests’ directory is going to be a new crate.
+use adder;
+
+#[test]	// write a test function, don’t need module with config annotation bc 
+	// cargo knows that all files in the ‘tests’ directory are tests 
+fn it_adds_two() {
+    assert_eq!(4, adder::add_two(2));	// have to call the public add_two(), can’t call private internal_adder()
+} 
+
+**`cargo run`** => 
+
 
 
 
