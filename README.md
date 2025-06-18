@@ -3537,8 +3537,6 @@ mod tests {
 
 - **Cargo knows to look for integration tests inside the ‘tests’ directory at the root of our project.** **Cargo will turn each of the files in the ‘tests’ directory into a crate.**
 
-- 
-
 <ins>**integration_test.rs file**</ins>
 
 // At the top of our integration_test.rs file, we have to bring our adder library into scope (see lib.rs
@@ -3553,6 +3551,19 @@ fn it_adds_two() {
 } 
 
 **`cargo run`** => 
+<img width="696" alt="Image" src="https://github.com/user-attachments/assets/149696de-1c86-41bb-b43f-261c4e23c813" />
+^^^We now have three sections
+1. The first section is for our unit tests (currently we just have the test called internal, which is shown earlier in the unit tests section.
+2. The second section is for our integration tests
+3. The third section is for our document tests
+
+- **If we want to run JUST our integration tests: `cargo test --test integration_test`**
+
+<ins>NOTE:</ins> Because every file in the ’tests’ directory is treated as a separate crate, this could lead to unexpected behavior. For example, if you have multiple integration test files and you want to share some code between those files.
+
+- To do so, create a new folder in our `tests` directory called `common`, and create a new file called `mod.rs` in common.
+- Then, add the shared code to `mod.rs`.
+
 
 
 
