@@ -1463,7 +1463,7 @@ println!("The third element is {}", third_value);
 
 ### Iterating Over Elements in a Vector
 
-- **`for in`**: **Loops through all of the elements in the v vector and takes an immutable reference to each element**. NOTE: must take some sort of reference to the vector or else the values will be moved.
+- **`for in`**: **Loops through all of the elements in the `v` vector and takes an immutable reference to each element**. NOTE: must take some sort of reference to the vector or else the values will be moved.
 
 ```Rust
 let v = vec![1, 2, 3, 4, 5];
