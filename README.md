@@ -1342,6 +1342,7 @@ mod front_of_house {
     }
 }
 ```
+<br>
 
 2. <ins>AFTER 1:</ins> Move the contents of our `front_of_house` module into a different file… So, in **src/front_of_house.rs** we have...
 
@@ -1359,6 +1360,7 @@ In **lib.rs** we now only have...
 // the module (i.e., src/front_of_house.rs).
 mod front_of_house;
 ```
+<br>
 
 3. <ins>AFTER 2:</ins> Move the contents of the `hosting` module into a different file... So, we have...
 
