@@ -3023,8 +3023,7 @@ mod tests {
 ```
 <img width="670" alt="Image" src="https://github.com/user-attachments/assets/6fd2deaa-293d-4131-a859-4b67507ee9ce" />
 
-<br>
-<ins>We can make the above test fail...</ins>
+<br><ins>We can make the above test fail...</ins>
 
 ```Rust
 pub fn add_two(a: i32) -> i32 {
