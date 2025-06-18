@@ -3478,7 +3478,7 @@ mod tests {
 **`cargo test -- --ignored`**
 
 <img width="674" alt="Image" src="https://github.com/user-attachments/assets/ce0f2f74-22f1-4a34-a60e-a06289eef130" />
-^^^<ins>The filtered out test is the one test we have without #[ignore]<ins>
+^^^<ins>The filtered out test is the one test we have without #[ignore]</ins>
 
 ## Test Organization
 
