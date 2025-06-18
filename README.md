@@ -3515,7 +3515,7 @@ fn internal_adder(a: i32, b: i32) -> i32 {
 // a module called tests which holds your tests for the product code. 
 
 #[cfg(test)]	// this attribute says the configuration of the module is test, meaning
-		// cargo only compiles the code in this module when we run cargo test.
+		// cargo only compiles the code in this module when we run `cargo test`.
 mod tests {
     use super::*;   // import everything from the parent module
 
