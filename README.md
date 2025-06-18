@@ -698,7 +698,7 @@ println!("rect: {:?}", rect);	// use the {:?}
 
 <img width="686" alt="Image" src="https://github.com/user-attachments/assets/d79412b6-756a-440e-b3d1-2ad4983c5cba" />
 
-SOLUTION: use a **derived trait**...
+**SOLUTION:** use a **derived trait**...
 - The hint in the above error tells us to add the `#[derive(Debug)]` text.
 - **Debug is a trait** and **adding derive** here **allows the compiler to provide a basic implementation of the Debug trait**.
 ```Rust
