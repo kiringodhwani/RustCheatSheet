@@ -3106,7 +3106,7 @@ fn greeting_contains_name() {
 <img width="696" alt="Image" src="https://github.com/user-attachments/assets/3239ae97-bba3-4433-a15a-37f6d01cd1a5" />
 ^^^We can see our custom failure message in the test output.
 
-## Asserting than a Function Fails
+## Asserting that a Function Fails
 ```Rust
 // Guess struct holds a value
 pub struct Guess {
@@ -3122,6 +3122,8 @@ impl Guess {
         Guess { value }
     }
 }
+```
+
 
 
 
