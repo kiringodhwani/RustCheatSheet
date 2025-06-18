@@ -3224,17 +3224,17 @@ mod tests {
 
 3. **Chaining Fallible Operations:** This is where the ? operator shines. If you have a sequence of operations, any one of which could return an Err, the ? operator provides a compact way to stop the test early if an error occurs.
 
-### How the ? Operator is Useful Here
+### How the `?` Operator is Useful Here
 
-The ? operator is syntactic sugar for error propagation. When you use **`some_fallible_expression?`**, it does the following:
+The `?` operator is syntactic sugar for error propagation. When you use **`some_fallible_expression?`**, it does the following:
 
-1. If some_fallible_expression evaluates to Ok(value): It unwraps the Ok variant and value becomes the result of the expression. The execution continues normally.
+1. If some_fallible_expression evaluates to `Ok(value)`: It unwraps the Ok variant and value becomes the result of the expression. The execution continues normally.
 
-2. If some_fallible_expression evaluates to Err(error): It immediately returns that Err(error) from the current function. This is why the function using ? must have a Result return type that is compatible with the error type being propagated.
+2. If some_fallible_expression evaluates to `Err(error)`: It immediately returns that `Err(error)` from the current function. This is why the function using `?` must have a Result return type that is compatible with the error type being propagated.
 
-- <ins>In the context of tests returning Result:</ins> **When you use ? in such a test, if an operation inside the test returns an Err, that Err is automatically returned from the test function itself. The Rust test runner then interprets this Err return as a test failure.**
+- <ins>In the context of tests returning Result:</ins> **When you use `?` in such a test, if an operation inside the test returns an Err, that Err is automatically returned from the test function itself. The Rust test runner then interprets this Err return as a test failure.**
 
-- <ins>Why it's useful:</ins> **Without ?, you'd have to write match statements** or unwrap()/expect() calls for every fallible operation.
+- <ins>Why it's useful:</ins> **Without `?`, you'd have to write `match` statements** or unwrap()/expect() calls for every fallible operation.
 
 ### Examples
 
