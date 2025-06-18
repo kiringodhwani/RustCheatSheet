@@ -751,6 +751,7 @@ fn main() {
     );
 }
 ```
+<br>
 
 - <ins>Example:</ins> Method that takes in multiple parameters
 
