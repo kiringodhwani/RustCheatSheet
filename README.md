@@ -3103,7 +3103,25 @@ fn greeting_contains_name() {
     );
 }
 ```
+<img width="696" alt="Image" src="https://github.com/user-attachments/assets/3239ae97-bba3-4433-a15a-37f6d01cd1a5" />
+^^^We can see our custom failure message in the test output.
 
+## Asserting than a Function Fails
+```Rust
+// Guess struct holds a value
+pub struct Guess {
+    value: i32,
+}
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        // The user must give a value between 1 and 100. If the value is less than 1 or greater than
+        // 100, then panic.
+        if value < 1 || value > 100 {
+            panic!("Guess value must be between 1 and 100, got {}", value);
+        }
+        Guess { value }
+    }
+}
 
 
 
