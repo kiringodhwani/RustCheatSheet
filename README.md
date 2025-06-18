@@ -3330,7 +3330,7 @@ mod tests {
         assert!(division_result.is_err());	// Assert that it's indeed an error
         assert_eq!(division_result.unwrap_err(), "Cannot divide by zero");	// Get the error and check its content
 
-    Ok(())	// If we reach here, it means we handled the error correctly, so the test passes.
+        Ok(())	// If we reach here, it means we handled the error correctly, so the test passes.
     }
 }
 ```
