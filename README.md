@@ -2873,7 +2873,7 @@ where
 
 ## Writing Tests
 1. **Create a new library** called ‘adder’: `cargo new adder --lib` 
-	- Test module and a test already created and written for us in lib.rs
+	- **Test module and a test already created and written for us in `lib.rs`**
 <img width="681" alt="Image" src="https://github.com/user-attachments/assets/ded72e5e-ddbf-4f8f-bc64-85ea129afc09" />
 <br>
 
