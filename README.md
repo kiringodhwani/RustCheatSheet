@@ -3495,7 +3495,6 @@ The Rust community thinks about tests as falling into two main categories: **uni
 <ins>**lib.rs file**</ins> — 
 ```Rust
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//
 // OUR PRODUCT CODE
 
 // add_two() is a public function that calls the private internal_adder() function to add 2 to the passed in num.
@@ -3507,12 +3506,11 @@ pub fn add_two(a: i32) -> i32 {
 fn internal_adder(a: i32, b: i32) -> i32 {
     a + b
 }
-
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//
 // OUR TESTS -- In Rust, it's convention that in the same file as your product code, you have
 // a module called tests which holds your tests for the product code. 
 
@@ -3529,7 +3527,6 @@ mod tests {
         assert_eq!(4, internal_adder(2, 2));
     }
 }
-
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ```
 
