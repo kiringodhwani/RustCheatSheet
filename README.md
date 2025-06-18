@@ -3468,7 +3468,10 @@ mod tests {
 }
  ```
 
-<br><ins>When you run</ins> `cargo test`  — 
+<br><ins>When you run</ins> `cargo test`</ins>:
+<img width="670" alt="Image" src="https://github.com/user-attachments/assets/1beff9c4-602c-463d-9f41-7ddb893d61ea" />
+
+<br>**To run ONLY the tests that have the `#[ignore]` attribute:** **`cargo test -- --ignored`**
 
 
 
