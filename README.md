@@ -689,9 +689,9 @@ fn area(rect: &Rectangle) -> u32 {
 
 <img width="583" alt="Image" src="https://github.com/user-attachments/assets/a0dd0851-987d-4dce-aa35-1c65f93c60fe" />
 
-SOLUTION: `println!("rect: {:?}", rect);	// use the {:?}`
+**SOLUTION:** `println!("rect: {:?}", rect);	// use the {:?}`
 
-**New Error:** Now we see that our **Rectangle struct doesn’t implement the Debug trait**, which allows us to print out information useful for developers.
+<br>**New Error:** Now we see that our **Rectangle struct doesn’t implement the Debug trait**, which allows us to print out information useful for developers.
 
 <img width="686" alt="Image" src="https://github.com/user-attachments/assets/d79412b6-756a-440e-b3d1-2ad4983c5cba" />
 
