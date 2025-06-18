@@ -3473,7 +3473,10 @@ mod tests {
 <br><ins>When you run</ins> `cargo test`</ins>:
 <img width="670" alt="Image" src="https://github.com/user-attachments/assets/1beff9c4-602c-463d-9f41-7ddb893d61ea" />
 
-<br>**To run ONLY the tests that have the `#[ignore]` attribute:** **`cargo test -- --ignored`**
+<br>**To run ONLY the tests that have the `#[ignore]` attribute:** 
+
+**`cargo test -- --ignored`**
+
 <img width="674" alt="Image" src="https://github.com/user-attachments/assets/ce0f2f74-22f1-4a34-a60e-a06289eef130" />
 ^^^The filtered out test is the one test we have without #[ignore]
 
