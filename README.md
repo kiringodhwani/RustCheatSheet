@@ -3574,7 +3574,7 @@ fn it_adds_two() {
 - Then, add the shared code to `mod.rs`.
 <img width="254" alt="Image" src="https://github.com/user-attachments/assets/d2f644b3-9a40-4d25-ba1d-b173ffdfd5ea" />
 
-<br>When we run `cargo test`, we DON'T get a separate section of tests for the folder with the shared code. **This is because files in subdirectories of the ‘tests’ folder do not get compiled as crates.**
+<br>In the below, when we run `cargo test`, we DON'T get a separate section of tests for the folder with the shared code. **This is because files in subdirectories of the ‘tests’ folder do not get compiled as crates.**
 
 <img width="683" alt="Image" src="https://github.com/user-attachments/assets/11b70db3-ecf9-44d3-b556-b3d9beba749c" />
 
