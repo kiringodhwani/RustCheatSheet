@@ -3561,7 +3561,7 @@ fn it_adds_two() {
 2. The second section is for our integration tests
 3. The third section is for our document tests
 
-**If we want to run JUST our integration tests:** 
+<br>**If we want to run JUST our integration tests:** 
 
 **`cargo test --test integration_test`**
 
