@@ -3561,13 +3561,15 @@ fn it_adds_two() {
 2. The second section is for our integration tests
 3. The third section is for our document tests
 
-**If we want to run JUST our integration tests:** **`cargo test --test integration_test`**
+**If we want to run JUST our integration tests:** 
+**`cargo test --test integration_test`**
 
-#### Defining Shared Code Amongst Our Integration Tests
+<ins>Defining Shared Code Amongst Our Integration Tests</ins>
 
-<ins>NOTE:</ins> Because every file in the ’tests’ directory is treated as a separate crate, this could lead to unexpected behavior. For example, if you have multiple integration test files and you want to share some code between those files.
+- <ins>NOTE:</ins> Because every file in the ’tests’ directory is treated as a separate crate, this could lead to unexpected behavior. For example, if you have multiple integration test files and you want to share some code between those files.
 
 - To do so, create a new folder in our `tests` directory called `common`, and create a new file called `mod.rs` in common.
+
 - Then, add the shared code to `mod.rs`.
 <img width="254" alt="Image" src="https://github.com/user-attachments/assets/d2f644b3-9a40-4d25-ba1d-b173ffdfd5ea" />
 
