@@ -3377,8 +3377,9 @@ These two sets of command line options are separated by two dashes. For example�
 ### Changing the number of threads
 The **`--test-threads`** command line option **allows you to set the number of threads used when running tests in parallel**. **By default, every test gets its own thread**. But, if we wanted to run tests serially, then we can set test-threads equal to 1…
 
-Ex: In the below we are using the command line options for the resulting test binary…
-	`cargo test -- --test-threads=1`
+<ins>Example:</ins> In the below, we are using the command line options for the resulting test binary…
+
+`cargo test -- --test-threads=1`
  
 ^^^Generally, you wouldn’t want to do something like this because your tests would run slower, but may be useful in some cases. For example, you might have some tests that modify a file on disk and it happens to be the same file. If the tests run in parallel, then they’ll modify the file at the same time, which will cause tests to fail. You can solve this issue by having each test modify a different file, or you can run the tests serially instead of in parallel. 
 
