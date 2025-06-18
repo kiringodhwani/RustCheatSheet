@@ -3191,6 +3191,150 @@ mod tests {
 <img width="682" alt="Image" src="https://github.com/user-attachments/assets/4f1b0db2-f92f-40b9-bba4-06ff25761a12" />
 
 <br>But, if we change the value in new() to -2… The below shows that the t**est failed because the panic message we got does not contain “Guess value must be less than or equal to 100”**...
+<img width="702" alt="Image" src="https://github.com/user-attachments/assets/c499ade7-da2c-4281-beeb-0aa562d3043b" />
+
+## Tests that Return a Result Type — 
+- **Tests that return a Result type allow you to use the ? operator**, which can be **convenient if you have multiple operations within the test that could return an error type and you want the test to fail if any of those return an error type.**
+```Rust
+#[cfg(test)]
+mod tests {
+    // The it_works() test function returns a Result type:
+    //     - The success case is a unit type (basically nothing)
+    //     - The error case is a String
+    #[test]
+    fn it_works() -> Result<(), String> {
+        if 2 + 2 == 4 {
+            Ok(())
+        } else {
+            Err(String::from("two plus two does not equal four"))
+        }
+    }
+}
+```
+
+### Why Tests that Return Result Are Useful...
+
+**Normally, a Rust test function has a () return type, and it passes if it runs to completion without panicking.** If it panics (e.g., via assert!, panic!, or an uncaught unwrap/expect), it fails.
+
+**When a test function returns a Result<(), E> (where E is some error type), the test passes if it returns Ok(()) and fails if it returns Err(e)**. This is **incredibly useful for**:
+
+1. **Explicit Error Reporting:** The Err variant allows you to return a specific error value, which can provide more detailed information about why a test failed compared to just a generic panic message. This makes debugging much easier.
+
+2. **Testing Fallible Operations:** Many Rust functions return Result (e.g., file I/O, network requests, parsing). When testing these functions, returning Result from your test allows you to directly use the return values without extra unwrap() or expect() calls that might obscure the actual failure.
+
+3. **Chaining Fallible Operations:** This is where the ? operator shines. If you have a sequence of operations, any one of which could return an Err, the ? operator provides a compact way to stop the test early if an error occurs.
+
+### How the ? Operator is Useful Here
+
+The ? operator is syntactic sugar for error propagation. When you use **`some_fallible_expression?`**, it does the following:
+
+1. If some_fallible_expression evaluates to Ok(value): It unwraps the Ok variant and value becomes the result of the expression. The execution continues normally.
+
+2. If some_fallible_expression evaluates to Err(error): It immediately returns that Err(error) from the current function. This is why the function using ? must have a Result return type that is compatible with the error type being propagated.
+
+- <ins>In the context of tests returning Result:</ins> **When you use ? in such a test, if an operation inside the test returns an Err, that Err is automatically returned from the test function itself. The Rust test runner then interprets this Err return as a test failure.**
+
+- <ins>Why it's useful:</ins> **Without ?, you'd have to write match statements** or unwrap()/expect() calls for every fallible operation.
+
+### Examples
+
+**Example without a Result Return Type:**
+
+```Rust
+fn safe_divide(numerator: i32, denominator: i32) -> i32 {
+    if denominator == 0 {
+        panic!("Cannot divide by zero!"); // panicking is bad if the error is recoverable
+    }
+    numerator / denominator
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_valid_division() {
+        let result = safe_divide(10, 2);
+        assert_eq!(result, 5); // Test passes
+    }
+
+    #[test]
+    #[should_panic(expected = "Cannot divide by zero!")]	// *expect* a panic
+    fn test_divide_by_zero_panics() {
+        safe_divide(10, 0); 
+    }
+}
+```
+
+<br>**Example with a Result Return Type — Rust-idiomatic way to handle recoverable errors.**
+
+```Rust
+fn safe_divide_result(numerator: i32, denominator: i32) -> Result<i32, String> {
+    if denominator == 0 {
+        // We return an Err here instead of panicking, MUCH BETTER
+        // Rust-idiomatic way to handle recoverable errors.
+        Err(String::from("Cannot divide by zero"))
+    } else {
+        Ok(numerator / denominator)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+
+    // TEST THAT PASSES BC NO ERROR RETURNED FROM safe_divide_result
+
+    #[test]
+    // This test now returns Result<(), String>
+    // It passes if it returns Ok(()) and fails if it returns Err(some_string)
+    //
+    fn test_valid_division_with_result() -> Result<(), String> {
+
+        // Below, safe_divide_result returns Ok(5)
+        // The `?` unwraps the Ok(5), so `result` becomes 5.
+        // Execution continues.
+        //
+        let result = safe_divide_result(10, 2)?; 
+        assert_eq!(result, 5);
+        Ok(()) // Test passes by returning Ok(())
+    }
+
+
+    // TEST FAILS BC ERROR RETURNED FROM safe_divide_result
+
+    #[test]
+    fn test_divide_by_zero_with_result() -> Result<(), String> {
+
+        // Below, safe_divide_result returns Err("Cannot divide by zero")
+        // The `?` sees the Err, and immediately returns it from `test_divide_by_zero_with_result`.
+        // The test runner sees this Err and marks the test as failed.
+        //
+        let result = safe_divide_result(10, 0)?;	// The test stops here and fails.
+
+        // This line will NEVER be reached if the `safe_divide_result` returns an error
+        Ok(())
+    }
+
+
+    // TEST TO MAKE SURE safe_divide_result RETURNS CORRECT ERROR IN ERROR CASE
+
+    #[test]
+    fn test_divide_by_zero_and_check_error_message() -> Result<(), String> {
+        let division_result = safe_divide_result(10, 0);
+
+        // Instead of `?`, we're explicitly checking the error.
+        // We expect it to be an Err, and we want to check its message.
+        assert!(division_result.is_err());	// Assert that it's indeed an error
+        assert_eq!(division_result.unwrap_err(), "Cannot divide by zero");	// Get the error and check its content
+
+    Ok(())	// If we reach here, it means we handled the error correctly, so the test passes.
+    }
+}
+```
+
+
 
 
 
