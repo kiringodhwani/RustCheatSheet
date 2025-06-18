@@ -3472,6 +3472,62 @@ mod tests {
 <img width="670" alt="Image" src="https://github.com/user-attachments/assets/1beff9c4-602c-463d-9f41-7ddb893d61ea" />
 
 <br>**To run ONLY the tests that have the `#[ignore]` attribute:** **`cargo test -- --ignored`**
+<img width="674" alt="Image" src="https://github.com/user-attachments/assets/ce0f2f74-22f1-4a34-a60e-a06289eef130" />
+^^^The filtered out test is the one test we have without #[ignore]
+
+## Test Organization
+
+The Rust community thinks about tests as falling into two main categories: **unit tests** and **integration tests**
+
+### Unit Tests
+- **small, focused, test one module in isolation, and could test private interfaces.**
+- We **have only been writing unit tests thus far.**
+- In Rust, unit tests **live in the same file as our product code**
+ 
+<ins>lib.rs file</ins> — 
+```Rust
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//
+// OUR PRODUCT CODE
+
+// add_two() is a public function that calls the private internal_adder() function to add 2 to the passed in num.
+pub fn add_two(a: i32) -> i32 {
+    internal_adder(a, 2)
+}
+
+// internal_adder() is a private function that adds two numbers together.
+fn internal_adder(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//
+// OUR TESTS -- In Rust, it's convention that in the same file as your product code, you have
+// a module called tests which holds your tests for the product code. 
+
+#[cfg(test)]	// this attribute says the configuration of the module is test, meaning
+		// cargo only compiles the code in this module when we run cargo test.
+mod tests {
+    use super::*;   // import everything from the parent module
+
+    // test function to call and test the private internal_adder() function
+    // NOTE: internal_adder() is private but we can call it in our test module because child modules in Rust
+    //       are able to access anything in their parent module (even private fields).
+    #[test]
+    fn internal() {
+        assert_eq!(4, internal_adder(2, 2));
+    }
+}
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+```
+
+### Integration Tests
+- **Completely external to your library and thus test the public interface of your library.**
+- **Live in a folder called `tests` at the root of your project.**
 
 
 
