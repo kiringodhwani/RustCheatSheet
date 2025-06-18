@@ -3134,7 +3134,8 @@ mod tests {
     use super::*;
 
     #[test]
-    #[should_panic]	// the should_panic attribute asserts that the code inside of the function body panics.
+    #[should_panic]		// the should_panic attribute asserts that the code
+				// inside of the function body panics.
     fn greater_than_100() {
         Guess::new(200);	// we pass in 200, which is greater than 100, so new() should panic 
     }
