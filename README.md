@@ -552,7 +552,7 @@ let slice = &a[0..2];
 - Structs allow you to group related data together
 - Enums and structs are the building blocks for creating new types in rust
 
-### Attributes of a Struct
+## Attributes of a Struct
 - Like a tuple, **Structs allows us to group related data of different types together**, but we get the **benefit of naming our structure and the data inside** the structure, so we can **reference data by name instead of index**.
 
 ```Rust
@@ -609,7 +609,7 @@ fn build_user(email: String, username: String) -> User {
 }
 ```
 
-### Tuple Structs (anonymous structs)
+## Tuple Structs (anonymous structs)
 
 - We can create Structs without named fields.
 
@@ -623,7 +623,7 @@ struct Color(i32, i32, i32);
 struct Point(i32, i32, i32);
 ```
 
-### Example to Show the Value of Structs
+## Example to Show the Value of Structs
 
 **Code Before Using Structs:** works, but could be improved in terms of readability. Specifically, we are calculating the area of one rectangle, so the width and height are related; however, our program does not express that these two variables are related.
 ```Rust
@@ -683,7 +683,7 @@ fn area(rect: &Rectangle) -> u32 {
 }
 ```
 
-### Derived Traits
+## Derived Traits
 
 **What if we want to print our Rectangle?? Our Rectangle struct does not implement the Display trait.** The Display trait specifies how something should be printed. Primitive types like integers implement this Display trait by default, since there is only one way to print an integer. But, for custom types like our structure, we have to implement it ourselves. 
 
@@ -716,7 +716,7 @@ With our new modified code...
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height: 50,  
 }"
 
-### Methods
+## Methods
 - In our earlier code, we have related data grouped together under the Rectangle struct. However, our area() function to compute the area of the rectangle is defined separately from the Rectangle struct, even though it is very closely tied to our Rectangle struct. We can improve this by **grouping the area() function with our Rectangle struct by using the method syntax.**
 - Methods are similar to functions, except that they are tied to an instance of a struct.
 - The first argument in a method is always **self**, which is the instance of the struct that the method is being called on. Usually, you take a reference to self (`&self`). We could also take a mutable reference to self (`&mut self`), or, in rare cases, we could take ownership of the instance (`self`).
@@ -792,7 +792,7 @@ fn main() {
 }
 ```
 
-### Associated Functions
+## Associated Functions
 - Unlike methods, associated functions are **not tied to an instance of our struct** (i.e., **don't take self as a parameter**).
 
 ```Rust
