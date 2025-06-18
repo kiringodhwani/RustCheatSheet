@@ -3216,7 +3216,7 @@ mod tests {
 
 **Normally, a Rust test function has a () return type, and it passes if it runs to completion without panicking.** If it panics (e.g., via assert!, panic!, or an uncaught unwrap/expect), it fails.
 
-**When a test function returns a Result<(), E> (where E is some error type), the test passes if it returns Ok(()) and fails if it returns Err(e)**. This is **incredibly useful for**:
+**<ins>When a test function returns a Result<(), E> (where E is some error type), the test passes if it returns Ok(()) and fails if it returns Err(e)</ins>**. This is **incredibly useful for**:
 
 1. **Explicit Error Reporting:** The Err variant allows you to return a specific error value, which can provide more detailed information about why a test failed compared to just a generic panic message. This makes debugging much easier.
 
