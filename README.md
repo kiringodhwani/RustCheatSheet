@@ -3593,9 +3593,11 @@ fn it_adds_two() {
 }
 ```
 
-NOTE: we have a lib.rs file in our src directory, which means we have a library crate. If we had a main.rs file instead, then we would have a binary crate. **We can’t directly test binary crates with integration tests.** This is why **it’s common to see a binary crate that’s a thin wrapper around a library crate. This way, you can test the library crate with integration tests. **
+NOTE: we have a lib.rs file in our src directory, which means we have a library crate. If we had a main.rs file instead, then we would have a binary crate. **We can’t directly test binary crates with integration tests.** This is why **it’s common to see a binary crate that’s a thin wrapper around a library crate. This way, you can test the library crate with integration tests.**
 
+---
 
+# CLI Program
 
 
 
