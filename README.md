@@ -3214,7 +3214,7 @@ mod tests {
 
 ### Why Tests that Return Result Are Useful...
 
-**Normally, a Rust test function has a () return type, and it passes if it runs to completion without panicking.** If it panics (e.g., via assert!, panic!, or an uncaught unwrap/expect), it fails.
+**Normally, a Rust test function has a `()` return type, and it passes if it runs to completion without panicking.** If it panics (e.g., via assert!, panic!, or an uncaught unwrap/expect), it fails.
 
 **<ins>When a test function returns a `Result<(), E>` (where `E` is some error type), the test passes if it returns `Ok(())` and fails if it returns `Err(e)`</ins>**. This is **incredibly useful for**:
 
