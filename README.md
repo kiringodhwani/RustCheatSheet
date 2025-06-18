@@ -3567,11 +3567,24 @@ fn it_adds_two() {
 
 When we run `cargo test`, we DON'T get a separate section of tests for the folder with the shared code. **This is because files in subdirectories of the ‘tests’ folder do not get compiled as crates.**
 
-
-
+<img width="683" alt="Image" src="https://github.com/user-attachments/assets/11b70db3-ecf9-44d3-b556-b3d9beba749c" />
 
 Also, **because we put our code into a file called mod.rs, our code is now in a module that can be used by our other integration test files**...
 
+```Rust
+use adder;
+
+mod common;	// This is a module declaration and it will look for the contents of the module in either a file
+		// called common.rs or a **folder called common with a file called mod.rs**
+
+#[test]
+fn it_adds_two() {
+    common::setup();	// We can call the function defined in our module
+    assert_eq!(4, adder::add_two(2));
+}
+```
+
+NOTE: we have a lib.rs file in our src directory, which means we have a library crate. If we had a main.rs file instead, then we would have a binary crate. **We can’t directly test binary crates with integration tests.** This is why **it’s common to see a binary crate that’s a thin wrapper around a library crate. This way, you can test the library crate with integration tests. **
 
 
 
