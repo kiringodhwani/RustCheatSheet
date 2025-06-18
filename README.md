@@ -3228,7 +3228,7 @@ mod tests {
 
 The `?` operator is syntactic sugar for error propagation. When you use **`some_fallible_expression?`**, it does the following:
 
-1. If some_fallible_expression evaluates to `Ok(value)`: It unwraps the Ok variant and value becomes the result of the expression. The execution continues normally.
+1. If some_fallible_expression evaluates to `Ok(value)`: It unwraps the Ok variant and `value` becomes the result of the expression. The execution continues normally.
 
 2. If some_fallible_expression evaluates to `Err(error)`: It immediately returns that `Err(error)` from the current function. This is why the function using `?` must have a `Result` return type that is compatible with the error type being propagated.
 
