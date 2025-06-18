@@ -3265,6 +3265,7 @@ mod tests {
     }
 }
 ```
+<img width="658" alt="Image" src="https://github.com/user-attachments/assets/483a35bb-9711-404e-aa8b-f60ecf608322" />
 
 <br>**Example with a Result Return Type — Rust-idiomatic way to handle recoverable errors.**
 
