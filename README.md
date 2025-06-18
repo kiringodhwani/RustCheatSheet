@@ -847,7 +847,6 @@ fn main() {
 // define a function that takes in a parameter of type IPAddressKind (our enum).
 fn route(ip_kind: IPAddressKind) {}
 ```
-<br>
 
 - <ins>Enum Example 2:</ins> **Enum variants can store a wide variety of types.** The Message enum below has four variants...
 	1. The first variant stores no data
