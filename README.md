@@ -3144,7 +3144,7 @@ mod tests {
 <img width="668" alt="Image" src="https://github.com/user-attachments/assets/aa063345-4694-427a-a7af-4d2ae54c6c72" />
 ^^^The test passes!!
 
-<br>**If we modify the new() method to not panic when the value is greater than 100, then the test fails** bc the method does not panic when you run Guess::new(200)...
+<br>**If we modify the new() method to not panic when the value is greater than 100, then the test fails** bc the method does not panic when you run Guess::new(200):
 <img width="699" alt="Image" src="https://github.com/user-attachments/assets/35be9b8d-65fc-4f5b-9e17-0f31b39b548a" />
 
 ^^^Testing that a function panics in this way works but is **imprecise**. All our test with **#[should_panic]** is saying is that the **function we call should panic, but it could panic for any reason**. We need to make our assertion more precise:
