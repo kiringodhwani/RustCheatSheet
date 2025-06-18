@@ -959,6 +959,7 @@ fn value_in_cents(coin: Coin) -> u8 {
 }
 ```
 
+<br>
 - <ins>Example 2:</ins> The **patterns in the match expression can also bind to values.**
 ```Rust
 // enum representing the state minted on each quarter
