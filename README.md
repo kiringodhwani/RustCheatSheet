@@ -2993,9 +2993,7 @@ mod tests {
 ```
 <img width="682" alt="Image" src="https://github.com/user-attachments/assets/b34c9f73-ee81-45fd-a91b-790750ebabd4" />
 
-<br>
-
-<ins>If we add a bug to our product code:</ins>
+<br><ins>If we add a bug to our product code:</ins>
 ```Rust
 impl Rectangle {
     fn can_hold(&self, other: &Rectangle) -> bool {
