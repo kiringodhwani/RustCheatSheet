@@ -1004,6 +1004,7 @@ fn main() {
     value_in_cents(Coin::Quarter(UsState::California));
 }
 ```
+<br>
 
 - **Using a `match` expression with an Option enum...**
 ```Rust
