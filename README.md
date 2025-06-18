@@ -3334,6 +3334,30 @@ mod tests {
     }
 }
 ```
+<img width="690" alt="Image" src="https://github.com/user-attachments/assets/6988e50a-c4c5-443e-9585-3c1922762f38" />
+
+## Controlling How Tests Run
+
+```Rust
+#[cfg(test)]
+mod tests {
+    // This test returns a Result type and tests that 2 + 2 = 4
+    #[test]
+    fn it_works() -> Result<(), String> {
+        if 2 + 2 == 4 {
+            Ok(())
+        } else {
+            Err(String::from("two plus two does not equal four"))
+        }
+    }
+
+    // This tests that 2 + 2 = 4 using assert_eq!()
+    #[test]
+    fn it_works2() {
+        assert_eq!(2 + 2, 4);
+    }
+}
+```
 
 
 
