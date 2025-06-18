@@ -3447,7 +3447,6 @@ mod tests {
     }
 }
 ```
-^^^
 - If we only want to run the test called `one_hundred`: **`cargo test one_hundred`**
 
 - If we want to run the two tests that start with “add”: **`cargo test add`**
