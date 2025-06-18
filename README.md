@@ -3374,7 +3374,7 @@ These two sets of command line options are separated by two dashes. For example�
 1. If we want to figure out which **options we could pass to the `cargo test`** command: **`cargo test --help`**
 2. If we want to figure out which **commands we could pass to the resulting test binary**: **`cargo test -- --help`**
 
-### Changing the number of threads
+### Changing the Number of Threads
 The **`--test-threads`** command line option **allows you to set the number of threads used when running tests in parallel**. **By default, every test gets its own thread**. But, if we wanted to run tests serially, then we can set test-threads equal to 1…
 
 <ins>Example:</ins> In the below, we are using the command line options for the resulting test binary…
