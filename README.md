@@ -3417,6 +3417,7 @@ We can fix this by giving an argument to the resulting test binary called `show-
 **`cargo test -- --show-output`**
 
 <img width="689" alt="Image" src="https://github.com/user-attachments/assets/827cb294-e190-4957-8dbd-afba92fe2f57" />
+
 ^^^**Now, we also see the print statement for the passing test.**
 
 ### Running a Subset of Tests 
