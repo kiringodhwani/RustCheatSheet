@@ -3086,12 +3086,14 @@ mod tests {
 // Calls greeting() with the name "Carol" and asserts that the returned string contains "Carol".
 fn greeting_contains_name() {
     let result = greeting("Carol");
+
+    // assert!() takes a custom failure message as the 2nd parameter.
+    // The remaining parameters in `assert` fill in the	placeholders in the custom failure message.
     assert!(
         result.contains("Carol"),
-        "Greeting did not contain name, value was '{}'",	// assert!() takes a custom failure message
-	result,							// as the 2nd parameter.
-								// The remaining parameters in `assert` fill in the 													// placeholders in the custom failure message.
-		);
+        "Greeting did not contain name, value was '{}'",	
+	result,							
+    );
 }
 ```
 
