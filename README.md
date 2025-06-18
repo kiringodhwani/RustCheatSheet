@@ -3222,7 +3222,7 @@ mod tests {
 
 2. **Testing Fallible Operations:** Many Rust functions return Result (e.g., file I/O, network requests, parsing). When testing these functions, returning Result from your test allows you to directly use the return values without extra unwrap() or expect() calls that might obscure the actual failure.
 
-3. **Chaining Fallible Operations:** This is where the ? operator shines. If you have a sequence of operations, any one of which could return an Err, the ? operator provides a compact way to stop the test early if an error occurs.
+3. **Chaining Fallible Operations:** This is where the `?` operator shines. If you have a sequence of operations, any one of which could return an Err, the ? operator provides a compact way to stop the test early if an error occurs.
 
 ### How the `?` Operator is Useful Here
 
