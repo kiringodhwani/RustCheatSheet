@@ -3414,8 +3414,62 @@ We can fix this by giving an argument to the resulting test binary called **`sho
 
 **`cargo test -- --show-output`**
 
+<img width="689" alt="Image" src="https://github.com/user-attachments/assets/827cb294-e190-4957-8dbd-afba92fe2f57" />
+^^^**Now, we also see the print statement for the passing test.**
 
- 
+### Running a Subset of Tests 
+— We can **run a subset of tests using the test name**
+```Rust
+pub fn add_two(a: i32) -> i32 {
+    a + 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn add_two_and_two() {
+        assert_eq!(4, add_two(2)); // test that if you pass in 2, you get 4
+    }
+
+    #[test]
+    fn add_three_and_two() {
+        assert_eq!(5, add_two(3)); // test that if you pass in 3, you get 5
+    }
+
+    #[test]
+    fn one_hundred() {
+        assert_eq!(102, add_two(100)); // test that if you pass in 100, you get 102
+    }
+}
+```
+^^^
+- If we only want to run the test called `one_hundred`: **`cargo test one_hundred`**
+
+- If we want to run the two tests that start with “add”: **`cargo test add`**
+
+- If we want to run tests based on the module (e.g., those in the “tests” module): **`cargo test tests::`**
+
+### Ignoring Tests
+```Rust
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+
+    #[test]
+    #[ignore]                  // the ignore attribute ignores the test 
+    fn expensive_test() {
+        // code that takes an hour to run
+    }
+}
+ ```
+
+<br><ins>When you run</ins> `cargo test`  — 
+
 
 
 
