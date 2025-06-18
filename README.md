@@ -3230,15 +3230,15 @@ The `?` operator is syntactic sugar for error propagation. When you use **`some_
 
 1. If some_fallible_expression evaluates to `Ok(value)`: It unwraps the Ok variant and value becomes the result of the expression. The execution continues normally.
 
-2. If some_fallible_expression evaluates to `Err(error)`: It immediately returns that `Err(error)` from the current function. This is why the function using `?` must have a Result return type that is compatible with the error type being propagated.
+2. If some_fallible_expression evaluates to `Err(error)`: It immediately returns that `Err(error)` from the current function. This is why the function using `?` must have a `Result` return type that is compatible with the error type being propagated.
 
-- <ins>In the context of tests returning Result:</ins> **When you use `?` in such a test, if an operation inside the test returns an Err, that Err is automatically returned from the test function itself. The Rust test runner then interprets this Err return as a test failure.**
+- <ins>In the context of tests returning `Result`:</ins> **When you use `?` in such a test, if an operation inside the test returns an Err, that Err is automatically returned from the test function itself. The Rust test runner then interprets this Err return as a test failure.**
 
 - <ins>Why it's useful:</ins> **Without `?`, you'd have to write `match` statements** or unwrap()/expect() calls for every fallible operation.
 
 ### Examples
 
-**Example without a Result Return Type:**
+**Example without a `Result` Return Type:**
 
 ```Rust
 fn safe_divide(numerator: i32, denominator: i32) -> i32 {
@@ -3267,7 +3267,7 @@ mod tests {
 ```
 <img width="658" alt="Image" src="https://github.com/user-attachments/assets/483a35bb-9711-404e-aa8b-f60ecf608322" />
 
-<br>**Example with a Result Return Type — Rust-idiomatic way to handle recoverable errors.**
+<br>**Example with a `Result` Return Type — Rust-idiomatic way to handle recoverable errors.**
 
 ```Rust
 fn safe_divide_result(numerator: i32, denominator: i32) -> Result<i32, String> {
