@@ -3126,7 +3126,7 @@ impl Guess {
     }
 }
 ```
-^^^Test that the new() method above correctly panics when the value is greater than 100…
+^^^**Test that the new() method above correctly panics when the value is greater than 100…**
 
 ```Rust
 #[cfg(test)]
@@ -3141,6 +3141,10 @@ mod tests {
     }
 }
 ```
+<img width="668" alt="Image" src="https://github.com/user-attachments/assets/aa063345-4694-427a-a7af-4d2ae54c6c72" />
+^^^The test passes!!
+
+<br>**If we modify the new() method to not panic when the value is greater than 100, then the test fails** bc the method does not panic when you run Guess::new(200):
 
 
 
