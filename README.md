@@ -3771,5 +3771,159 @@ fn main() {
 
 # Closures
 
+Closures are **anonymous functions** (i.e., no name), like lambda functions in Python. 
+- They **could be stored as variables and passed around.** 
+- They **could** even **be passed in as input parameters to a function.**
+- They **capture the variables inside the scope in which they are defined.**
+
+1. **Closure with <ins>no parameters</ins> and <ins>performs one action (doesn't return anything) </ins> —  printing specific text**
+
+```Rust
+let print_text = || println!("Defining Closure");	// store closure in a variable so can call it 
+
+print_text();	// call the closure
+```
+
+2. **Closure with <ins>1 parameter</ins> and <ins>returns a value</ins> — adding 1 to a passed in integer**
+
+```Rust
+let add_one = |x: i32| x + 1;	// store closure in a variable so can call it 
+
+add_one(2);	// call the closure with value 2
+```
+
+3. **Closure with <ins>multiple parameters</ins> and <ins>multiple lines</ins> — return the squared sum of two parameters**
+
+```Rust
+let squared_sum = |x: i32, y: i32| {
+
+    let mut sum: i32 = x + y;	// find the sum of two parameters
+
+    let mut result: i32 = sum * sum;	// find the squared value of the sum
+
+    return result;
+};
+
+let result = squared_sum(5, 3);	// call the closure
+```
+
+## Closure Environment Capturing
+
+Closure has a unique feature that allows it to capture the environment. This means the **closure can use the values in its scope**. <ins>For example, in the below,</ins> t**he closure bound to `print_num` uses the variable `num` which was not defined in it…**
+
+```Rust
+fn main() {
+    let num = 100;
+
+    // A closure that captures the `num` variable
+    let print_num = || println!("Number = {}", num);
+
+    print_num(); 
+}
+```
+
+### Closure Environment Capturing Modes in Rust
+
+1. **<ins>Capture by Immutable Borrow (&T):</ins>** **Variable is not modified inside the closure.** In the below, the variable **`word` is not modified inside the closure `print_str`**. **As the variable is immutable by default, we can make any number of immutable references of `word` inside the closure.** Notice that the closure variable print_str is also immutable.
+
+	- **<ins>When a closure captures a variable by immutable borrow</ins>** (which **happens when the variable is only read inside the closure**, as word is in `println!("word = {}", word)`), **<ins>the closure essentially takes an immutable reference to that variable.</ins>** The core rule is that **you can have any number of _immutable references_ to a piece of data simultaneously.** Because the closure `print_str` only holds an immutable borrow of `word`, and `println!("length of word = {}", word.len());` also takes an immutable borrow of `word`, these operations can coexist.
+
+ 	- **Encoded in the `Fn` function trait** — `Fn` immutably borrows values**
+
+```Rust
+fn main() {
+    let word = String::from("Hello");
+
+    // immutable closure — all we do is print the word, don’t modify it 
+    let print_str = || println!("word = {}", word); 
+
+    // now we CAN still do an immutable borrow outside the closure, can do as many immutable 
+    // references to `word` as we want, as explained above
+    println!("length of word = {}", word.len());
+
+    print_str();
+}
+```
+
+2. **<ins>Capture by Mutable Borrow (&mut T):</ins>** **Variable is modified inside the closure.** In the below example, the variable **`word` is modified inside the closure `print_str` with `word.push_str("World!");`**. Thus, we **have to make the variable `word` mutable as well as the closure variable `print_str`**. This means **<ins>no other references of the `word` variable can exist unless the closure is used</ins>, since the closure takes a mutable reference to the piece of data.**
+	- **Encoded in the `FnMut` function trait** — **`FnMut` mutably borrows values**
+
+```Rust
+fn main() {
+    let mut word = String::from("Hello");
+
+    // mutable closure — we modify the value of `word`, so closure borrows the variable as mutable
+    let mut print_str = || {
+        word.push_str(" World!");
+        println!("word = {}", word);
+    };
+
+    // NOTE: CANNOT immutable borrow here because the variable is borrowed as mutable inside the
+    // closure, see screenshot below…
+    // println!("length of word = {}", word.len());
+
+    print_str();
+
+    // BUT, can immutable borrow here because the closure has been already used
+    println!("length of word = {}", word.len());
+}
+```
+
+- <ins>To elaborate on why we have to make the `print_str` variable mutable in the above even though it just stores the closure…</ins>
+
+    - **`FnMut`** **requires &mut self on the closure itself.**
+
+    - Because the **closure in the above example captures `word` by mutable reference**, its **type automatically becomes `FnMut`.**
+
+    - A **closure** of type **`FnMut`** **has a `fn call_mut(&mut self)` method (or similar) that takes `&mut self`**. This means that **whenever you call `print_str()`**, you are effectively **calling a method on the `print_str` variable that requires `print_str` itself to be mutable.**
+
+    - **<ins>BEST ANALOGY:</ins>** **Think of `print_str` as a struct that internally holds a `&mut String` to `word`.** **When you call `print_str()`**, you're essentially saying **"I want to use the mutable reference stored within `print_str`." To allow that usage, print_str itself must also be mutable.**
+ 
+  3. **<ins>Capture by Move (i.e., Capture by value, Taking Ownership) (T):</ins>** **Variable is moved inside closure.** Here, we move the value in the `word` variable to a new variable `new_word` inside the closure. As the variable is moved, we cannot use it anywhere else except for inside the closure.
+
+    - **Encoded in the `FnOnce` function trait** — **`FnOnce` takes ownership of the variables inside the closure’s environment.** The “Once” part of the name represents the fact that closures can’t take ownership of the same variables more than once. So, these closures can only be called once. 
+
+```Rust
+fn main() {
+    let word = String::from("Hello");
+
+    // `word` is moved into the closure — value in `word` variable is moved to a new variable in the closure
+    let print_str = || {
+        let new_word = word;
+        println!("word = {}", new_word);
+    };
+
+    print_str();
+
+    // CANNOT immutable borrow here because word variable has moved inside closure
+    // see screenshot below…
+    // println!("length of word = {}", word.len());
+}
+```
+
+**When you create a closure, Rust infers which of the traits to use (FnOnce, FnMut, Fn) based on how you use the values in inside the closure’s environment.** 
+
+- You can **force the closure to take ownership of the values it uses inside its environment by using the `move` keyword in front of the closure.** Mostly **useful when you’re passing a closure from one thread to another thread** so you can also pass the ownership of the variables from one thread to the other thread. Ex:
+
+fn main() {
+    let x = vec![1,2,3];
+
+    // Inside this closure, we just evaluate z == x, so we don't take ownership of x inside our closure.
+    // However, we can force the closure to take ownership of x by specifying "move".
+    //
+    let equal_to_x = move |z| z == x;
+
+    println!("can't use x here {:?}", x);	// this errors (red squiggly under x) bc the closure now takes
+    						// ownership of x so we can't use x after it’s been moved.
+
+
+NOTE: **Because closures capture their environment, they have to use extra memory to store that context**. Functions, on the other hand, don’t capture their environment, so they don’t incur the same overhead. 
+
+## Closure Type Inference
+
+
+
+
+
 
 
