@@ -4021,7 +4021,7 @@ where
 
 fn generate_workout(intensity: u32, random_number: u32) {
     // Call the `new()` function in our `Cacher` struct on our closure for the expensive calculation
-    // Make variable mutable bc we will be calling the value method which mutates the `Cacher` instance
+    // Make variable mutable bc we will be calling the `value` method which mutates the `Cacher` instance
     //
     let mut cached_result = Cacher::new(|num| {
         println!("calculating slowly...");
