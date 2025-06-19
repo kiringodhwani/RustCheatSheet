@@ -4123,27 +4123,27 @@ fn iterator_demonstration() {
 }
 ```
 
-<ins>^^^^NOTE:</ins> Our **iterator returns immutable references when we use iter()…**
+<ins>^^^^NOTE:</ins> Our **iterator returns immutable references when we use `iter()`…**
 
-- **iter()**  —  **immutable references**
+- **`iter()`**  —  **immutable references**
 
-- **iter_mut()**  —  **mutable references**
+- **`iter_mut()`**  —  **mutable references**
 
-- **into_iter()**  —   **own types**       <ins>Example with into_iter:</ins>
+- **`into_iter()`**  —   **own types**       <ins>Example with `into_iter`:</ins>
 
 ```Rust
 #[test]
 fn iterator_demonstration() {
-	let v1 = vec![1, 2, 3]; 
+    let v1 = vec![1, 2, 3]; 
 
-	let mut v1_iter = v1.into_iter();   
+    let mut v1_iter = v1.into_iter();   
 
-	// You can see in these `assert_eq!()` calls that the value stored in `Some` is
-	// an own type, not a reference like we had with `iter()`.
-	assert_eq!(v1_iter.next(), Some(1)); 
-	assert_eq!(v1_iter.next(), Some(2)); 
-	assert_eq!(v1_iter.next(), Some(3));  
-	assert_eq!(v1_iter.next(), None);   
+    // You can see in these `assert_eq!()` calls that the value stored in `Some` is
+    // an own type, not a reference like we had with `iter()`.
+    assert_eq!(v1_iter.next(), Some(1)); 
+    assert_eq!(v1_iter.next(), Some(2)); 
+    assert_eq!(v1_iter.next(), Some(3));  
+    assert_eq!(v1_iter.next(), None);   
 }
 ```
 
