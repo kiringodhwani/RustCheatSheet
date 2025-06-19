@@ -3828,7 +3828,7 @@ fn main() {
 
 	- **<ins>When a closure captures a variable by immutable borrow</ins>** (which **happens when the variable is only read inside the closure**, as `word` is in `println!("word = {}", word)`), **<ins>the closure essentially takes an immutable reference to that variable.</ins>** The core rule is that **you can have any number of _immutable references_ to a piece of data simultaneously.** Because the closure `print_str` only holds an immutable borrow of `word`, and `println!("length of word = {}", word.len());` also takes an immutable borrow of `word`, these operations can coexist.
 
- 	- **Encoded in the `Fn` function trait** — `Fn` immutably borrows values**
+ 	- **Encoded in the `Fn` function trait** — **`Fn` immutably borrows values**
 
 ```Rust
 fn main() {
