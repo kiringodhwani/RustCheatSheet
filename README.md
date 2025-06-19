@@ -3926,6 +3926,28 @@ NOTE: **Because closures capture their environment, they have to use extra memor
 
 ## Closure Type Inference
 
+**You don’t have to annotate the type of your closure’s input parameter nor do you have to annotate your closure’s return value.** For regular functions, you would have to specify the type of the input parameters and the type of the return value. 
+
+- **Functions** are part of an explicit interface exposed to users, so agreeing on the types being passed in and returned is important.
+
+- **Closures** are usually short and only relevant within a narrow context, so the **compiler is able to determine the input parameter types and the return types**. This is similar to how the compiler is able to determine the types of most variables. 
+
+<ins>Example:</ins> You **can make the types explicit in a closure**…
+```Rust
+let expensive_closure = |num: u32| -> u32 {
+	…
+}
+```
+
+<ins>NOTE:</ins> **Closure definitions can only have one concrete type inferred for each input parameter**…
+
+	let example_closure = |x| x;
+	
+	let s = example_closure(String::from(“hello”));	// here, the compiler infers that `x` in the closure is a `String`
+
+	let n = example_closure(5);	// this fails bc the compiler expects from previous line that 
+ 					// `x` is a String
+
 
 
 
