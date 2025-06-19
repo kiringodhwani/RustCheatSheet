@@ -3879,6 +3879,8 @@ fn main() {
 
     - **<ins>BEST ANALOGY:</ins>** **Think of `print_str` as a struct that internally holds a `&mut String` to `word`.** **When you call `print_str()`**, you're essentially saying **"I want to use the mutable reference stored within `print_str`." To allow that usage, `print_str` itself must also be mutable.**
 
+<br>
+
 3. **<ins>Capture by Move (i.e., Capture by value, Taking Ownership) (T):</ins>** **Variable is moved inside closure.** Here, we move the value in the `word` variable to a new variable `new_word` inside the closure. As the variable is moved, we cannot use it anywhere else except for inside the closure.
 
 	- **Encoded in the `FnOnce` function trait** — **`FnOnce` takes ownership of the variables inside the closure’s environment.** The “Once” part of the name represents the fact that closures can’t take ownership of the same variables more than once. So, these closures can only be called once. 
