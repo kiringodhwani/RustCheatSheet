@@ -3913,13 +3913,13 @@ fn main() {
 fn main() {
     let x = vec![1,2,3];
 
-    // Inside this closure, we just evaluate z == x, so we don't take ownership of x inside our closure.
-    // However, we can force the closure to take ownership of x by specifying "move".
+    // Inside this closure, we just evaluate `z == x`, so we don't take ownership of `x` inside our closure.
+    // However, we can force the closure to take ownership of `x` by specifying `move`.
     //
     let equal_to_x = move |z| z == x;
 
-    println!("can't use x here {:?}", x);	// this errors (red squiggly under x) bc the closure now takes
-    						// ownership of x so we can't use x after it’s been moved.
+    println!("can't use x here {:?}", x);	// this errors (red squiggly under `x`) bc the closure now takes
+    						// ownership of `x` so we can't use `x` after it’s been moved.
 ```
 
 NOTE: **Because closures capture their environment, they have to use extra memory to store that context**. Functions, on the other hand, don’t capture their environment, so they don’t incur the same overhead. 
