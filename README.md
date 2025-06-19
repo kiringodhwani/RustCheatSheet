@@ -4129,7 +4129,8 @@ fn iterator_demonstration() {
 
 - **`iter_mut()`**  —  **mutable references**
 
-- **`into_iter()`**  —   **own types**       <ins>Example with `into_iter`:</ins>
+- **`into_iter()`**  —   **own types**
+	- <ins>Example with `into_iter`:</ins>
 
 ```Rust
 #[test]
