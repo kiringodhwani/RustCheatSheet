@@ -3988,7 +3988,7 @@ where
 impl<T> Cacher<T>
 where
     T: Fn(u32) -> u32,	// For the methods within this specific implementation of
-			// `Cacher` (`new` and `value`), `T` is a function (implements the `Fn` trait.
+			// `Cacher` (`new` and `value`), `T` is a function (implements the `Fn` trait).
 {
     fn new(calculation: T) -> Cacher<T> {	// Constructor. Takes in a calculation of type `T` (our closure), and
 						// creates a new `Cacher`, passing in the calculation and initializing an
