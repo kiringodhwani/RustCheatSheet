@@ -3599,5 +3599,176 @@ NOTE: we have a lib.rs file in our src directory, which means we have a library 
 
 # CLI Program
 
+**<ins>lib.rs</ins>**
+
+```Rust
+use std::error::Error;
+use std::fs;
+use std::env; // import the environment module
+
+// Box<dyn Error> essentially represents any type of error
+pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    // With ?, if read_to_string() returns an Error type, then that Error type will automatically be
+    // returned from the function.
+    let contents = fs::read_to_string(config.filename)?;
+
+    if config.case_sensitive {
+        for line in search(&config.query, &contents) {
+            println!("{}", line);
+        }
+    } else {
+        for line in search_case_insensitive(&config.query, &contents) {
+            println!("{}", line);
+        }
+    }
+    // OR CAN DO:
+    // let results = if config.case_sensitive {
+    //     search(&config.query, &contents) 
+    // } else {
+    //     search_case_insensitive(&config.query, &contents)
+    // };
+    // for line in results {
+    //     println!("{}", line);
+    // }
+
+    Ok(())  // In Ok() case, we return unit type
+}
+
+fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
+    let mut matches = Vec::new();
+    for line in contents.lines() {
+        if line.contains(query) {
+            matches.push(line);
+        }
+    }
+    matches
+}
+
+fn search_case_insensitive<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
+    
+    let mut matches = Vec::new();
+    let query = query.to_lowercase();
+
+    for line in contents.lines() {
+        if line.to_lowercase().contains(&query) {
+            matches.push(line);
+        }
+    }
+    matches
+}
+
+pub struct Config {
+    pub query: String,
+    pub filename: String,
+    pub case_sensitive: bool,
+}
+impl Config {
+    pub fn new(args: &[String]) -> Result<Config, &str> {
+        if args.len() < 3 {
+            return Err("Not enough arguments");
+        }
+        let query = args[1].clone();
+        let filename = args[2].clone();
+
+        // We use environment variables to determine if we want to do regular case sensitive
+        // search or case insensitive search. 
+        // We call the var() function in the environment module which takes in a key to an 
+        // environment variable and returns a Result type if the key exists. If the environment
+        // variable is set, then the Result will be Ok() containing the set value. Otherwise, it
+        // will be Error. Then, we call is_err() which returns a boolean that is equal to True if
+        // var() errors. 
+        //     Thus, if "CASE_INSENSITIVE" is not set, then var() will return Error, so is_err() will return True.
+        //                  so case_sensitive will be True
+        //           if "CASE_INSENSITIVE" is set, then var() will NOT return Error, so is_err() will return False.
+        //                  so case_sensitive will be False
+        //
+        // Can set environment variable: export CASE_INSENSITIVE=true
+        // Unset environment variable: unset CASE_INSENSITIVE
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        Ok(Config { query, filename, case_sensitive})
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;   
+
+    #[test]
+    fn case_sensitive() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Duct tape.";
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+
+    #[test]
+    fn case_insensitive() {
+        let query = "rUsT";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Trust me.";
+        assert_eq!(
+            vec!["Rust:", "Trust me."], 
+            search_case_insensitive(query, contents)
+        );
+    }
+}
+```
+
+**<ins>main.rs</ins>**
+
+```Rust
+use std::env;
+use std::process; // allow us to exit the program without panicking
+
+use minigrep::Config; // import the Config struct from our library crate 
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    // unwrap_or_else() takes in a closure containing the error variant. It
+    // either returns the Ok value or computes it from the closure.
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        eprintln!("Problem parsing arguments: {}", err); // print error to the standard error stream
+        process::exit(1);  // terminates the program with the status code passed in
+    });
+    // Could also use a match like the below...
+    // let config = match Config::new(&args) {
+    //     Ok(val) => val,
+    //     Err(err) => {
+    //         eprintln!("Problem parsing arguments: {}", err);
+    //         process::exit(1);
+    //     }
+    // };
+
+    println!("Query: {}", config.query);
+    println!("Filename: {}", config.filename);
+
+    match minigrep::run(config) {
+        Ok(_) => (), // in Ok case we do nothing
+        Err(err) => {
+            eprintln!("Application Error: {}", err); // print error to the standard error stream
+            process::exit(1);
+        }
+    };
+
+    // Could also use if let syntax because we only care about one case (i.e., the error variant in this example)...
+    // if let Err(err) = run(config) {
+    //     eprintln!("Application Error: {}", err);
+    //     process::exit(1);
+    // } 
+
+}
+```
+
+---
+
+# Closures
+
 
 
