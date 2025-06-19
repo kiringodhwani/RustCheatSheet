@@ -3824,7 +3824,7 @@ fn main() {
 
 ### Closure Environment Capturing Modes in Rust
 
-1. **<ins>Capture by Immutable Borrow (&T):</ins>** **Variable is not modified inside the closure.** In the below, the variable **`word` is not modified inside the closure `print_str`**. **As the variable is immutable by default, we can make any number of immutable references of `word` inside the closure.** Notice that the closure variable `print_str` is also immutable.
+1. **<ins>Capture by Immutable Borrow (`&T`):</ins>** **Variable is not modified inside the closure.** In the below, the variable **`word` is not modified inside the closure `print_str`**. **As the variable is immutable by default, we can make any number of immutable references of `word` inside the closure.** Notice that the closure variable `print_str` is also immutable.
 
 	- **<ins>When a closure captures a variable by immutable borrow</ins>** (which **happens when the variable is only read inside the closure**, as `word` is in `println!("word = {}", word)`), **<ins>the closure essentially takes an immutable reference to that variable.</ins>** The core rule is that **you can have any number of _immutable references_ to a piece of data simultaneously.** Because the closure `print_str` only holds an immutable borrow of `word`, and `println!("length of word = {}", word.len());` also takes an immutable borrow of `word`, these operations can coexist.
 
@@ -3845,7 +3845,7 @@ fn main() {
 }
 ```
 
-2. **<ins>Capture by Mutable Borrow (&mut T):</ins>** **Variable is modified inside the closure.** In the below example, the variable **`word` is modified inside the closure `print_str` with `word.push_str("World!");`**. Thus, we **have to make the variable `word` mutable as well as the closure variable `print_str`**. This means **<ins>no other references of the `word` variable can exist unless the closure is used</ins>, since the closure takes a mutable reference to the piece of data.**
+2. **<ins>Capture by Mutable Borrow (`&mut T`):</ins>** **Variable is modified inside the closure.** In the below example, the variable **`word` is modified inside the closure `print_str` with `word.push_str("World!");`**. Thus, we **have to make the variable `word` mutable as well as the closure variable `print_str`**. This means **<ins>no other references of the `word` variable can exist unless the closure is used</ins>, since the closure takes a mutable reference to the piece of data.**
 	- **Encoded in the `FnMut` function trait** — **`FnMut` mutably borrows values**
 
 ```Rust
@@ -3881,7 +3881,7 @@ fn main() {
 
 <br>
 
-3. **<ins>Capture by Move (i.e., Capture by value, Taking Ownership) (T):</ins>** **Variable is moved inside closure.** Here, we move the value in the `word` variable to a new variable `new_word` inside the closure. As the variable is moved, we cannot use it anywhere else except for inside the closure.
+3. **<ins>Capture by Move (i.e., Capture by value, Taking Ownership) (`T`):</ins>** **Variable is moved inside closure.** Here, we move the value in the `word` variable to a new variable `new_word` inside the closure. As the variable is moved, we cannot use it anywhere else except for inside the closure.
 
 	- **Encoded in the `FnOnce` function trait** — **`FnOnce` takes ownership of the variables inside the closure’s environment.** The “Once” part of the name represents the fact that closures can’t take ownership of the same variables more than once. So, these closures can only be called once. 
 
