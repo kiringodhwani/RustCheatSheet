@@ -4116,9 +4116,9 @@ fn iterator_demonstration() {
 					// be mutable bc we're calling next() and next()
 					// needs a mutable reference to the iterator
 
-    assert_eq!(v1_iter.next(), Some(&1));	// First call, get reference to first elem inside of Some()
-    assert_eq!(v1_iter.next(), Some(&2));	// Second call, get reference to second elem inside of Some()
-    assert_eq!(v1_iter.next(), Some(&3));	// Third call, get reference to third elem inside of Some()
+    assert_eq!(v1_iter.next(), Some(&1));	// First call, get reference to first elem in iterator wrapped in Some()
+    assert_eq!(v1_iter.next(), Some(&2));	// Second call, get reference to second elem in iterator wrapped in Some()
+    assert_eq!(v1_iter.next(), Some(&3));	// Third call, get reference to third elem in iterator wrapped in Some()
     assert_eq!(v1_iter.next(), None);		// Fourth call, get None bc at the end of vector
 }
 ```
