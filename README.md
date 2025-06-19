@@ -4075,7 +4075,7 @@ let v1 = vec![1, 2, 3];
 let v1_iter = v1.iter();	// create an iterator over the vector
 ```
 
-- <ins>NOTE:</ins> **In Rust, iterators are lazy.** When we do “let v1_iter = v1.iter();”, **nothing special happens until we actually use the iterator**…
+- <ins>NOTE:</ins> **In Rust, iterators are lazy.** When we do `let v1_iter = v1.iter();`, **nothing special happens until we actually use the iterator**…
 
 ```Rust
 for value in v1_iter {
