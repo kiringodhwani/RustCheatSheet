@@ -3975,7 +3975,7 @@ fn main() {
 //
 struct Cacher<T>
 where
-    T: Fn(u32) -> u32,	// For a Cacher to exist, `T` must be a function (specifically, `T` must implement the `Fn` trait).
+    T: Fn(u32) -> u32,	// For a `Cacher` to exist, `T` must be a function (specifically, `T` must implement the `Fn` trait).
 {
     calculation: T,	// calculation can be any closure that meets the trait bound
     	
@@ -3983,23 +3983,23 @@ where
 				// The key will be the `u32` argument, and the value will be the `u32` result.
 }
 
-// The implementation block for Cacher has the same generic and trait bound as the Cacher struct
+// The implementation block for `Cacher` has the same generic and trait bound as the `Cacher` struct
 //
 impl<T> Cacher<T>
 where
     T: Fn(u32) -> u32,	// For the methods within this specific implementation of
-			// Cacher (new and value), T is a function (implements the `Fn` trait.
+			// `Cacher` (`new` and `value`), `T` is a function (implements the `Fn` trait.
 {
-    fn new(calculation: T) -> Cacher<T> {	// Constructor. Takes in a calculation of type T (our closure), and
-						// creates a new Cacher, passing in the calculation and initializing an
+    fn new(calculation: T) -> Cacher<T> {	// Constructor. Takes in a calculation of type `T` (our closure), and
+						// creates a new `Cacher`, passing in the calculation and initializing an
 						// empty HashMap.
         Cacher {
             calculation,
-            value: HashMap::new(),	// Initialize an empty HashMap when the Cacher is created.
+            value: HashMap::new(),	// Initialize an empty HashMap when the `Cacher` is created.
         }
     }
 
-    // value() method, method bc first param is reference to self
+    // `value()` method, method bc first param is reference to `self`
     fn value(&mut self, arg: u32) -> u32 {
 
         // Check if the result for the given `arg` already exists in the HashMap.
@@ -4009,7 +4009,7 @@ where
         //
         *self.value.entry(arg).or_insert_with(|| {
 
-            // If the arg is NOT in the HashMap, execute the expensive calculation and store its result.
+            // If the `arg` is NOT in the HashMap, execute the expensive calculation and store its result.
             let v = (self.calculation)(arg);
             println!("Caching result for argument: {}", arg);	// Added for clarity, see print output below
             v
@@ -4020,8 +4020,8 @@ where
 }
 
 fn generate_workout(intensity: u32, random_number: u32) {
-    // Call the new() function in our Cacher struct on our closure for the expensive calculation
-    // Make variable mutable bc we will be calling the value method which mutates the Cacher instance
+    // Call the `new()` function in our `Cacher` struct on our closure for the expensive calculation
+    // Make variable mutable bc we will be calling the value method which mutates the `Cacher` instance
     //
     let mut cached_result = Cacher::new(|num| {
         println!("calculating slowly...");
