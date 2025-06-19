@@ -3971,11 +3971,11 @@ fn main() {
 // In order to define structs, enums, or even function parameters that use closures, we need to
 // use generics and trait bounds. Here, we have a generic called `T` and we define a trait bound
 // for the generic with the `Fn` trait (function, capture by immutable borrow). All closures implement
-// (one of the three fn traits `Fn`, `FnMut`, `FnOnce`). Regular functions also implement these three fn traits.
+// one of the three fn traits `Fn`, `FnMut`, `FnOnce`. Regular functions also implement these three fn traits.
 //
 struct Cacher<T>
 where
-    T: Fn(u32) -> u32,	// For a Cacher to exist, T must be a function (specifically, `T` must implement the `Fn` trait).
+    T: Fn(u32) -> u32,	// For a Cacher to exist, `T` must be a function (specifically, `T` must implement the `Fn` trait).
 {
     calculation: T,	// calculation can be any closure that meets the trait bound
     	
