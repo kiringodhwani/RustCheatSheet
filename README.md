@@ -3903,6 +3903,8 @@ fn main() {
 }
 ```
 
+<br>
+
 **When you create a closure, Rust infers which of the traits to use (`FnOnce`, `FnMut`, `Fn`) based on how you use the values in inside the closure’s environment.** 
 
 - You can **force the closure to take ownership of the values it uses inside its environment by using the `move` keyword in front of the closure.** Mostly **useful when you’re passing a closure from one thread to another thread** so you can also pass the ownership of the variables from one thread to the other thread. Ex:
