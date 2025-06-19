@@ -3731,6 +3731,7 @@ use minigrep::Config; // import the Config struct from our library crate
 
 fn main() {
     let args: Vec<String> = env::args().collect();
+
     // unwrap_or_else() takes in a closure containing the error variant. It
     // either returns the Ok value or computes it from the closure.
     let config = Config::new(&args).unwrap_or_else(|err| {
