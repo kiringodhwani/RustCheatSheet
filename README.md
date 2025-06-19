@@ -3905,6 +3905,7 @@ fn main() {
 
 - You can **force the closure to take ownership of the values it uses inside its environment by using the `move` keyword in front of the closure.** Mostly **useful when you’re passing a closure from one thread to another thread** so you can also pass the ownership of the variables from one thread to the other thread. Ex:
 
+```Rust
 fn main() {
     let x = vec![1,2,3];
 
@@ -3915,7 +3916,7 @@ fn main() {
 
     println!("can't use x here {:?}", x);	// this errors (red squiggly under x) bc the closure now takes
     						// ownership of x so we can't use x after it’s been moved.
-
+```
 
 NOTE: **Because closures capture their environment, they have to use extra memory to store that context**. Functions, on the other hand, don’t capture their environment, so they don’t incur the same overhead. 
 
