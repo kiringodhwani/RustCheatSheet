@@ -4150,4 +4150,78 @@ fn iterator_demonstration() {
 
 ## Additional Iterator Methods with Default Implementations
 
+The **Iterator trait** has **various methods which have default implementations provided by the standard library**. There are <ins>two broad categories of methods</ins>:
+
+1. **<ins>Adapters</ins>** — **Take in an iterator and return another iterator.**
+
+    - **`.map(closure)`** — Takes a closure and creates an iterator which calls that closure on each element in the sequence. <ins>Example:</ins>
+	
+```Rust
+let v1 = vec![1, 2, 3];
+
+// map() returns an iterator and iterators in Rust are lazy. So it doesn't do anything until we
+// use a consumer method. We use collect() to transform it into a collection.
+//
+let v2: Vec<i32> = v1.iter().map(|x| x + 1).collect(); // [1, 2, 3] -> [2, 3, 4]
+```
+
+    - **`.filter(closure)`** — Accepts a closure and creates an iterator which uses the closure to determine if an element should be included in the new iterator or not. Given an element the closure must return true or false. The returned iterator will yield only the elements for which the closure returns true. <ins>Example:</ins>
+
+#[derive(PartialEq, Debug)]
+struct Shoe {	// shoe struct that represents a single shoe 
+    size: u32,	// size of the shoe
+    style: String,	// style of the shoe
+}
+
+// Takes a vector of shoes (not a reference so takes ownership of the vector) and a shoe size
+// Filters the shoes in the vector to only shoes that have the specified size
+//
+fn shoes_in_my_size(shoes: Vec<Shoe>, shoe_size: u32) -> Vec<Shoe> {
+
+    // into_iter() creates an iterator that takes ownership of the shoes vector.
+    // 
+    // Call the filter() method to create an iterator that only includes shoes with size equal to the
+    // passed in shoe_size. This is an example of closures capturing their environment, as shoe_size 
+    // is not defined in the closure but the closure has access to it.
+    // 
+    // Call collect() to convert the iterator returned from filter into a collection (vector of shoes)
+    // 
+    shoes.into_iter().filter(|s| s.size == shoe_size).collect()
+}
+
+    - **`.zip(other iterator)`** — takes in another iterator and ‘zips up' the two iterators into a single iterator of pairs. Just like zip() in Python. <ins>Example:</ins>
+
+```Rust
+let a1 = [1, 2, 3];
+let a2 = [4, 5, 6];
+
+let mut iter = a1.iter().zip(a2.iter());    // —> [ Some((&1, &4)), Some((&2, &5)), Some((&3, &6)) ]
+```
+			
+    -**`.skip()`** — creates an iterator that skips the first n elements. skip(n) skips elements until n elements are skipped or the end of the iterator is reached (whichever happens first). After that, all the remaining elements are yielded. In particular, if the original iterator is too short, then the returned iterator is empty. <ins>Example:</ins>
+
+```Rust
+let a = [1, 2, 3];
+
+let mut iter = a.iter().skip(2);    // skip 1 and 2 so the next element is 3
+
+assert_eq!(iter.next(), Some(&3));       
+assert_eq!(iter.next(), None);
+```
+
+2. **<ins>Consumers</ins>** — **Take in an iterator and return some other type such as an integer, collection, or any other type.**
+
+        - **`.sum()`** — `sum()` will repeatedly call the `next()` method to get each element in the sequence and then add those elements up and return the sum.
+
+```Rust
+let v1 = vec![1, 2, 3];
+
+let total: i32 = v1.iter().sum();	// requires type annotation 
+					// total = 6
+```
+
+        - **`.collect()`** — transform the iterator into a collection
+
+## Implementing Our Own Iterator
+
 
