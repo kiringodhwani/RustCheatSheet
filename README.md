@@ -4063,5 +4063,90 @@ fn generate_workout(intensity: u32, random_number: u32) {
 
 # Iterators
 
+- The **iterator pattern** allows you to **iterate over a sequence of elements regardless of how the elements are stored** (e.g., an array, a hashmap, a graph, a custom data structure, etc.)
+
+- **Iterators encapsulate the logic for iterating over these different data structures**, whether its an array (simple just incrementing the index, or a hashmap which is more complicated). **This allows you to iterate over various data structures in a uniform way.**
+
+- <ins>Example:</ins>
+
+```Rust
+let v1 = vec![1, 2, 3];
+
+let v1_iter = v1.iter();	// create an iterator over the vector
+```
+
+- <ins>NOTE:</ins> **In Rust, iterators are lazy.** When we do “let v1_iter = v1.iter();”, **nothing special happens until we actually use the iterator**…
+
+```Rust
+for value in v1_iter {
+    println!("Got: {}", value);
+}
+```
+
+## How Iterators Work
+
+- All iterators in Rust implement the **Iterator trait** which is defined in Rust standard library. Looks something like the below... 
+
+	- As you can see, **iterators are very simple** — there’s **only one method you have to implement which is the <ins>next()</ins> method**. All the other methods have default implementations. 
+
+	- The **<ins>next()</ins> method** **returns the next item in the iteration wrapped in Some() and when we get to the end of the iteration, it returns None.**
+
+```Rust
+pub trait Iterator {
+    type Item;	// when implementing the iterator, you also have to define the `Item` type, which
+		// is the type returned from the next() method.
+
+    fn next(&mut self) -> Option<Self::Item>;	// we also need a mutable reference to `self` bc
+						// calling next() changes the internal state of the
+						// iterator used to track where it is in the sequence.
+
+    // methods with default implementations elided
+}
+```
+
+<br>
+
+<ins>Example showing iterator in action with next():</ins>
+
+```Rust
+fn iterator_demonstration() {
+    let v1 = vec![1, 2, 3]; 
+
+    let mut v1_iter = v1.iter();	// mutable variable to store iterator, must
+					// be mutable bc we're calling next() and next()
+					// needs a mutable reference to the iterator
+
+    assert_eq!(v1_iter.next(), Some(&1));	// First call, get reference to first elem inside of Some()
+    assert_eq!(v1_iter.next(), Some(&2));	// Second call, get reference to second elem inside of Some()
+    assert_eq!(v1_iter.next(), Some(&3));	// Third call, get reference to third elem inside of Some()
+    assert_eq!(v1_iter.next(), None);		// Fourth call, get None bc at the end of vector
+}
+```
+
+<ins>^^^^NOTE:</ins> Our **iterator returns immutable references when we use iter()…**
+
+- **iter()**  —  **immutable references**
+
+- **iter_mut()**  —  **mutable references**
+
+- **into_iter()**  —   **own types**       <ins>Example with into_iter:</ins>
+
+```Rust
+#[test]
+fn iterator_demonstration() {
+	let v1 = vec![1, 2, 3]; 
+
+	let mut v1_iter = v1.into_iter();   
+
+	// You can see in these `assert_eq!()` calls that the value stored in `Some` is
+	// an own type, not a reference like we had with `iter()`.
+	assert_eq!(v1_iter.next(), Some(1)); 
+	assert_eq!(v1_iter.next(), Some(2)); 
+	assert_eq!(v1_iter.next(), Some(3));  
+	assert_eq!(v1_iter.next(), None);   
+}
+```
+
+## Additional Iterator Methods with Default Implementations
 
 
