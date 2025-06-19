@@ -3941,16 +3941,127 @@ let expensive_closure = |num: u32| -> u32 {
 
 <ins>NOTE:</ins> **Closure definitions can only have one concrete type inferred for each input parameter**…
 
-	let example_closure = |x| x;
+```Rust
+let example_closure = |x| x;
 	
-	let s = example_closure(String::from(“hello”));	// here, the compiler infers that `x` in the closure is a `String`
+let s = example_closure(String::from(“hello”));	// here, the compiler infers that `x` in the closure is a `String`
 
-	let n = example_closure(5);	// this fails bc the compiler expects from previous line that 
- 					// `x` is a String
+let n = example_closure(5);	// this fails bc the compiler expects from previous line that 
+				// `x` is a String
+```
 
+^^^**The first type passed into our closure will be the concrete type of our input parameters.**
 
+## Closure Example Use Case
 
+Imagine you are building a back end for a fitness app, and the backend is built in Rust. The fitness app will generate customized workouts for a user based on various factors like their age, body mass index, workout preference, and intensity level. **Part of this algorithm runs a calculation that is expensive and takes a few seconds to run. We want to perform this expensive calculation as few times as possible, so we <ins>cache results of the calculation</ins>. CACHER IMPLEMENTATION**
 
+```Rust
+use std::collections::HashMap; // Import HashMap
+use std::thread;
+use std::time::Duration;
+
+fn main() {
+    let simulated_intensity = 10;
+    let simulated_random_number = 7;
+
+    generate_workout(simulated_intensity, simulated_random_number);
+}
+
+// In order to define structs, enums, or even function parameters that use closures, we need to
+// use generics and trait bounds. Here, we have a generic called `T` and we define a trait bound
+// for the generic with the `Fn` trait (function, capture by immutable borrow). All closures implement
+// (one of the three fn traits `Fn`, `FnMut`, `FnOnce`). Regular functions also implement these three fn traits.
+//
+struct Cacher<T>
+where
+    T: Fn(u32) -> u32,	// For a Cacher to exist, T must be a function (specifically, `T` must implement the `Fn` trait).
+{
+    calculation: T,	// calculation can be any closure that meets the trait bound
+    	
+    value: HashMap<u32, u32>,	// `value` is a HashMap to store results for different arguments.
+				// The key will be the `u32` argument, and the value will be the `u32` result.
+}
+
+// The implementation block for Cacher has the same generic and trait bound as the Cacher struct
+//
+impl<T> Cacher<T>
+where
+    T: Fn(u32) -> u32,	// For the methods within this specific implementation of
+			// Cacher (new and value), T is a function (implements the `Fn` trait.
+{
+    fn new(calculation: T) -> Cacher<T> {	// Constructor. Takes in a calculation of type T (our closure), and
+						// creates a new Cacher, passing in the calculation and initializing an
+						// empty HashMap.
+        Cacher {
+            calculation,
+            value: HashMap::new(),	// Initialize an empty HashMap when the Cacher is created.
+        }
+    }
+
+    // value() method, method bc first param is reference to self
+    fn value(&mut self, arg: u32) -> u32 {
+
+        // Check if the result for the given `arg` already exists in the HashMap.
+        // `entry(arg)` gets an Entry enum, which can be `Occupied` or `Vacant`.
+        // `or_insert_with` allows us to insert a value if the key is vacant, 
+        // using the result of a closure (in this case, calling `self.calculation`).
+        //
+        *self.value.entry(arg).or_insert_with(|| {
+
+            // If the arg is NOT in the HashMap, execute the expensive calculation and store its result.
+            let v = (self.calculation)(arg);
+            println!("Caching result for argument: {}", arg);	// Added for clarity, see print output below
+            v
+        })
+        // `or_insert_with` returns a mutable reference to the value.
+        // We dereference it (`*self.value...`) to get the owned `u32` value.
+    }
+}
+
+fn generate_workout(intensity: u32, random_number: u32) {
+    // Call the new() function in our Cacher struct on our closure for the expensive calculation
+    // Make variable mutable bc we will be calling the value method which mutates the Cacher instance
+    //
+    let mut cached_result = Cacher::new(|num| {
+        println!("calculating slowly...");
+        thread::sleep(Duration::from_secs(2));	// this is the expensive calculation
+        num
+    });
+
+    if intensity < 25 {
+        println!(
+            "Today, do {} pushups!",
+            cached_result.value(intensity),	// The 1st call with intensity 10 will calculate and cache the result.
+        );
+        println!(
+            "Next, do {} situps!",
+            cached_result.value(intensity),	// The 2nd call with intensity 10 will retrieve the cached result. 
+        );
+        println!(
+            "How about some jumping jacks? {} of them!",
+            cached_result.value(15),	// This is a new argument (15), so it will calculate and cache this result.
+        );
+        println!(
+            "And back to pushups: {} of them!",
+            cached_result.value(intensity),	// This will again retrieve the cached result for 10.
+        );
+    } else {
+        if random_number == 3 {
+            println!("Take a break today! Remember to stay hydrated!");
+        } else {
+            println!( 
+                "Today, run for {} minutes!",
+                cached_result.value(intensity),
+            )
+        }
+    }
+}
+```
+
+---
+
+Iterators
 
 
 
