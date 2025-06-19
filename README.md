@@ -4211,6 +4211,8 @@ assert_eq!(iter.next(), Some(&3));
 assert_eq!(iter.next(), None);
 ```
 
+<br>
+
 2. **<ins>Consumers</ins>** — **Take in an iterator and return some other type such as an integer, collection, or any other type.**
 
 - **`.sum()`** — `sum()` will repeatedly call the `next()` method to get each element in the sequence and then add those elements up and return the sum.
