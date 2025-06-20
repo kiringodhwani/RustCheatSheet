@@ -4444,11 +4444,11 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
 ```Rust
 fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
     contents 
-        .lines()	// .lines() creates an iterator over all of the lines in our 'contents' string
+        .lines()	// .lines() creates an iterator over all the lines in our `contents` string
 
-        .filter(|line| line.contains(query))	// filter to only lines that contain the 'query' string
+        .filter(|line| line.contains(query))	// filter to only lines that contain the `query` string
 
-        .collect()	// collect() consumer method turns the iterator returned from filter() into a collection.
+        .collect()	// `collect()` consumer method turns the iterator returned from `filter()` into a collection.
 			// Here, Rust knows what type of collection we want bc it's specified as the return type  
 }
 ```
