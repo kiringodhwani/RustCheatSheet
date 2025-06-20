@@ -4311,7 +4311,7 @@ fn using_other_iterator_trait_methods() {
 
 - **<ins>OLD CODE:</ins>** We **`clone()`** strings in `Config::new()` which is **inefficient**, but we have no choice… as explained below…
 
-<ins>main.rs</ins>*
+<ins>main.rs</ins>
 ```Rust
 fn main() {
     let args: Vec<String> = env::args().collect();	// `args()` returns an iterator over our command line
@@ -4427,7 +4427,7 @@ impl Config {
 
 ### Simplifying `search()` Using Iterator Adaptor Functions
 
-<ins>OLD CODE:</ins>
+**<ins>OLD CODE:</ins>**
 ```Rust    
 fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
     let mut matches = Vec::new();
@@ -4439,7 +4439,7 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
     matches
 }
 
-<ins>NEW CODE:</ins>
+**<ins>NEW CODE:</ins>**
 ```Rust
 fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
     contents 
