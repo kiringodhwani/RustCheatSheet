@@ -4425,7 +4425,7 @@ impl Config {
 }
 ```
 
-### Simplifying `search()` Using Iterator Adaptor Functions:
+### Simplifying `search()` Using Iterator Adaptor Functions
 
 <ins>OLD CODE:</ins>
 ```Rust    
