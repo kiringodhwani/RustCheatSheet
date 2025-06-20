@@ -4444,7 +4444,7 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
 ```Rust
 fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
     contents 
-        .lines()	// .lines() creates in iterator to all the lines in our 'contents' string
+        .lines()	// .lines() creates in iterator over all of the lines in our 'contents' string
 
         .filter(|line| line.contains(query))	// filter to only lines that contain the 'query' string
 
