@@ -4226,6 +4226,77 @@ let total: i32 = v1.iter().sum();	// requires type annotation
 
 - **`.collect()`** — transform the iterator into a collection
 
+
 ## Implementing Our Own Iterator
 
+<ins>Example:</ins> Here, we create an iterator that counts from 1 to 5...
 
+struct Counter {
+    count: u32,	// count field keeps track of where we are in the process of iterating from 1 to 5.
+    		// Private bc we want the field to only be accessed by our implementation block.
+}
+
+impl Counter {
+    fn new() -> Counter {	// Constructor to create a new Counter with a count set to 0, we enforce that
+    				// every time a new Counter is created, count gets initialized to 0
+        Counter { count: 0 }
+    }
+}
+
+// Implement the Iterator trait for Counter
+// 
+impl Iterator for Counter {
+    type Item = u32;	// Item associate type set to unsigned 32-bit int. Says that our iterator is
+    			// going to return items of type u32. 
+
+    // next() is the only method we're required to implement for the Iterator trait...
+    //   - takes a mutable reference to self
+    //   - returns an Option enum which holds the next item or None if reaches the end
+    //
+    fn next(&mut self) -> Option<Self::Item> { 
+        if self.count < 5 {	// if self.count < 5, then we increment self.count and return it (bc not at 5 yet)
+            self.count += 1;
+            Some(self.count)
+        } else {	// if self.count >=5, then return None bc we're at the end of our iteration
+            None
+        }
+    }
+}
+
+#[test]
+fn calling_next_directly() {
+    let mut counter = Counter::new();
+
+    // call next() six times, first five calls expect to get a number in the sequence bc iterating from 0 -> 5
+    assert_eq!(counter.next(), Some(1));
+    assert_eq!(counter.next(), Some(2));
+    assert_eq!(counter.next(), Some(3));
+    assert_eq!(counter.next(), Some(4));
+    assert_eq!(counter.next(), Some(5));
+    assert_eq!(counter.next(), None);	// sequence is over
+}
+
+// The standard library provides default implementations for a lot of other methods on our iterator…
+// Example test using these default implementations…
+//
+#[test]
+fn using_other_iterator_trait_methods() {
+    // Create a variable called 'sum' which is an integer equal to this long expression...
+    let sum: u32 = Counter::new()	// Create a new Counter.
+
+        .zip(Counter::new().skip(1))	// Zip up the Counter we created with another Counter that 
+					// skips the first element.
+
+        .map(|(a, b)| a * b)		// Call map on the zipped up iterator to multiply each pair (tuple) 
+					// of values together then returns the iterator with these products.
+
+        .filter(|x| x % 3 == 0)		// Filter the iterator to only items that are divisible by 3.
+
+        .sum();				// Sum the items in the iterator.
+
+    assert_eq!(18, sum);
+}
+
+^^^This example shows that simply implementing the next() method gives us access to all these other methods that have default implementations in the standard library.
+
+# Iterators in Practice
