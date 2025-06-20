@@ -4438,6 +4438,7 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
     }
     matches
 }
+```
 
 **<ins>NEW CODE:</ins>**
 ```Rust
