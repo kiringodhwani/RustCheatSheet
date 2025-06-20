@@ -4405,8 +4405,8 @@ impl Config {
 			// about, so essentially just discard / skip it here.
 
         // `next()` returns an `Option` enum, which we match over.
-        //     If we have a valid argument in `next()`, then we extract it from `Some()` and return it
-        //     Otherwise, return an error specifying that we didn't get the `query` string
+        //     - If we have a valid argument in `next()`, then we extract it from `Some()` and return it
+        //     - Otherwise, return an error specifying that we didn't get the `query` string
         //
         let query = match args.next() {               
             Some(arg) => arg,                        
