@@ -4257,7 +4257,7 @@ impl Iterator for Counter {
     //   - returns an `Option` enum which holds the next item or None if reaches the end
     //
     fn next(&mut self) -> Option<Self::Item> { 
-        if self.count < 5 {	// If `self.count < 5`, then we increment `self.coun`t and return it (bc not at 5 yet).
+        if self.count < 5 {	// If `self.count < 5`, then we increment `self.count` and return it (bc not at 5 yet).
             self.count += 1;
             Some(self.count)
         } else {	// If `self.count >=5`, then return None bc we're at the end of our iteration.
