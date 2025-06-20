@@ -4301,6 +4301,6 @@ fn using_other_iterator_trait_methods() {
 }
 ```
 
-^^^This example shows that simply implementing the next() method gives us access to all these other methods that have default implementations in the standard library.
+^^^This example shows that simply implementing the `next()` method gives us access to all these other methods that have default implementations in the standard library.
 
 # Iterators in Practice
