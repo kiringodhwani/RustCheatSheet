@@ -4200,7 +4200,7 @@ let a2 = [4, 5, 6];
 let mut iter = a1.iter().zip(a2.iter());    // —> [ Some((&1, &4)), Some((&2, &5)), Some((&3, &6)) ]
 ```
 			
--**`.skip()`** — creates an iterator that skips the first n elements. skip(n) skips elements until n elements are skipped or the end of the iterator is reached (whichever happens first). After that, all the remaining elements are yielded. In particular, if the original iterator is too short, then the returned iterator is empty. <ins>Example:</ins>
+-**`.skip(n)`** — creates an iterator that skips the first n elements. skip(n) skips elements until n elements are skipped or the end of the iterator is reached (whichever happens first). After that, all the remaining elements are yielded. In particular, if the original iterator is too short, then the returned iterator is empty. <ins>Example:</ins>
 
 ```Rust
 let a = [1, 2, 3];
@@ -4459,3 +4459,6 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
 
 - **Comes down to preference.** **Rust engineers tend to prefer iterators**, because it’s a higher level of abstraction and you get access to all of the nice default standard library methods like map() and filter(). 
 
+---
+
+# Publishing a Rust Crate
