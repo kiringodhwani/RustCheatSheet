@@ -4234,32 +4234,33 @@ let total: i32 = v1.iter().sum();	// requires type annotation
 ```Rust
 
 struct Counter {
-    count: u32,	// count field keeps track of where we are in the process of iterating from 1 to 5.
+    count: u32,	// `count` field keeps track of where we are in the process of iterating from 1 to 5.
     		// Private bc we want the field to only be accessed by our implementation block.
 }
 
 impl Counter {
-    fn new() -> Counter {	// Constructor to create a new Counter with a count set to 0, we enforce that
-    				// every time a new Counter is created, count gets initialized to 0
+    fn new() -> Counter {	// Constructor to create a new `Counter` with a `count` set to 0. This enforces that
+    				// every time a new `Counter` is created, `count` gets initialized to 0 (bc `count` field
+				// is private, so `Counter`'s can only be instantiated with this `new()` associated function).
         Counter { count: 0 }
     }
 }
 
-// Implement the Iterator trait for Counter
+// Implement the `Iterator` trait for `Counter`
 // 
 impl Iterator for Counter {
-    type Item = u32;	// Item associate type set to unsigned 32-bit int. Says that our iterator is
+    type Item = u32;	// `Item` associated type set to unsigned 32-bit int. Says that our `Iterator` is
     			// going to return items of type u32. 
 
-    // next() is the only method we're required to implement for the Iterator trait...
-    //   - takes a mutable reference to self
-    //   - returns an Option enum which holds the next item or None if reaches the end
+    // `next()` is the only method we're required to implement for the `Iterator` trait...
+    //   - takes a mutable reference to `self`
+    //   - returns an `Option` enum which holds the next item or None if reaches the end
     //
     fn next(&mut self) -> Option<Self::Item> { 
-        if self.count < 5 {	// if self.count < 5, then we increment self.count and return it (bc not at 5 yet)
+        if self.count < 5 {	// If `self.count < 5`, then we increment `self.coun`t and return it (bc not at 5 yet).
             self.count += 1;
             Some(self.count)
-        } else {	// if self.count >=5, then return None bc we're at the end of our iteration
+        } else {	// If `self.count >=5`, then return None bc we're at the end of our iteration.
             None
         }
     }
@@ -4269,7 +4270,7 @@ impl Iterator for Counter {
 fn calling_next_directly() {
     let mut counter = Counter::new();
 
-    // call next() six times, first five calls expect to get a number in the sequence bc iterating from 0 -> 5
+    // call `next()` six times, first five calls expect to get a number in the sequence bc iterating from 0 -> 5
     assert_eq!(counter.next(), Some(1));
     assert_eq!(counter.next(), Some(2));
     assert_eq!(counter.next(), Some(3));
@@ -4278,23 +4279,23 @@ fn calling_next_directly() {
     assert_eq!(counter.next(), None);	// sequence is over
 }
 
-// The standard library provides default implementations for a lot of other methods on our iterator…
+// The standard library provides default implementations for a lot of other methods on our `Iterator`…
 // Example test using these default implementations…
 //
 #[test]
 fn using_other_iterator_trait_methods() {
-    // Create a variable called 'sum' which is an integer equal to this long expression...
-    let sum: u32 = Counter::new()	// Create a new Counter.
+    // Create a variable called `sum` which is an integer equal to this long expression...
+    let sum: u32 = Counter::new()	// Create a new `Counter`.
 
-        .zip(Counter::new().skip(1))	// Zip up the Counter we created with another Counter that 
+        .zip(Counter::new().skip(1))	// Zip up the `Counter` we created with another `Counter` that 
 					// skips the first element.
 
-        .map(|(a, b)| a * b)		// Call map on the zipped up iterator to multiply each pair (tuple) 
-					// of values together then returns the iterator with these products.
+        .map(|(a, b)| a * b)		// Call `map` on the zipped up `Iterator` to multiply each pair (tuple) 
+					// of values together then return the `Iterator` with these products.
 
-        .filter(|x| x % 3 == 0)		// Filter the iterator to only items that are divisible by 3.
+        .filter(|x| x % 3 == 0)		// Filter the `Iterator` to only items that are divisible by 3.
 
-        .sum();				// Sum the items in the iterator.
+        .sum();				// Sum the items in the `Iterator`.
 
     assert_eq!(18, sum);
 }
