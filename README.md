@@ -4343,11 +4343,11 @@ impl Config {
         if args.len() < 3 {
             return Err("Not enough arguments");
         }
-        // PROBLEM: cloning the strings here is inefficient, but we have to do this because ‘args’ above is
+        // PROBLEM: cloning the strings here is inefficient, but we have to do this because `args` above is
         //          a reference to an array, so we can’t take ownership of the strings. TO FIX THIS, instead
-        //	    of taking an array reference / slice for ‘args’, let’s take in an iterator, which we have 
+        //	    of taking an array reference / slice for `args`, let’s take in an iterator, which we have 
         //	    ownership over, which also means that we have ownership over its contents. This way
-        //          we can remove the clone() operation here. 
+        //          we can remove the `clone()` operation here. 
         // 
         let query = args[1].clone();
         let filename = args[2].clone();
