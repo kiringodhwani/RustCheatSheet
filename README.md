@@ -4304,3 +4304,157 @@ fn using_other_iterator_trait_methods() {
 ^^^This example shows that simply implementing the `next()` method gives us access to all these other methods that have default implementations in the standard library.
 
 # Iterators in Practice
+
+- Improving our minigrep (CLI) project with iterators.
+
+### Removing the Use of `clone()` by Using Iterators
+
+- **<ins>OLD CODE:</ins>** We **`clone()`** strings in `Config::new()` which is **inefficient**, but we have no choice… as explained below…
+
+<ins>main.rs</ins>*
+```Rust
+fn main() {
+    let args: Vec<String> = env::args().collect();	// `args()` returns an iterator over our command line
+							// arguments, but we call `collect()` to turn it into a
+							// a vector of `Strings`.
+
+    let config = Config::new(&args).unwrap_or_else(|err| {	// We pass a reference to our vector
+								// of Strings into `Config::new()`.
+
+        eprintln!("Problem parsing arguments: {}", err); 
+        process::exit(1); 
+    });
+
+    …
+    …
+    …
+}
+```
+
+<ins>lib.rs</ins>
+```Rust
+pub struct Config {
+    pub query: String,
+    pub filename: String,
+    pub case_sensitive: bool,
+}
+impl Config {
+    pub fn new(args: &[String]) -> Result<Config, &str> {
+        if args.len() < 3 {
+            return Err("Not enough arguments");
+        }
+        // PROBLEM: cloning the strings here is inefficient, but we have to do this because ‘args’ above is
+        //          a reference to an array, so we can’t take ownership of the strings. TO FIX THIS, instead
+        //	    of taking an array reference / slice for ‘args’, let’s take in an iterator, which we have 
+        //	    ownership over, which also means that we have ownership over its contents. This way
+        //          we can remove the clone() operation here. 
+        // 
+        let query = args[1].clone();
+        let filename = args[2].clone();
+
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        Ok(Config { query, filename, case_sensitive})
+    }
+}
+```
+
+- **<ins>NEW CODE:</ins>** **Don’t have to call `clone()` in `Config::new()` because we pass in an iterator for `args`**. When we call `args.next()`, we get a `Some()` variant and the `String` inside `Some()` is an own `String`, and we then pass this own `String` into a `query` variable, so the `query` variable is now taking ownership of the `String`. The same goes for `filename` — the `filename` variable is taking ownership of its `String`. We then pass the `query` and `filename` variables into a `Config` instance, so the `Config` instance takes ownership of the `query` and `filename` strings.
+
+<ins>main.rs</ins>
+```Rust
+fn main() {
+    let config = Config::new(env::args()).unwrap_or_else(|err| {	//  Pass the iterator returned from `args()`
+ 									//  straight into `Config::new()`
+        eprintln!("Problem parsing arguments: {}", err); 
+        process::exit(1); 
+    });
+
+    …
+    …
+    …
+}
+```
+
+<ins>lib.rs</ins>
+```Rust
+pub struct Config {
+    pub query: String,
+    pub filename: String,
+    pub case_sensitive: bool,
+}
+impl Config {
+
+    // `new()` now takes in the `args` iterator (type is `env::Args`)
+    // Also, make `args` mutable because we iterate over the iterator using `next()`
+    //
+    // We know from the lifetime elision rules that each parameter that is a reference gets its own lifetime  
+    // parameter. Before, we had one parameter (a reference to an array), so this will get a lifetime parameter
+    // since it's a reference. We also know from the elision rules that if there is exactly one input lifetime 
+    // parameter, that lifetime is assigned to all output lifetime parameters. Thus, the lifetime of the array 
+    // reference (`args`) was assigned to all the output lifetime parameters, so we didn't have to specify 
+    // lifetime annotations. Now, though, `args` is an own type (we changed it to an iterator), so it doesn't get a 
+    // lifetime parameter, but we are still returning a string slice for the error part of the `Result` enum. As a 
+    // result, we have to specify the lifetime of the string slice. Here, we set our lifetime to a `static` lifetime, 
+    // which makes sense because the string slice we return in the `Error` variant is the error message which 
+    // will live for the duration of the program, hence the `static` lifetime. 
+    //
+    pub fn new(mut args: env::Args) -> Result<Config, &'static str> {	
+
+        args.next();	// the first command line argument is the path to our program, which we don't care
+			// about, so essentially just discard / skip it here.
+
+        // `next()` returns an `Option` enum, which we match over.
+        //     If we have a valid argument in `next()`, then we extract it from `Some()` and return it
+        //     Otherwise, return an error specifying that we didn't get the `query` string
+        //
+        let query = match args.next() {               
+            Some(arg) => arg,                        
+            None => return Err("Didn't get a query string”),
+        };
+
+        let filename = match args.next() {
+            Some(filename) => filename,
+            None => return Err("Didn't get a filename")
+        };
+
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        Ok(Config { query, filename, case_sensitive})
+    }
+}
+```
+
+### Simplifying `search()` Using Iterator Adaptor Functions:
+
+<ins>OLD CODE:</ins>
+```Rust    
+fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
+    let mut matches = Vec::new();
+    for line in contents.lines() {
+        if line.contains(query) {
+            matches.push(line);
+        }
+    }
+    matches
+}
+
+<ins>NEW CODE:</ins>
+```Rust
+fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
+    contents 
+        .lines()	// .lines() creates in iterator to all the lines in our 'contents' string
+
+        .filter(|line| line.contains(query))	// filter to only lines that contain the 'query' string
+
+        .collect()	// collect() consumer method turns the iterator returned from filter() into a collection.
+			// Here, Rust knows what type of collection we want bc it's specified as the return type  
+}
+```
+
+### Should I Use Loops or Iterators?
+
+- **There is no added performance hit for using iterators.** Rust follows the zero cost abstraction principle which means that using higher level abstractions like iterators over loops doesn’t have a meaningful impact in terms of performance. So, **using loops or using iterators is about the same in terms of speed.**
+
+- **Comes down to preference.** **Rust engineers tend to prefer iterators**, because it’s a higher level of abstraction and you get access to all of the nice default standard library methods like map() and filter(). 
+
