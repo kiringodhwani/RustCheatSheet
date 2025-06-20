@@ -4231,6 +4231,8 @@ let total: i32 = v1.iter().sum();	// requires type annotation
 
 <ins>Example:</ins> Here, we create an iterator that counts from 1 to 5...
 
+```Rust
+
 struct Counter {
     count: u32,	// count field keeps track of where we are in the process of iterating from 1 to 5.
     		// Private bc we want the field to only be accessed by our implementation block.
@@ -4296,6 +4298,7 @@ fn using_other_iterator_trait_methods() {
 
     assert_eq!(18, sum);
 }
+```
 
 ^^^This example shows that simply implementing the next() method gives us access to all these other methods that have default implementations in the standard library.
 
