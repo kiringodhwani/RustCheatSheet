@@ -4221,7 +4221,7 @@ assert_eq!(iter.next(), None);
 let v1 = vec![1, 2, 3];
 
 let total: i32 = v1.iter().sum();	// requires type annotation 
-					// total = 6
+					// `total` = 6
 ```
 
 - **`.collect()`** — transform the iterator into a collection
