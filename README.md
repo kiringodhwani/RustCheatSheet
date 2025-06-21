@@ -4511,7 +4511,7 @@ opt-level = 3
 
     - **Regular comments** start with two slashes  `//` 
 
-    - **Documentation comments **start with three slashes  `///`  and **use markdown for formatting**. Rust also turns your documentation into an HTML format that’s easy to read.
+    - **Documentation comments** start with three slashes  `///`  and **use markdown for formatting**. Rust also turns your documentation into an HTML format that’s easy to read.
    
          - Example: We have a function called add1() which takes in an integer and adds 1 to it, then returns the new integer…. **Right above the function, we have a documentation comment**… this is defined in **lib.rs** :
      
