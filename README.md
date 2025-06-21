@@ -4659,6 +4659,15 @@ Takeaway: pub use statements allow you to make your public API different from th
 
 ## Publishing to crates.io
 
+1. Login to **crates.io** with GitHub account, verify email address.
+
+2. Click dropdown next to your profile icon and go to account settings. Then, go to API tokens and generate a new API token. <ins>Copy the API token:</ins> **`cio79T7s4n0CSnlgmj863r9GIgoiMhBrgWg`**.
+
+3. Run **`cargo login`** and **paste the key when prompted**.
+
+
+
+
 
 
 
