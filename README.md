@@ -4462,3 +4462,10 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
 ---
 
 # Publishing a Rust Crate
+
+**Release Profiles** -- Allow you to configure how your code is compiled. Cargo has two main profiles:
+
+1. **Dev:** Defined with good defaults for development.
+    - The dev build is optimized and contains debug information
+    - If we run cargo build, then our code will compile with the dev profile
+
