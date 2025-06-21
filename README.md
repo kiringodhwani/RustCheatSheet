@@ -4483,7 +4483,7 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
 
 - **Release**: The release profile will have an `opt-level` of 3 because we are only going to be compiling once and running the program many times. So, we’ll **exchange a slower compile time for a faster runtime.** 
 
-^^^But these “opt-level” settings are customizable in the below…
+^^^But these `opt-level` settings are customizable in the below…
 
 **<ins>cargo.toml</ins>**
 ```Rust
@@ -4501,10 +4501,38 @@ opt-level = 0	// can change this to set `opt-level` to something else, like 1, f
 opt-level = 3
 ```
 
-^^^NOTE: to get a full list of settings beyond just “opt-level”, see cargo’s documentation
+^^^NOTE: to get a full list of settings beyond just `opt-level`, see cargo’s documentation
 
 # Uploading Code to crates.io
 
 ## Preparing Your Code for Public Consumption
+
+1. **Writing Useful Documentation Comments** — comments are useful when documenting your public API so that others know how to use your code.
+
+    - **Regular comments** start with two slashes  `//` 
+
+    - **Documentation comments **start with three slashes  `///`  and **use markdown for formatting**. Rust also turns your documentation into an HTML format that’s easy to read.
+   
+         - Example: We have a function called add1() which takes in an integer and adds 1 to it, then returns the new integer…. **Right above the function, we have a documentation comment**… this is defined in **lib.rs** :
+     
+```Rust
+/// Adds one to the number given. -> (at the top of the documentation, explain what the function does)
+/// 
+/// # Examples -> (example section which gives an example of how to use the function)
+/// 
+/// ```
+/// let arg = 5; -> (code block to show how to call the function, incl. line below)
+/// let answer = my_crate::add_one(arg);
+/// 
+/// assert_eq!(6, answer); -> (assert statement that asserts that we get back the correct value. Bc we
+			       have this assert_eq!() statement, Rust runs this documentation
+			       comment as a documentation test when you run “cargo test”, as shown
+			       below… of course, we delete all these parenthesis comments b4 running)
+/// ```
+pub fn add_one(x: i32) -> i32 {
+    x + 1
+}
+```
+**Running `cargo test` to see the result of the Documentation test**… this feature is great because it forces the documentation to be in sync with the code! If, for example, we changed our function to add 2 instead of 1, then our documentation test fails. 
 
 
