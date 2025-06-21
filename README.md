@@ -4831,6 +4831,7 @@ This **isn’t meant to be a replacement for system packages or package managers
 
 	- Install `ripgrep` using **`cargo install ripgrep`**
 
+<img width="566" alt="Image" src="https://github.com/user-attachments/assets/508b72a6-7051-4e49-b880-b66258b7e382" />
 
  ^^^Highlighted line shows where the binary is installed
 
