@@ -4708,7 +4708,7 @@ You can’t delete or modify your code once it’s up on crates.io, but **you ca
 
 **What happens if a project grows beyond just one binary crate and one library crate to include multiple library crates?** In this case, **cargo workspaces** help you organize your project. 
 - **Workspaces help you manage multiple related packages that are developed in tandem.**
-- **Packages in a workspace share common dependency resolution by having one `cargo.lock` file**.
+- **Packages in a workspace share common dependency resolution by having one `Cargo.lock` file**.
 - **Packages in a workspace share one output directory and various settings such as profiles.**
 
 <br><ins>Example:</ins> **Create a workspace with 1 binary (`main.rs`) that depends on two libraries.** The first library will have an `add_one()` function and the second library will have an `add_two()` function. 
