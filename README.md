@@ -4706,6 +4706,148 @@ You can’t delete or modify your code once it’s up on crates.io, but **you ca
 
 # Cargo Workspaces
 
+**What happens if a project grows beyond just one binary crate and one library crate to include multiple library crates?** In this case, **cargo workspaces** help you organize your project. 
+- **Workspaces help you manage multiple related packages that are developed in tandem.**
+- **Packages in a workspace share common dependency resolution by having one `cargo.lock` file**.
+- **Packages in a workspace share one output directory and various settings such as profiles.**
+
+<br><ins>Example:</ins> **Create a workspace with 1 binary (`main.rs`) that depends on two libraries.** The first library will have an `add_one()` function and the second library will have an `add_two()` function. 
+	
+1. Create a new add directory and cd into it. Open in VSCode.
+
+**`mkdir add`**
+
+**`cd add`**
+
+**`code .`**
+	
+2. Add a **`Cargo.toml`** file which **will configure the entire workspace…**
+    - Instead of having a package section like usual, we **create a `workspace` section**. 
+    - Also, we have a **workspace `members`** section to specify the packages in our workspace (i.e., we specify the paths to our packages in this section). 
+
+<img width="404" alt="Image" src="https://github.com/user-attachments/assets/1ec62971-b6a3-41df-8553-1e7fb276f66b" />
+
+3. Create our binary, called `adder` here. Thus, we specify its path as `adder` in the members section.
+
+**`cargo new adder`**
+
+<img width="406" alt="Image" src="https://github.com/user-attachments/assets/4b1d7d50-a47d-4d99-a9b0-092780ff34ac" />
+
+4. **Build our workspace by running `cargo build` from the add directory (the root of our workspace**, this is the original directory we created). This will **generate `Cargo.lock` and the `target` directory in add**. Also, when we look at the “adder” directory containing our binary (we created this in the previous step), we will see that it doesn’t have a Cargo.lock file or a target directory. 
+
+**`cargo build`**
+
+<img width="211" alt="Image" src="https://github.com/user-attachments/assets/0d63b29e-1096-41f2-b276-f1f5525b3527" />
+
+^^^^Even if we ran `cargo build` from the `adder` directory, we would still see the output in the top level target directory. Cargo uses this structure because packages in a workspace are meant to depend on each other. If each package had its own target directory, then when you compile a package, you would have to also compile all its dependencies — so this reduces the amount of recompilation you have to do. 
+
+5. **Add a second package (or member) to our workspace called `add-one`**. This is a **library** so we have to specify `--lib` when we create it.
+	
+**`cargo new add-one --lib`**
+
+<img width="406" alt="Image" src="https://github.com/user-attachments/assets/d9445d20-e471-4692-80eb-5bb87367f6b0" />
+
+6. **Add a public `add_one()` function to the `src/lib.rs` file in `add-one`.**
+
+```Rust
+pub fn add_one(x: i32) -> i32 {
+    x + 1
+}
+```
+
+7. We **can now use the public `add_one()` function from the `add-one` library from within the `adder` binary we created in step 3**. To do so, we need **go to the `Cargo.toml` file within the `adder` directory and specify that our `adder` binary depends on our `add-one` library**. So, we **specify the `add-one` library as a dependency in the `adder` binary’s `Cargo.toml` file**. Cargo doesn’t assume that crates within a workspace depend on each other, so we have to make this relationship explicit.
+
+```Rust
+[dependencies]
+add-one = { path = "../add-one" }
+```
+
+<img width="566" alt="Image" src="https://github.com/user-attachments/assets/1ee231b3-38d6-4d86-a4d2-82dd5586b733" />
+
+8. **Use the public `add_one()` function from the `add-one` library in `src/main.rs` in the `adder` binary.**
+
+<img width="689" alt="Image" src="https://github.com/user-attachments/assets/10e2271f-e393-4f05-b419-e7a611425b6c" />
+
+9. **Build our workspace by running `cargo build`** at the root of our workspace (within `add`). Then, **run the `adder` binary from the root of our workspace**… use `-p` to specify the package we want to run
+
+`cargo run -p adder` —> Hello, world! 10 plus one is 11!
+
+10. **<ins>External Dependencies</ins>** — We have `Cargo.toml` files for both the `add-one` library and the `adder` binary. This can be seen in the screenshot for step 7. However, we only have one `Cargo.lock` file in the root of our workspace. This ensures that all of our crates are using the same version of all dependencies. So, if we add a dependency to our `add-one` package and we add the same dependency to our `adder` package, they will both resolve to the same version. Making all packages in a workspace use the same dependencies ensures that the packages are compatible with each other.
+
+	- <ins>Example</ins> — we **add `rand` as a dependency to `add-one`**
+
+<img width="210" alt="Image" src="https://github.com/user-attachments/assets/691efb89-7040-47f8-be64-c0547223e484" />
+
+Then, after we run **`cargo build`**, this will **bring in and compile the `rand` crate**, and we **can see the `rand` crate as a dependency in `Cargo.lock` at the root of our workspace.**
+<img width="665" alt="Image" src="https://github.com/user-attachments/assets/b363f4df-4cf4-499c-8719-30aa8c96a1a3" />
+
+NOTE: We can’t yet, though, use `rand` in any other package in the workspace. For example, we can’t use it in `adder`. We have to add `rand` as a dependency of the `adder` package in its `Cargo.toml` file. 
+
+11. **<ins>Adding a Test to a Workspace</ins>** — We now **add a test module and one test in `lib.rs` in the `add-one` library.**
+
+<img width="729" alt="Image" src="https://github.com/user-attachments/assets/d541ef85-f1ef-41ea-b63c-1171c0f82308" />
+
+To run the test, we run **`cargo test`** from the **root of our workspace**(`add` folder). 
+
+<img width="551" alt="Image" src="https://github.com/user-attachments/assets/7475bad2-116b-4559-b492-974bbe134a55" />
+^^^**Running `cargo test` at the root of our workspace will run tests for all the projects within that workspace**. If we want to **run tests for a specific project**, we can do that by specifying **`-p`**. 
+
+**`cargo test -p add-one`**
+
+12. **Add another library: `add-two`**
+
+- Create the add-two library by running this command at the root of the workspace: **`cargo new add-two --lib`**
+
+- Add a public `add_two()` function to `src/lib.rs` in the `add-two` library.
+
+<img width="537" alt="Image" src="https://github.com/user-attachments/assets/d6a25b90-43b2-4155-8992-4d25d647dd1d" />
+
+- Add the `add-two` library as a dependency in the `Cargo.toml` file of the `adder` binary:
+
+<img width="614" alt="Image" src="https://github.com/user-attachments/assets/b64d66f7-4962-4f87-9a66-3950074bd28e" />
+
+- Use the public `add_two()` function from the `add-two` library in `src/main.rs` in the `adder` binary.
+
+<img width="558" alt="Image" src="https://github.com/user-attachments/assets/d52849a1-286b-4a3e-9aad-e1b064eb8add" />
+
+- **Build our workspace by running `cargo build` at the root of our workspace** (within `add`). **Run the whole workspace with `cargo run` or just the binary with `cargo run -p adder`**.
+
+- Can also add tests to src/lib.rs in the add-two library
+
+<ins>NOTE:</ins> **If you want to publish the packages within a workspace, you have to publish them individually**. Meaning you’ll have to `cd` into each package (e.g., `adder`, `add-one`, `add-two`) and then run `cargo publish` from their respective directories. 
+
+## Installing Binaries from crates.io with `cargo install`
+
+This **isn’t meant to be a replacement for system packages or package managers such as homebrew**. Rather, it’s a **convenient way for Rust developers to use tools built by other Rust developers and publish to crates.io.**
+
+- <ins>NOTE:</ins> you **can only install packages that have a binary target** bc you need something you can actually execute (remember packages can have binary targets and library targets)
+  
+- All binaries installed using the **`cargo install`** command are **stored inside the installation route’s bin directory**. Need to **add path to bin directory** `$HOME/.cargo/bin` **inside path environment variable**.
+
+- <ins>Example:</ins> Rust installation of `grep` called `ripgrep`
+
+	- Install `ripgrep` using **`cargo install ripgrep`**
+
+ <img width="557" alt="Image" src="https://github.com/user-attachments/assets/7c0015d9-2e36-498a-8881-3bd75846845d" />
+
+ ^^^Highlighted line shows where the binary is installed
+
+ - To use the tool, **`rg --help`**.
+
+## Extending Cargo with Custom Commands
+
+You can **use the binaries installed with `cargo install` to extend cargo with custom commands…**
+
+- If you have a **binary in your path that’s prefixed with `cargo`** (e.g., **`cargo-something`**), then you **can run this as a sub command of cargo by typing cargo something**. Cargo is designed this way so you can extend cargo without actually modifying cargo’s code.
+
+---
+
+# Smart Pointers in Rust
+
+
+
+
+
 
 
 
