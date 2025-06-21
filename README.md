@@ -4468,6 +4468,7 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
 1. **Dev:** Defined with good defaults for development.
     - The dev build is optimized and contains debug information
     - If we run `cargo build`, then our code will compile with the dev profile
+
 <img width="521" alt="Image" src="https://github.com/user-attachments/assets/13c3ef58-e1c2-446e-957c-0351eae19fb8" />
 
 <br>
@@ -4475,6 +4476,7 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
 2. **Release:** Defined with good defaults for a release build
     - The release build is **optimized**
     - If we want to compile our code with the release profile, then we’ll type in `cargo build --release`
+
 <img width="527" alt="Image" src="https://github.com/user-attachments/assets/9525f3cb-b292-4121-9889-22e711fcc323" />
 
 <br>
