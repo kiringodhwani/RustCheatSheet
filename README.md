@@ -4841,7 +4841,7 @@ This **isn’t meant to be a replacement for system packages or package managers
 
 You can **use the binaries installed with `cargo install` to extend cargo with custom commands…**
 
-- If you have a **binary in your path that’s prefixed with `cargo`** (e.g., **`cargo-something`**), then you **can run this as a sub command of cargo by typing cargo something**. Cargo is designed this way so you can extend cargo without actually modifying cargo’s code.
+- If you have a **binary in your path that’s prefixed with `cargo`** (e.g., **`cargo-something`**), then you **can run this as a sub command of cargo by typing `cargo something`**. Cargo is designed this way so you can extend cargo without actually modifying cargo’s code.
 
 ---
 
