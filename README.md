@@ -4643,7 +4643,7 @@ pub use self::kinds::SecondaryColor;
 pub use self::utils::mix;
 ```
 
-^^^Now, **`PrimaryColor`, `SecondaryColor`, and `mix` will be exported from the top level of our library.** This means that **`PrimaryColor`, `SecondaryColor`, and `mix` are directly accessible via `use my_crate::...`**. So, instead of having to write `use my_crate::kinds::PrimaryColor;`, we can now simply write **`use my_crate::PrimaryColor;`. No need for `::kinds``**. 
+^^^Now, **`PrimaryColor`, `SecondaryColor`, and `mix` will be exported from the top level of our library.** This means that **`PrimaryColor`, `SecondaryColor`, and `mix` are directly accessible via `use my_crate::...`**. So, instead of having to write `use my_crate::kinds::PrimaryColor;`, we can now simply write **`use my_crate::PrimaryColor;`. No need for `::kinds`**. 
 
 **<ins>main.rs</ins>** 
 ```Rust
