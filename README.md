@@ -4813,6 +4813,8 @@ To run the test, we run **`cargo test`** from the **root of our workspace** (`ad
 
 - **Build our workspace by running `cargo build` at the root of our workspace** (within `add`). **Run the whole workspace with `cargo run` or just the binary with `cargo run -p adder`**.
 
+<img width="558" alt="Image" src="https://github.com/user-attachments/assets/d52849a1-286b-4a3e-9aad-e1b064eb8add" />
+
 - Can also add tests to `src/lib.rs` in the `add-two` library
 
 <ins>NOTE:</ins> **If you want to publish the packages within a workspace, you have to publish them individually**. Meaning you’ll have to `cd` into each package (e.g., `adder`, `add-one`, `add-two`) and then run `cargo publish` from their respective directories. 
@@ -4829,7 +4831,6 @@ This **isn’t meant to be a replacement for system packages or package managers
 
 	- Install `ripgrep` using **`cargo install ripgrep`**
 
-<img width="558" alt="Image" src="https://github.com/user-attachments/assets/d52849a1-286b-4a3e-9aad-e1b064eb8add" />
 
  ^^^Highlighted line shows where the binary is installed
 
