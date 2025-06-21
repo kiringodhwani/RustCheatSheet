@@ -4669,7 +4669,7 @@ Takeaway: pub use statements allow you to make your public API different from th
 
 4. Double-check the metadata, which is located in cargo.toml.
    
-    - **name**: when you develop locally the name doesn’t matter, but when you publish to crates.io, the **name must be unique**. So, go to crates.io, and check if your desired name has already been taken. <ins>SO, in our example</ins>, I changed the name from "my_crate" to "kirin_art"s.
+    - **name**: when you develop locally the name doesn’t matter, but when you publish to crates.io, the **name must be unique**. So, go to crates.io, and check if your desired name has already been taken. <ins>SO, in our example</ins>, I changed the name from "my_crate" to "kirin_art".
       
     - **Add description and license**
 
