@@ -4653,9 +4653,9 @@ use my_crate::mix;
 
 Also, **when we look at the docs now, we can see the re-exports…**
 
+<img width="399" alt="Image" src="https://github.com/user-attachments/assets/af78140a-b5c5-4f8c-b50c-ef05014eb8ff" />
 
 Takeaway: pub use statements allow you to make your public API different from the internal structure of your program, which could be very useful for people consuming your library.
-<img width="399" alt="Image" src="https://github.com/user-attachments/assets/af78140a-b5c5-4f8c-b50c-ef05014eb8ff" />
 
 ## Publishing to crates.io
 
