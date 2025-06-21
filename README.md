@@ -4620,9 +4620,9 @@ pub mod utils {
 
 **<ins>main.rs</ins>**
 ```Rust
-use my_crate::kinds::PrimaryColor;	PROBLEM: We want users to have access to the enums (`PrimaryColor`
-					and `SecondaryColor`) and the `mix()` function at the top level without
-					having to reference their respective modules —> re-export
+use my_crate::kinds::PrimaryColor;	// PROBLEM: We want users to have access to the enums (`PrimaryColor`
+					// and `SecondaryColor`) and the `mix()` function at the top level without
+					// having to reference their respective modules —> re-export
 use my_crate::utils::mix;
 
 fn main() {
