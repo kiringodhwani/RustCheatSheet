@@ -4467,5 +4467,42 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
 
 1. **Dev:** Defined with good defaults for development.
     - The dev build is optimized and contains debug information
-    - If we run cargo build, then our code will compile with the dev profile
+    - If we run `cargo build`, then our code will compile with the dev profile
+<img width="521" alt="Image" src="https://github.com/user-attachments/assets/13c3ef58-e1c2-446e-957c-0351eae19fb8" />
+
+2. **Release:** Defined with good defaults for a release build
+    - The release build is **optimized**
+    - If we want to compile our code with the release profile, then we’ll type in `cargo build --release`
+<img width="527" alt="Image" src="https://github.com/user-attachments/assets/9525f3cb-b292-4121-9889-22e711fcc323" />
+
+**We can also customize the settings in the Cargo.toml file…** In the below, we add two sections for the dev and release profiles. We also add the `opt-level` setting, which stands for optimization level. The optimization level can be 0, 1, 2, or 3. 0 being no optimizations and 3 being the highest number of optimizations. In the below, we keep the default settings…
+
+- **Dev**: The dev profile will have an `opt-level` of 0 because we are going to be compiling a lot so we want our compilation speed to be fast, and that trades off the runtime speed —> **fast compile time but slower runtime.**
+
+- **Release**: The release profile will have an “opt-level” of 3 because we are only going to be compiling once and running the program many times. So, we’ll **exchange a slower compile time for a faster runtime.** 
+
+^^^But these “opt-level” settings are customizable in the below…
+
+**<ins>cargo.toml</ins>**
+```Rust
+[package]
+name = "my_crate"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[profile.dev]
+opt-level = 0	// can change this to set `opt-level` to something else, like 1, for the dev profile
+
+[profile.release]
+opt-level = 3
+```
+
+^^^NOTE: to get a full list of settings beyond just “opt-level”, see cargo’s documentation
+
+# Uploading Code to crates.io
+
+## Preparing Your Code for Public Consumption
+
 
