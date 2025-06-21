@@ -4471,17 +4471,13 @@ fn search<'a> (query: &str, contents: &'a str) -> Vec<&'a str> {
 
 <img width="521" alt="Image" src="https://github.com/user-attachments/assets/13c3ef58-e1c2-446e-957c-0351eae19fb8" />
 
-<br>
-
-2. **Release:** Defined with good defaults for a release build
+<br>2. **Release:** Defined with good defaults for a release build
     - The release build is **optimized**
     - If we want to compile our code with the release profile, then we’ll type in `cargo build --release`
 
 <img width="527" alt="Image" src="https://github.com/user-attachments/assets/9525f3cb-b292-4121-9889-22e711fcc323" />
 
-<br>
-
-**We can also customize the settings in the Cargo.toml file…** In the below, we add two sections for the dev and release profiles. We also add the `opt-level` setting, which stands for optimization level. The optimization level can be 0, 1, 2, or 3. 0 being no optimizations and 3 being the highest number of optimizations. In the below, we keep the default settings…
+<br>**We can also customize the settings in the Cargo.toml file…** In the below, we add two sections for the dev and release profiles. We also add the `opt-level` setting, which stands for optimization level. The optimization level can be 0, 1, 2, or 3. 0 being no optimizations and 3 being the highest number of optimizations. In the below, we keep the default settings…
 
 - **Dev**: The dev profile will have an `opt-level` of 0 because we are going to be compiling a lot so we want our compilation speed to be fast, and that trades off the runtime speed —> **fast compile time but slower runtime.**
 
