@@ -4779,17 +4779,17 @@ add-one = { path = "../add-one" }
 <img width="210" alt="Image" src="https://github.com/user-attachments/assets/691efb89-7040-47f8-be64-c0547223e484" />
 
 Then, after we run **`cargo build`**, this will **bring in and compile the `rand` crate**, and we **can see the `rand` crate as a dependency in `Cargo.lock` at the root of our workspace.**
-<img width="665" alt="Image" src="https://github.com/user-attachments/assets/b363f4df-4cf4-499c-8719-30aa8c96a1a3" />
+<img width="631" alt="Image" src="https://github.com/user-attachments/assets/39f0b7a7-d735-4c3a-9683-eeaa37b6849c" />
 
 NOTE: We can’t yet, though, use `rand` in any other package in the workspace. For example, we can’t use it in `adder`. We have to add `rand` as a dependency of the `adder` package in its `Cargo.toml` file. 
 
 11. **<ins>Adding a Test to a Workspace</ins>** — We now **add a test module and one test in `lib.rs` in the `add-one` library.**
 
-<img width="729" alt="Image" src="https://github.com/user-attachments/assets/d541ef85-f1ef-41ea-b63c-1171c0f82308" />
+<img width="665" alt="Image" src="https://github.com/user-attachments/assets/b363f4df-4cf4-499c-8719-30aa8c96a1a3" />
 
 To run the test, we run **`cargo test`** from the **root of our workspace**(`add` folder). 
 
-<img width="551" alt="Image" src="https://github.com/user-attachments/assets/7475bad2-116b-4559-b492-974bbe134a55" />
+<img width="729" alt="Image" src="https://github.com/user-attachments/assets/d541ef85-f1ef-41ea-b63c-1171c0f82308" />
 ^^^**Running `cargo test` at the root of our workspace will run tests for all the projects within that workspace**. If we want to **run tests for a specific project**, we can do that by specifying **`-p`**. 
 
 **`cargo test -p add-one`**
@@ -4799,16 +4799,16 @@ To run the test, we run **`cargo test`** from the **root of our workspace**(`add
 - Create the add-two library by running this command at the root of the workspace: **`cargo new add-two --lib`**
 
 - Add a public `add_two()` function to `src/lib.rs` in the `add-two` library.
-
-<img width="537" alt="Image" src="https://github.com/user-attachments/assets/d6a25b90-43b2-4155-8992-4d25d647dd1d" />
+- 
+<img width="551" alt="Image" src="https://github.com/user-attachments/assets/7475bad2-116b-4559-b492-974bbe134a55" />
 
 - Add the `add-two` library as a dependency in the `Cargo.toml` file of the `adder` binary:
 
-<img width="614" alt="Image" src="https://github.com/user-attachments/assets/b64d66f7-4962-4f87-9a66-3950074bd28e" />
+<img width="537" alt="Image" src="https://github.com/user-attachments/assets/d6a25b90-43b2-4155-8992-4d25d647dd1d" />
 
 - Use the public `add_two()` function from the `add-two` library in `src/main.rs` in the `adder` binary.
 
-<img width="558" alt="Image" src="https://github.com/user-attachments/assets/d52849a1-286b-4a3e-9aad-e1b064eb8add" />
+<img width="614" alt="Image" src="https://github.com/user-attachments/assets/b64d66f7-4962-4f87-9a66-3950074bd28e" />
 
 - **Build our workspace by running `cargo build` at the root of our workspace** (within `add`). **Run the whole workspace with `cargo run` or just the binary with `cargo run -p adder`**.
 
@@ -4828,7 +4828,7 @@ This **isn’t meant to be a replacement for system packages or package managers
 
 	- Install `ripgrep` using **`cargo install ripgrep`**
 
- <img width="557" alt="Image" src="https://github.com/user-attachments/assets/7c0015d9-2e36-498a-8881-3bd75846845d" />
+<img width="558" alt="Image" src="https://github.com/user-attachments/assets/d52849a1-286b-4a3e-9aad-e1b064eb8add" />
 
  ^^^Highlighted line shows where the binary is installed
 
