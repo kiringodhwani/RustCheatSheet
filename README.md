@@ -4633,7 +4633,7 @@ fn main() {
 ```
 
 
-**<ins>IMPROVED CODE:</ins>**
+<br>**<ins>IMPROVED CODE:</ins>**
 
 **<ins>lib.rs</ins>** — Add the following to **re-export** the **enums (`PrimaryColor` and `SecondaryColor`) and the `mix()` function.** 
 
