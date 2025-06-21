@@ -4813,7 +4813,7 @@ To run the test, we run **`cargo test`** from the **root of our workspace** (`ad
 
 - **Build our workspace by running `cargo build` at the root of our workspace** (within `add`). **Run the whole workspace with `cargo run` or just the binary with `cargo run -p adder`**.
 
-- Can also add tests to src/lib.rs in the add-two library
+- Can also add tests to `src/lib.rs` in the `add-two` library
 
 <ins>NOTE:</ins> **If you want to publish the packages within a workspace, you have to publish them individually**. Meaning you’ll have to `cd` into each package (e.g., `adder`, `add-one`, `add-two`) and then run `cargo publish` from their respective directories. 
 
