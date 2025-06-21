@@ -4800,7 +4800,7 @@ To run the test, we run **`cargo test`** from the **root of our workspace** (`ad
 - Create the add-two library by running this command at the root of the workspace: **`cargo new add-two --lib`**
 
 - Add a public `add_two()` function to `src/lib.rs` in the `add-two` library.
-- 
+  
 <img width="551" alt="Image" src="https://github.com/user-attachments/assets/7475bad2-116b-4559-b492-974bbe134a55" />
 
 - Add the `add-two` library as a dependency in the `Cargo.toml` file of the `adder` binary:
