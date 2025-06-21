@@ -4533,6 +4533,133 @@ pub fn add_one(x: i32) -> i32 {
     x + 1
 }
 ```
-**Running `cargo test` to see the result of the Documentation test**… this feature is great because it forces the documentation to be in sync with the code! If, for example, we changed our function to add 2 instead of 1, then our documentation test fails. 
+**Running `cargo test` to see the result of the Documentation test**… this feature is great because **it forces the documentation to be in sync with the code**! If, for example, we changed our function to add 2 instead of 1, then our documentation test fails. 
+
+<img width="670" alt="Image" src="https://github.com/user-attachments/assets/43d641ed-683a-4c53-bbc8-0ea4bb36362f" />
+
+<br>**In order to build the HTML documentation for our crate…   `cargo doc --open`**
+- NOTE: `--open` is not required, it just opens a web browser with our documentation which is convenient
+- <ins>Result of running `cargo doc —open` with the above example with `add_one()`…</ins>
+
+<img width="618" alt="Image" src="https://github.com/user-attachments/assets/edf0ff41-0f1c-4514-b74c-0c9be2a10b23" />
+
+<br>**Below, we have the web page Rust generated.** It **shows the name of our crate (“my_crate”) and then a list of functions in our crate**, which is currently just `add_one()`. NOTE: I deleted all of the parenthesis comments before opening this…
+
+<img width="726" alt="Image" src="https://github.com/user-attachments/assets/1004022d-03c8-4b4e-931b-9110bcabb2e8" />
+
+**If we click into the add_one() function on the web page, then we can see the function signature and the "Examples" section…**
+
+<img width="731" alt="Image" src="https://github.com/user-attachments/assets/feda7f3c-8767-4cd1-bc86-3b49d72edcf6" />
+
+<br>**Besides “Examples”, there are a few other commonly used sections…**
+
+1. **Panics** — describes scenarios in which the function being documented could panic. Callers of the function who don’t want their programs to panic should make sure they don’t call the function in these situations. 
+
+2. **Errors** — if the function returns a Result type. Use to describe the kinds of errors that might occur and what conditions might cause those errors to be returned. Helpful to callers so they can write code to handle the different kinds of errors in different ways. 
+
+3. **Safety** — if the function is “unsafe” to call, there should be a section explaining why the function is unsafe and covering the invariants that the function expects callers to uphold.
+
+### `//!` Comments
+
+This style of comment **documents the item containing the comment** instead of documenting the item following the comment. 
+
+- <ins>Example:</ins> The `//!` is inside of **lib.rs**, so it is **documenting our library crate.**
+
+```Rust
+//! # My Crate
+//! 
+//! `my_crate` is a collection of utilities to make performing certain
+//! calculations more convenient.
+
+/// Adds one to the number given.   (This and below is the same as our earlier documentation) 
+/// 
+/// # Examples
+/// ...
+```
+
+**`cargo doc --open`** => 
+<img width="714" alt="Image" src="https://github.com/user-attachments/assets/bb731f59-7a87-405e-9473-da8087f4cb62" />
+
+## Re-Exporting / Exporting a Public API
+
+**<ins>lib.rs</ins>** 
+```Rust
+//! # Art
+//!
+//! A library for modeling artistic concepts.
+
+pub mod kinds {
+    /// The primary colors according to the RYB color model.
+    pub enum PrimaryColor {
+        Red,
+        Yellow,
+        Blue
+    }
+
+    /// The secondary colors according the RYB color model.
+    pub enum SecondaryColor {
+        Orange,
+        Green,
+        Purple,
+    }
+}
+
+pub mod utils {
+    use crate::kinds::*;
+
+    /// Combines two primary colors in equal amounts to create
+    /// a secondary color.
+    pub fn mix(c1: PrimaryColor, c2: PrimaryColor) -> SecondaryColor {
+        // --snip--
+        // ANCHOR_END: here
+        SecondaryColor::Orange
+        // ANCHOR: here
+    }
+}
+```
+
+**<ins>main.rs</ins>**
+```Rust
+use my_crate::kinds::PrimaryColor;	PROBLEM: We want users to have access to the enums (`PrimaryColor`
+					and `SecondaryColor`) and the `mix()` function at the top level without
+					having to reference their respective modules —> re-export
+use my_crate::utils::mix;
+
+fn main() {
+    let red = PrimaryColor::Red;
+    let yellow = PrimaryColor::Yellow;
+    mix(red, yellow);
+}
+```
+
+
+**<ins>IMPROVED CODE:</ins>**
+**<ins>lib.rs</ins>** — Add the following to **re-export** the **enums (`PrimaryColor` and `SecondaryColor`) and the `mix()` function.** 
+
+```Rust
+pub use self::kinds::PrimaryColor;
+pub use self::kinds::SecondaryColor;
+pub use self::utils::mix;
+```
+
+^^^Now, **`PrimaryColor`, `SecondaryColor`, and `mix` will be exported from the top level of our library.** This means that **`PrimaryColor`, `SecondaryColor`, and `mix` are directly accessible via `use my_crate::...`**. So, instead of having to write `use my_crate::kinds::PrimaryColor;`, we can now simply write **`use my_crate::PrimaryColor; // No need for `::kinds``**. 
+
+**<ins>main.rs</ins>** 
+```Rust
+use my_crate::PrimaryColor;	// Now, we can import our items from the top level of our library.
+use my_crate::mix;
+```
+
+Also, **when we look at the docs now, we can see the re-exports…**
+
+
+Takeaway: pub use statements allow you to make your public API different from the internal structure of your program, which could be very useful for people consuming your library.
+<img width="399" alt="Image" src="https://github.com/user-attachments/assets/af78140a-b5c5-4f8c-b50c-ef05014eb8ff" />
+
+## Publishing to crates.io
+
+
+
+
 
 
