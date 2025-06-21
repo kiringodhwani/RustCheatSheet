@@ -4665,6 +4665,36 @@ Takeaway: pub use statements allow you to make your public API different from th
 
 3. Run **`cargo login`** and **paste the key when prompted**.
 
+<img width="436" alt="Image" src="https://github.com/user-attachments/assets/106243e5-0b2c-4ffe-a67c-3aca8261826f" />
+
+4. Double-check the metadata, which is located in cargo.toml.
+   
+    - **name**: when you develop locally the name doesn’t matter, but when you publish to crates.io, the **name must be unique**. So, go to crates.io, and check if your desired name has already been taken. <ins>SO, in our example, I changed the name from my_crate to kirin_art</ins>.
+      
+    - **Add description and license**
+
+```Rust
+[package]
+name = "kirin_art"
+version = "0.1.0"
+edition = "2024"
+description = "A library for modeling artistic concepts."
+license = "MIT"
+```
+
+5. Add and commit changes (`git add .` and `git commit -m ""`)
+
+6. **`cargo publish`**
+
+<img width="740" alt="Image" src="https://github.com/user-attachments/assets/2f0c94bd-2096-4831-a38f-b4cacc2ec228" />
+
+<img width="733" alt="Image" src="https://github.com/user-attachments/assets/51bf601b-ad4b-4391-82ca-fe5321d987ca" />
+
+^^^NOTE: **Publishing to crates.io is permanent** — now that this **code is published, it cannot be deleted.** I can publish new versions, but the code as it is right now will be forever on crates.io. 
+- crates.io does it this way because others may rely on your library and we don’t want to break them by deleting or modifying the code.
+
+**When you want to upload a new version of your library to crates.io, simply change the version number in cargo.toml using the semantic versioning rules, and run `cargo publish` again**.
+
 
 
 
