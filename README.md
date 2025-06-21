@@ -4790,7 +4790,8 @@ NOTE: We can’t yet, though, use `rand` in any other package in the workspace. 
 To run the test, we run **`cargo test`** from the **root of our workspace** (`add` folder). 
 
 <img width="729" alt="Image" src="https://github.com/user-attachments/assets/d541ef85-f1ef-41ea-b63c-1171c0f82308" />
-^^^**Running `cargo test` at the root of our workspace will run tests for all the projects within that workspace**. If we want to **run tests for a specific project**, we can do that by specifying **`-p`**. 
+
+^^^ **Running `cargo test` at the root of our workspace will run tests for all the projects within that workspace**. If we want to **run tests for a specific project**, we can do that by specifying **`-p`**. 
 
 **`cargo test -p add-one`**
 
