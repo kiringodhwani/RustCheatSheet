@@ -4525,9 +4525,9 @@ opt-level = 3
 /// let answer = my_crate::add_one(arg);
 /// 
 /// assert_eq!(6, answer); -> (assert statement that asserts that we get back the correct value. Bc we
-			       have this assert_eq!() statement, Rust runs this documentation
-			       comment as a documentation test when you run “cargo test”, as shown
-			       below… of course, we delete all these parenthesis comments b4 running)
+///			       have this assert_eq!() statement, Rust runs this documentation
+///			       comment as a documentation test when you run “cargo test”, as shown
+///			       below… of course, we delete all these parenthesis comments b4 running)
 /// ```
 pub fn add_one(x: i32) -> i32 {
     x + 1
