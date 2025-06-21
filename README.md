@@ -4797,7 +4797,7 @@ To run the test, we run **`cargo test`** from the **root of our workspace** (`ad
 
 <br>12. **Add another library: `add-two`**
 
-- Create the add-two library by running this command at the root of the workspace: **`cargo new add-two --lib`**
+- Create the `add-two` library by running this command at the root of the workspace: **`cargo new add-two --lib`**
 
 - Add a public `add_two()` function to `src/lib.rs` in the `add-two` library.
   
