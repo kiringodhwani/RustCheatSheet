@@ -4733,7 +4733,7 @@ You can’t delete or modify your code once it’s up on crates.io, but **you ca
 
 <img width="406" alt="Image" src="https://github.com/user-attachments/assets/4b1d7d50-a47d-4d99-a9b0-092780ff34ac" />
 
-4. **Build our workspace by running `cargo build` from the add directory (the root of our workspace**, this is the original directory we created). This will **generate `Cargo.lock` and the `target` directory in add**. Also, when we look at the “adder” directory containing our binary (we created this in the previous step), we will see that it doesn’t have a Cargo.lock file or a target directory. 
+4. **Build our workspace by running `cargo build` from the `add` directory (the root of our workspace**, this is the original directory we created). This will **generate `Cargo.lock` and the `target` directory in `add`**. Also, when we look at the `adder` directory containing our binary (we created this in the previous step), we will see that it doesn’t have a `Cargo.lock` file or a target directory. 
 
 **`cargo build`**
 
