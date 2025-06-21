@@ -4713,7 +4713,7 @@ You can’t delete or modify your code once it’s up on crates.io, but **you ca
 
 <br><ins>Example:</ins> **Create a workspace with 1 binary (`main.rs`) that depends on two libraries.** The first library will have an `add_one()` function and the second library will have an `add_two()` function. 
 	
-1. Create a new `add` directory and cd into it. Open in VSCode.
+1. Create a new `add` directory and `cd` into it. Open in VSCode.
 
 **`mkdir add`**
 
