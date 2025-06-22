@@ -5559,6 +5559,24 @@ mod tests {
 }
 ```
 
+As we explained, `RefCell` smart pointer checks the borrowing rules at runtime. **One of the borrowing rules is that we can’t have two mutable references at the same time. What happens when this is the case?**
+
+```Rust
+fn send(&self, message: &str) {
+    // Two variables that take a mutable reference to `sent_messages`.
+    let mut one_borrow = self.sent_messages.borrow_mut();
+    let mut two_borrow = self.sent_messages.borrow_mut();
+            
+    // Push the passed in message using the first mutable reference and then the second.
+    one_borrow.push(String::from(message));
+    two_borrow.push(String::from(message));
+
+}
+```
+^^^**NO COMPILE TIME ERRORS, bc `RefCell` checks borrowing rules at runtime**, **BUT when we run `cargo test`, the program panics at runtime…**
+
+
+
 
 
 
