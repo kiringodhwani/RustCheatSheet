@@ -5125,11 +5125,62 @@ fn main() {
 			//
 			// ^^^Bc Rust does this automatically, we don't have to think about when we have to
 			// use the `deref()` method, so we can treat regular references and types that
-			// implement Deref the same.
+			// implement `Deref` the same.
 }
 ```
 
 ### Implicit Deref Coercion with Functions and Methods
+
+**<ins>Deref Coercion</ins>** — a convenience feature in Rust that happens automatically for types that implement the `Deref` trait.
+
+- **Deref Coercion will convert a reference to one type (A REFERENCE!!! CANT JUST BE AN OWNED TYPE) to a reference to a different type.**
+
+- <ins>Example</ins>:
+
+```Rust
+
+fn hello(name: &str) {
+    println!("Hello, {}!", name);
+}
+
+fn main() {
+    let m = MyBox::new(String::from("Rust"));
+    hello(&m)	// have to pass `&m` and not `m` because Deref Coercion
+		// converts one reference to another reference! Rust will
+		// not automatically coerce an owned value
+		// (`MyBox<String>`) into a reference (`&str`). Deref coercion
+		// only works on references (`&T` to `&U`)
+}
+```
+^^^The above code **works even though we pass `&MyBox<String>` into `hello()` which expects `&str`**.
+
+<ins>In the above example, how do we get from `&MyBox<String>` to `&str` ???</ins>
+
+1. `MyBox<String>` implements `Deref`. If we call `.deref()` on `m`, then we get `&String`. `&MyBox<String>` —> `&String`.
+
+2. The `String` type in Rust standard library also implements `Deref`. If we call `.deref()` on a String, then we get will get back a string slice (`&str`). `&String` —> `&Str`.
+
+3. Rust sees that the type being passed to `hello()` is different than the type expected by the function signature, so it automatically performs these chained `.deref()` calls at compile time to get the correct type.
+ 
+    - If Rust didn’t have automatic deref coercion, then to call `hello()` with `m`, we’d have to write the below code which is harder to read and longer and harder to write…
+```Rust
+hello(&(*m)[..])   // 1. Dereference `m` to a `String`
+		   // 2. Take a reference to a string slice (`&str`) that is the full range of the `String` (`[..]`)
+```
+
+<ins>Rust performs deref coercion when it finds types and trait implementations in three cases</ins>:
+
+1. From `&T` to `&U` when `T: Deref<Target=U>` — When going from an immutable reference to another immutable reference.
+
+2. From `&mut T` to `&mut U` when `T: DerefMut<Target=U>` — When going from a mutable reference to another mutable reference
+
+3. From `&mut T` to `&U` when `T: Deref<Target=U>` — When going from a mutable reference to another immutable reference.
+
+	- NOTE: **RUST cannot perform deref coercion when going from an immutable reference to a mutable reference**. This has to do with borrowing rules. See the borrowing rules from earlier. The borrowing rules state that you can either have one mutable reference or any number of immutable references, so you can’t have a mutable reference to a variable if an immutable reference already exists for it. Converting a mutable reference to an immutable reference won’t break that rule (bc go from 1 mutable to 1 immutable). HOWEVER, **converting an immutable reference to a mutable reference would require that the initial immutable reference is the only immutable reference to that piece of data** (otherwise you may end up with mutable reference and immutable 	reference/s), which is something the **borrowing rules cannot guarantee**.
+
+- **Similar to how you use the `Deref` trait to override the dereference operator `*` for immutable references, you can use the `DerefMut` trait to override the dereference operator for mutable references.**
+
+## The `Drop` Trait
 
 
 
