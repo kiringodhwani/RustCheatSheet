@@ -4938,9 +4938,9 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 ```Rust
 let b = Box::new(5);	// Here, we store 5 on the heap. On the stack, we store a pointer (memory address)
-			// to the location of 5 on the heap. This pointer is stored in the ‘b’ variable here.
+			// to the location of 5 on the heap. This pointer is stored in the `b` variable here.
 
-println!("b = {}", b);	// can simply use the Box value as if it were a value on the stack
+println!("b = {}", b);	// can simply use the `Box` value as if it were a value on the stack
 ```
 ^^^THIS IS A CONTRIVED EXAMPLE. Typically you won’t store a single value, like `5`, on the heap. In fact, in this case, storing `5` on the stack would be much more appropriate. So, **typically Boxes ARE NOT used by themselves.**
 
