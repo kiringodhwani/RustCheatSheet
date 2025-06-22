@@ -5296,6 +5296,29 @@ fn main() {
 
 **Suppose we create two lists that both share ownership of a third list**, like the below… In this case, we have a list called `b` and a list called `c`, and they both point to a list called `a`.
 
+<img width="732" alt="Image" src="https://github.com/user-attachments/assets/d80e7935-dc42-493a-9124-cf52c245379c" />
+
+<ins>Here is this example in code…</ins>
+```Rust
+// See my detailed explanation of a Cons List in previous section
+enum List {
+    Cons(i32, Box<List>),
+    Nil,
+}
+
+use crate::List::{Cons, Nil};
+
+fn main() {
+    let a = Cons(5, Box::new(Cons(10, Box::new(Nil))));
+
+    // Both lists b and c point to list a
+    let b = Cons(3, Box::new(a));
+    let c = Cons(4, Box::new(a));
+}
+```
+^^^**HOWEVER, this code errors**, as shown below. The error states that we are attempting to use a value that has already been moved. **A `Cons` variant owns the data that it holds**. So, **when we do let `b = Cons(3, Box::new(a));` we are moving `a` into `b`**, so **`b` now owns `a`**. For this reason, we **can’t use `a` in the next line when defining `c`, which causes the below error.**
+
+
 
 
 
