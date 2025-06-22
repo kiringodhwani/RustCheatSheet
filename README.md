@@ -5278,6 +5278,26 @@ fn main() {
 
 ## Reference Counting
 
+**The Reference Counting smart pointer allows us to share ownership of some data.**
+
+- In the majority of cases, ownership is clear; you know exactly which variable owns a specific value.
+
+- However, **there are cases where a single value has multiple owners**. For example, if you have a graph with multiple edges that point to the same node. Conceptually, this node is owned by all of the edges. In this case, a node should not cleaned up unless it doesn’t have any edges pointing to it. 
+
+- **To enable multiple ownership of a value, we can use a Reference Counting smart pointer, which will <ins>keep track of the number of references to a value, and when there are no more references, the value will get cleaned up</ins>.**
+
+    - <ins>An analogy would be a tv in a living room.</ins> When a person walks into the living room, they turn on the tv. As more people walk into the room, they start watching the tv. Then, people start to leave, and the last person to leave is the one who turns off the tv. If the tv turned off while there were multiple people in the living room, there would be panic. 
+
+- The Reference Counting smart pointer is **<ins>used when we want to allocate a value on the heap and have multiple parts of our program read that value, and we don’t know at compile time which part of our program is going to finish using that value last (who should be the owner???)</ins>**. **If we knew which part was going to finish using the data last, we can simply make that part the data’s owner** and then create regular references referencing that owner and ownership rules would be enforced. However, if we don’t know who the owner is, then the owner may go out of scope and we’d have dangling references.
+
+<ins>NOTE:</ins> The Reference Counting smart pointer we use here in this section is only useful in single threaded programs. 
+
+### `Cons` List Example with `Rc`
+
+**Suppose we create two lists that both share ownership of a third list**, like the below… In this case, we have a list called `b` and a list called `c`, and they both point to a list called `a`.
+
+
+
 
 
 
