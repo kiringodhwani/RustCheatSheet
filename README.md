@@ -5416,14 +5416,14 @@ A design pattern in Rust that **allows you to mutate data even when there are im
 //
 let a = 5;		// Immutable variable `a` that is set to 5.
 let b = &mut a;		// `b` is a mutable borrow to `a`, ERROR: "cannot borrow `a` as mutable
-			// bc it's not declared as mutable".
+                        // bc it's not declared as mutable".
 
 // IF we have an immutable reference to some data, then we can't change that data even if the data itself is mutable...
 //
 let mut c = 10;		// Mutable variable `c` that is set to 10
 let d = &c;		// `d` is an immutable borrow to `c`
 *d = 20;		// Use dereference to change underlying value from 10 to 20. ERROR: `d` is an
-			// immutable reference, so the data it refers to cannot be written.
+                        // immutable reference, so the data it refers to cannot be written.
 ```
 **POSSIBLE SOLUTION WITH INDIRECTION:**
 - Imagine we have a data structure that stores some value, and inside the data structure, that val is mutable.
