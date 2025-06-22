@@ -4968,7 +4968,7 @@ enum Message {
 ```
 ^^^The way Rust will figure out the size needed to store a variant of `Message` is by going through each variant (`Quit`, `Move`, `Write`, `ChangeColor`) and seeing how much size each variant needs (`Quit` doesn’t need any space, `Move` is a struct with two values, `Write` is tuple with one `String`, `ChangeColor` is tuple with three integers). **Rust figures out which variant needs the most amount of space.** Because we **can only use one variant of the `Message` enum at a time, the most space `Message` is going to take up is equal to the space the largest variant takes up.**
 
-<ins>Example where Boxes are actually useful</ins>. **Enabling Recursive Types with Boxes**
+<ins>Example where Boxes are actually useful</ins>: **Enabling Recursive Types with Boxes**
 
 - **Rust needs to know how much space a type takes up at compile time**. BUT, <ins>in the below example</ins>, and **in general with recursive enums**, we **don't know how much space the enum could take up**. This is because, in theory, we **could recurse forever**…
 
