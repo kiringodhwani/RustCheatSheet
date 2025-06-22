@@ -5499,7 +5499,7 @@ mod tests {
 						//
 						// SOLUTION: we wrap the vector of `Strings` in a `RefCell`
 						// smart pointer, bc `RefCell<T>` allows mutable borrows
-						// checked at runtime, so you can mutate the value inside
+						// checked at runtime. Thus, we can mutate the value inside
 						// the `RefCell<T>` even when the `RefCell<T>` smart pointer
 						// itself is immutable.
    		}
