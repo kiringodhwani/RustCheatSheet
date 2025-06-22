@@ -4847,6 +4847,87 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 # Smart Pointers in Rust
 
+**Pointer** — **a pointer is a general concept for a variable that stores a memory address. The memory address refers to (or points to) some other data in memory.** You can think about pointers as an arrow pointing to a value stored in somewhere in memory. 
+
+**The most common pointer in Rust** is a **<ins>reference</ins>**. 
+
+- **References simply borrow the values they point to, meaning that they don’t have ownership over the values.**
+
+- References don’t have any special capabilities, which also means they don’t have much overhead, unlike smart pointers
+
+**<ins>Smart Pointers</ins>** are **data structures that act like a pointer but have metadata and extra capabilities tacked on.**
+
+- <ins>Ex:</ins> <ins>reference counting smart pointer</ins> — allows a piece of data to have multiple owners by keeping track of the owners, and once there are no more owners, cleaning up the data.
+
+- **In many cases, smart pointers own the data that they point to**, unlike references which simply borrow the values.
+
+- We’ve already encountered smart pointers — **`Strings`** and **`Vectors`**. **Both of these types are smart pointers because they own some data and allow you to manipulate it, they store extra metadata such as the capacity, and they have extra capabilities** (e.g., the String type ensures that the data is valid UTF-8).
+
+- **Smart pointers are usually implemented using structs**. BUT, unlike regular structs, they implement the **`Deref`** and **`Drop`** traits.
+
+    - **<ins>`Deref` trait</ins>:** Allows instances of your smart pointer struct to be treated like references. So, you can write code which works with both references and smart pointers. 
+    - **<ins>`Drop` trait</ins>**: Allows you to customize the code that is run when an instance of your smart pointer goes out of scope.
+ 
+- Smart pointers are a general design pattern used frequently in Rust.
+
+- Many libraries implement their own smart pointers, so we won’t be covering every single smart pointer out there; instead, we’ll be covering the most common smart pointers used within the Rust standard library.
+
+## Smart Pointer Summary (for additional info on these, see the detailed sections below)
+
+- **<ins>Reference Counting smart pointer</ins>:**   **`Rc<T`>**
+
+    - **Heap-allocated type**. **Similar to `Box`, but the `T` value allocated on the heap is accompanied by two reference counts**. They allow value sharing, which can be an effective way to reduce memory usage.
+  
+    - Enables **multiple owners (shared ownership) of the same data.**
+  
+    - Allows **only immutable borrows checked at compile time**.
+  
+    - Internally stores a **strong count** (# references that have ownership of the data) and **weak count** (# references that don’t have ownership. A **value is dropped when its strong count is 0**, the weak count has no influence over whether the underlying value is dropped or not.
+  
+    - <ins>NOTE:</ins> The **`Weak`** smart pointer is a version of the Reference Counting smart pointer (`Rc`) that holds a non-owning reference to the managed allocation. For more information see later section.
+
+- **<ins>Box smart pointer</ins>**:   **`Box<T>`**
+
+    - **Heap-allocated type**. A `Box<T>` value is a `T` value that is allocated on the heap. So, allocates memory on the heap.
+  
+    - Allows **single ownership** to a piece of data
+  
+    - Allows **immutable or mutable borrows checked at <ins>compile time</ins>** (i.e., enforces the borrowing rules at compile time). This means that if you want the value inside of a `Box` smart pointer to be mutable, then the `Box` smart pointer itself has to be mutable (see below how this is different for `RefCell`).
+
+- **<ins>RefCell smart pointer</ins>:**   **`RefCell<T>`**
+
+    - Allows **single ownership** to a piece of data
+  
+    - Allows **immutable or mutable borrows checked at <ins>runtime</ins>** (i.e., enforces the borrowing rules at runtime). Because `RefCell<T>` allows mutable borrows checked at runtime, **you can mutate the value inside the `RefCell<T>` even when the `RefCell<T>` smart pointer itself is immutable (i.e., provides interior mutability).**
+  
+    - RefCell itself **does not allocate any memory on the heap**. It's a **mechanism for mutability within a type that is otherwise immutable**, and it works without requiring heap allocation. If you put a RefCell inside a Rc or Box, then the Rc or Box will allocate on the heap, but the RefCell itself doesn't (i.e., If you put a RefCell inside another heap-allocated type, like Box<RefCell<T>> or Rc<RefCell<T>>, then the RefCell (and its contents) will reside on the heap as part of that larger allocation). 
+
+## IMPORTANT DISTINCTION: `Rc<RefCell<T>>` vs. `RefCell<Rc<T>>`
+
+**`Rc<RefCell<T>>`** **(The Common Pattern for Shared, Mutable Data)** — example above uses this.
+
+- When you see `Rc<RefCell<T>>`, it signifies that **the entire structure `RefCell<T>` is shared among multiple owners**.
+
+- The **outer `Rc` (Reference Counter) enables multiple parts of your program to hold shared ownership of the same `RefCell<T>`**. You can clone this `Rc` to create more pointers, all referencing (sharing ownership of) the exact same internal `RefCell` instance.
+
+- The **inner `RefCell<T>` provides interior mutability**. **While `Rc` itself, by default, provides only shared and immutable access to its contents, the `RefCell` allows any of the `Rc` owners to obtain a mutable borrow of the contained `T` at runtime.**
+
+    - `RefCell` still enforces Rust's core borrowing rules at runtime: you can have either one mutable borrow OR any number of immutable borrows, but never both simultaneously. If you attempt to violate this rule (e.g., by calling `borrow_mut()` twice, or `borrow_mut()` while a `borrow()` is active), the program will panic at runtime.
+
+- <ins>Summary in simple terms:</ins> **Usually, you use `Rc<RefCell<T>>`**; the **whole thing is shared and each shared owner gets to mutate the contents `T`**. The **effect of mutating the contents will be seen by all of the shared owners of the outer `Rc` because the inner data is shared.**
+
+<br>**`RefCell<Rc<T>>` (less useful, rarely used)**
+- The **outer `RefCell` means that you have a single `RefCell` that you can mutably borrow from**. In this way, you **have `&mut Rc<T>`, so you can change the `Rc<T>` itself**. **HOWEVER**, You **cannot directly change the `T` that the `Rc` points to** (unless `T` itself uses interior mutability). So, while you can "change the inside value" of a `RefCell<Rc<T>>`, what you're changing is the `Rc<T>` itself (the shared pointer), not the data `T` that the `Rc` points to.
+
+- **The `RefCell` cannot inherently be shared among multiple owners** (shared ownership) in the same way `Rc` allows; you'd **need to wrap this entire structure in an `Rc`** if you wanted to share it (i.e., `Rc<RefCell<Rc<T>>>`), which gets overly complex.
+
+- The **inner `Rc<T>` is a shared pointer to some data `T`**.
+
+- <ins>Summary in simple terms:</ins< You **can't share a `RefCell<Rc<T>>` except by reference**, so this configuration is more **limited** in how it can be used. In order to mutate the inner data, you would need to mutably borrow from the outer RefCell, but then you'd have access to an immutable Rc. **The only way to mutate it would be to replace it with a completely different Rc.** Far less useful.
+
+
+
+
 
 
 
