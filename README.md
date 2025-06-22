@@ -4849,7 +4849,7 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 **<ins>Pointer</ins>** — **a pointer is a general concept for a variable that stores a memory address. The memory address refers to (or points to) some other data in memory.** You can think about pointers as an arrow pointing to a value stored in somewhere in memory. 
 
-### References
+## References
 
 **The most common pointer in Rust** is a **<ins>Reference</ins>**. 
 
@@ -4857,7 +4857,7 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 - References don’t have any special capabilities, which also means they don’t have much overhead, unlike smart pointers
 
-### Smart Pointers Overview
+### Smart Pointers Introductio
 
 **<ins>Smart Pointers</ins>** are **data structures that act like a pointer but have metadata and extra capabilities tacked on.**
 
