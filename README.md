@@ -5435,6 +5435,130 @@ let d = &c;		// `d` is an immutable borrow to `c`
 - HOWEVER, the **`RefCell<T>` smart pointer is a little fancier** bc **instead of calling methods to mutate the data, we <ins>can call methods to get an immutable or mutable reference to the data</ins>**. This works because the **`RefCell<T>` smart pointer checks that the references are valid at runtime**.
 
 
+### USE CASE for the Interior Mutability Pattern
+
+We have a library that tracks a value against a maximum value and sends messages depending on how close the value is to the maximum value. This library could keep track of the quota for how many API calls a user is able to make. This library only provides the functionality to track how close a value is to the maximum value and what messages to send at what times. Applications implementing the library are expected to implement the mechanism for actually sending the message (whether through email, text, or something else). 
+
+```Rust
+// `Messenger trait` with one method called `send()` that takes an immutable reference to `self` and a message
+// to send (string slice)
+pub trait Messenger {
+    fn send(&self, msg: &str);
+}
+
+// `LimitTracker` struct with three fields.
+pub struct LimitTracker<'a, T: Messenger> {
+    messenger: &'a T,	// `messenger` field is a reference to a generic type that implements the `Messenger` trait.
+			// Bc we're borrowing `T` here, we have to add a lifetime annotation.
+
+    value:usize,	// `value` field represents the current value
+    max:usize,		// `max` field represents the max value
+}
+
+// In the implementation block, we have to specify our lifetime and generic again (with the trait bound)
+impl <'a, T> LimitTracker<'a, T>
+where
+    T: Messenger,
+{
+    // Constructor
+    pub fn new(messenger: &T, max: usize) -> LimitTracker<T> {
+        LimitTracker {
+            messenger,
+            value: 0,
+            max,
+        }
+    }
+    // Pass in mutable reference to `self` and the `value` we want to set.
+    pub fn set_value(&mut self, value: usize) {
+        self.value = value;
+
+        let percentage_of_max = self.value as f64 / self.max as f64;
+
+        if percentage_of_max >= 1.0 {
+            self.messenger.send("Error: You are over your quota!");
+        } else if percentage_of_max >= 0.9 {
+            self.messenger.send("Urgent warning: You've used over 90% of your quota!");
+        } else if percentage_of_max >= 0.75 {
+            self.messenger.send("Warning: You've used up over 75% of your quota!");
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::cell::RefCell;	// bring the `RefCell` smart pointer into scope
+
+    // `MockMessenger` struct with one field called `sent_messages` which will store a vector of 
+    // messages that have been sent (the messages sent from `LimitTracker::set_value()` with .`send()`). 
+    struct MockMessenger {
+        sent_messages: RefCell<Vec<String>>,	// This vector is a mutable value, but the `send()` method
+						// below accepts an immutable reference to `self`. As a result,
+						// in `send()`, we can't edit the mutable `sent_messages` value
+						// unless we use a `RefCell` smart pointer.
+						//
+						// SOLUTION: we wrap the vector of `Strings` in a `RefCell`
+						// smart pointer, bc `RefCell<T>` allows mutable borrows
+						// checked at runtime, so you can mutate the value inside
+						// the `RefCell<T>` even when the `RefCell<T>` smart pointer
+						// itself is immutable.
+   		}
+    impl MockMessenger {
+        fn new() -> MockMessenger {
+            MockMessenger {
+                sent_messages: RefCell::new(vec![]),	// construct a new `RefCell` smart pointer and
+							// pass in an empty vector.
+            }
+        }
+    }
+    // Implement the `Messenger` trait for the `MockMessenger` struct. We make it so that when a `MockMessenger`
+    // calls the `.send()` method, it pushes the message as a `String` onto the `sent_messages` vector. In this way,
+    // the `MockMessenger` accumulates all of the messages sent in its `sent_messages` vector.
+    impl Messenger for MockMessenger {
+        fn send(&self, message: &str) {
+            // self.sent_messages.push(String::from(message));	// Without `RefCell`, this ERRORS, because we
+								// can't borrow the `sent_messages` vector
+								// as mutable to push a value when we have
+								// an immutable reference to the current
+								// `MockMessenger` instance (`&self`). Bc we
+								// take an immutable reference, all fields
+								// inside the struct are also immutable.
+								//
+								// If instead of `RefCell`, we were to try to fix
+								// this by taking a mutable reference to `self`
+								// (`&mut self`), this would also ERROR bc the
+								// `Messenger` trait expects a `send()`
+								// method that accepts an immutable
+								// reference to `self`.														
+
+            // NOW, after applying our solution, `sent_messages` is our `RefCell` smart pointer and it is
+            // immutable bc we have `&self` (an immutable reference to `self`), so all of the fields inside
+            // of it (including `sent_messages`) are also immutable. BUT, bc `sent_messages` is a `RefCell`
+            // smart pointer, we can can get a mutable reference to the values stored inside our smart
+            // pointer by calling `.borrow_mut()`... then we can call the `.push()` method on our mutable reference 
+            // and append the message.
+            //
+            self.sent_messages.borrow_mut().push(String::from(message));
+        }
+    }
+
+    #[test]
+    fn it_sends_an_over_75_percent_warning_message() {
+        let mock_messenger = MockMessenger::new();
+        let mut limit_tracker = LimitTracker::new(&mock_messenger, 100);
+
+        limit_tracker.set_value(80); // should send the "Warning" message for >= 75%
+
+        // `sent_messages` is our `RefCell` smart pointer, but we want to get the length of the vector stored
+        // inside of our smart pointer. In this case, we don't need a mutable reference. We can simply get
+        // an immutable reference using `.borrow() `
+        //
+        assert_eq!(mock_messenger.sent_messages.borrow().len(), 1);
+    }
+
+}
+```
+
 
 
 
