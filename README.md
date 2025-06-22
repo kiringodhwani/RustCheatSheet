@@ -5225,7 +5225,7 @@ fn main() {
     // At the end of `main`, both of the `CustomSmartPointers` go out of scope and Rust will automatically
     // call the `drop()` method for both. 
     // NOTE: variables will be dropped in the reverse order of their creation, so first `d` is dropped and
-    // then `c (because c was created first and then d)
+    // then `c` (because `c` was created first and then `d`)
 }
 ```
 **`cargo run`** —>  
