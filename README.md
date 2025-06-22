@@ -5353,7 +5353,7 @@ fn main() {
     // pointer (returned by `clone()`) that also points to and shares ownership of the same underlying data.
     // They both hold separate `Rc` instances that refer to the same allocated content.
     // 
-    // To summarize, we want both List `b` and List `c` point to List `a`. We can't just pass in a reference to `a` for
+    // To summarize, we want both List `b` and List `c` to point to List `a`. We can't just pass in a reference to `a` for
     // the `Rc<List>` value in the tuple because what it expects is an owned type -> mismatched types error. We
     // also can't pass List `a` in directly because it would move ownership of `a` into `b` (as it is passed into `b` 
     // first). So, the solution here is to use the `clone()` method of `Rc`, which will give us back an owned value; 
