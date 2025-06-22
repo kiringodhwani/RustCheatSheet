@@ -5382,6 +5382,63 @@ fn main() {
 
 ## Interior Mutability
 
+A design pattern in Rust that **allows you to mutate data even when there are immutable references to that data**, which is typically disallowed by the borrowing rules. 
+
+- To mutate data, this pattern **uses unsafe code** inside a data structure to bypass the typical rules around mutation and borrowing. 
+
+- **Unsafe code:** code that is not checked at compile time for memory safety.
+
+    - Even though the borrowing rules are not enforced at compile time, we can still enforce them at runtime.
+  
+    - You may ask: **why would you want to enforce the borrowing rules at runtime instead of compile time?** <ins>See below example</ins>.
+ 
+### `RefCell` Smart Pointer
+
+**The `RefCell` smart pointer represents single ownership over the data it holds**, much like the `Box` smart pointer. The difference is the **`Box` smart pointer enforces the borrowing rules at <ins>compile time</ins>**, whereas the **`RefCell` smart pointer enforces the borrowing rules at <ins>runtime</ins>**. As a result, with `RefCell`, if you break the borrowing rules at runtime, then your program will panic and exit. 
+
+- **Because `RefCell<T>` allows mutable borrows checked at runtime, you can <ins>mutate the value inside</ins> the RefCell<T> <ins>even when</ins> the RefCell<T> <ins>smart pointer itself is immutable.</ins>**
+
+    - Mutating a value inside an immutable value is called the **interior mutability pattern**.
+
+- The **advantage `Box` has with checking the borrowing rules at compile time is that errors will be caught sooner** in the development cycle and there’s no runtime performance cost. For these reasons, checking borrowing rules at compile time is the default in Rust. 
+
+- The **advantage of checking the borrowing rules at runtime is that certain memory safe scenarios are allowed, whereas they would be disallowed at compile time.** This is because certain properties of a program are impossible to detect using static analysis. 
+    - Example: The most famous example of this is the halting problem. 
+
+- The **`RefCell` smart pointer is useful when you’re sure that your code is following the borrowing rules, but the compiler can’t understand or guarantee that.**
+
+- <ins>NOTE:</ins> you **can only use the `RefCell` smart pointer in single-threaded programs**.
+
+- <ins>Example:</ins> **ERRORS** when **trying to use the interior mutability pattern w/ borrowing rules being checked at compile time.**
+
+ ```Rust
+// NOT ALLOWED to have a mutable reference to data that is declared as immutable...
+//
+let a = 5;		// Immutable variable `a` that is set to 5.
+let b = &mut a;		// `b` is a mutable borrow to `a`, ERROR: "cannot borrow `a` as mutable
+			// bc it's not declared as mutable".
+
+// IF we have an immutable reference to some data, then we can't change that data even if the data itself is mutable...
+//
+let mut c = 10;		// Mutable variable `c` that is set to 10
+let d = &c;		// `d` is an immutable borrow to `c`
+*d = 20;		// Use dereference to change underlying value from 10 to 20. ERROR: `d` is an
+			// immutable reference, so the data it refers to cannot be written.
+```
+**POSSIBLE SOLUTION WITH INDIRECTION:**
+- Imagine we have a data structure that stores some value, and inside the data structure, that val is mutable.
+
+- But, when we get a reference to the data structure, the reference itself is immutable. As a result, **code outside the data structure** would n**ot be able to mutate the value stored within the data structure directly.**
+
+- HOWEVER, outside the data structure, we could **call** some **public methods that would mutate the inner value.** —> <ins>THIS is called the interior mutability pattern</ins> and it is **essentially what the `RefCell<T>` smart pointer does.**
+
+- HOWEVER, the **`RefCell<T>` smart pointer is a little fancier** bc **instead of calling methods to mutate the data, we <ins>can call methods to get an immutable or mutable reference to the data</ins>**. This works because the **`RefCell<T>` smart pointer checks that the references are valid at runtime**.
+
+
+
+
+
+
 
 
 
