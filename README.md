@@ -5440,7 +5440,7 @@ let d = &c;		// `d` is an immutable borrow to `c`
 We have a library that tracks a value against a maximum value and sends messages depending on how close the value is to the maximum value. This library could keep track of the quota for how many API calls a user is able to make. This library only provides the functionality to track how close a value is to the maximum value and what messages to send at what times. Applications implementing the library are expected to implement the mechanism for actually sending the message (whether through email, text, or something else). 
 
 ```Rust
-// `Messenger trait` with one method called `send()` that takes an immutable reference to `self` and a message
+// `Messenger` trait with one method called `send()` that takes an immutable reference to `self` and a message
 // to send (string slice)
 pub trait Messenger {
     fn send(&self, msg: &str);
