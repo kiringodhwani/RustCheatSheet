@@ -5069,7 +5069,7 @@ let y = Box::new(x);	// `Box` points to the value `5` stored in memory. HOWEVER,
 			// is copied instead of ownership being transferred.
 
 assert_eq!(5, x);
-assert_eq!(5, *y);	// We can use the dereference operator `*` the same way bc Box is a smart pointer that
+assert_eq!(5, *y);	// We can use the dereference operator `*` the same way bc `Box` is a smart pointer that
 			// implements the `Deref` trait, which allows the dereference operator to work the same
 			// as if it were a reference
 ```
