@@ -4878,7 +4878,7 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 ## Smart Pointer Summary
 
-**<ins>Reference Counting smart pointer</ins>:**   **`Rc<T`>**
+**<ins>Reference Counting smart pointer</ins>:**   **`Rc<T>`**
 
 - **Heap-allocated type**. **Similar to `Box`, but the `T` value allocated on the heap is accompanied by two reference counts**. They allow value sharing, which can be an effective way to reduce memory usage.
   
