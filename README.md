@@ -5409,7 +5409,7 @@ A design pattern in Rust that **allows you to mutate data even when there are im
 
 - <ins>NOTE:</ins> you **can only use the `RefCell` smart pointer in single-threaded programs**.
 
-- <ins>Example:</ins> **ERRORS** when **trying to use the interior mutability pattern w/ borrowing rules being checked at compile time.**
+- <ins>Example Below:</ins> We get **ERRORS** when **trying to use the interior mutability pattern w/ borrowing rules being checked at compile time.**
 
  ```Rust
 // NOT ALLOWED to have a mutable reference to data that is declared as immutable...
