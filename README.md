@@ -4847,7 +4847,7 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 # Smart Pointers in Rust
 
-**Pointer** — **a pointer is a general concept for a variable that stores a memory address. The memory address refers to (or points to) some other data in memory.** You can think about pointers as an arrow pointing to a value stored in somewhere in memory. 
+**<ins>Pointer</ins>** — **a pointer is a general concept for a variable that stores a memory address. The memory address refers to (or points to) some other data in memory.** You can think about pointers as an arrow pointing to a value stored in somewhere in memory. 
 
 **The most common pointer in Rust** is a **<ins>reference</ins>**. 
 
