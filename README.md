@@ -4956,7 +4956,7 @@ Just like any other owned value, **when our `Box` goes out of scope, it will be 
 
 ### `Box` Example
 
-<ins>SIDE NOTE TO INTRODUCE EXAMPLE:<ins> **How Rust computes the size of non-recursive enums. **
+<ins>SIDE NOTE TO INTRODUCE EXAMPLE:<ins> **How Rust computes the size of non-recursive enums.**
 
 ```Rust
 enum Message {
