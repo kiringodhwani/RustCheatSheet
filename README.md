@@ -5272,8 +5272,9 @@ fn main() {
 	CustomSmartPointer created.  
 	Dropping CustomSmartPointer with data `some data`!    <— we can see that our smart pointer was
  								 successfully dropped / cleaned up
-	  							 early before main() ends
-	   						         `CustomSmartPointer` dropped before the end of main.
+	  							 early before main() ends   						         
+		   
+`CustomSmartPointer` dropped before the end of main.
 
 ## Reference Counting
 
