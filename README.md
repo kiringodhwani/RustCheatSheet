@@ -5418,7 +5418,7 @@ let a = 5;		// Immutable variable `a` that is set to 5.
 let b = &mut a;		// `b` is a mutable borrow to `a`, ERROR: "cannot borrow `a` as mutable
                         // bc it's not declared as mutable".
 
-// IF we have an immutable reference to some data, then we can't change that data even if the data itself is mutable...
+// IF we have an immutable reference to some data, then we can't change the underlying value of that data even if the data itself is mutable...
 //
 let mut c = 10;		// Mutable variable `c` that is set to 10
 let d = &c;		// `d` is an immutable borrow to `c`
