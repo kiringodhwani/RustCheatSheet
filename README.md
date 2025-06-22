@@ -5396,7 +5396,7 @@ A design pattern in Rust that **allows you to mutate data even when there are im
 
 **The `RefCell` smart pointer represents single ownership over the data it holds**, much like the `Box` smart pointer. The difference is the **`Box` smart pointer enforces the borrowing rules at <ins>compile time</ins>**, whereas the **`RefCell` smart pointer enforces the borrowing rules at <ins>runtime</ins>**. As a result, with `RefCell`, if you break the borrowing rules at runtime, then your program will panic and exit. 
 
-- **Because `RefCell<T>` allows mutable borrows checked at runtime, you can <ins>mutate the value inside</ins> the RefCell<T> <ins>even when</ins> the RefCell<T> <ins>smart pointer itself is immutable.</ins>**
+- **Because `RefCell<T>` allows mutable borrows checked at runtime, you can <ins>mutate the value inside</ins> the `RefCell<T>` <ins>even when</ins> the `RefCell<T>` <ins>smart pointer itself is immutable.</ins>**
 
     - Mutating a value inside an immutable value is called the **interior mutability pattern**.
 
