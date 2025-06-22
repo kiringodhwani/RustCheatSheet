@@ -5099,7 +5099,7 @@ impl<T> Deref for MyBox<T> {
     type Target = T;	// Associated type called `Target` which is equal to our generic `T`. Associated types are a
 			// slightly different way of declaring a generic parameter. See later section (chapter 19).
 
-    // The `Deref` trait requires that we one method called `deref()` which takes a reference to `self` and returns a 
+    // The `Deref` trait requires that we implement one method called `deref()` which takes a reference to `self` and returns a 
     // reference to the inner data, which in this case is going to be `&Self::Target` (or `&T`).
     //
     // In summary, this function's purpose: when the the deference operator `*` is used, we return a reference 
