@@ -5133,7 +5133,7 @@ fn main() {
 
 **<ins>Deref Coercion</ins>** — a convenience feature in Rust that happens automatically for types that implement the `Deref` trait.
 
-- **Deref Coercion will convert a reference to one type (A REFERENCE!!! CANT JUST BE AN OWNED TYPE) to a reference to a different type.**
+- **Deref Coercion will convert <ins>a reference to one type</ins> (A REFERENCE!!! CANT JUST BE AN OWNED TYPE) to <ins>a reference to a different type</ins>.**
 
 - <ins>Example</ins>:
 
