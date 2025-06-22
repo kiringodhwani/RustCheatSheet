@@ -5182,6 +5182,102 @@ hello(&(*m)[..])   // 1. Dereference `m` to a `String`
 
 ## The `Drop` Trait
 
+- Can be implemented on any type.
+
+- Allows you to **customize the code that is run when a value goes out of scope**.
+
+- **Almost always used when implementing smart pointers.**
+
+    - <ins>For example</ins>, with the `Box` smart pointer, the custom behavior we want when a `Box` goes out of scope is to deallocate the data stored on the heap.
+  
+    - In some languages, you have to manually free memory or resources when you’re done using an instance of a smart pointer. BUT, **with the `Drop` trait**, this **cleanup happens automatically when a value goes out of scope.** So, you **don’t have to worry about manually cleaning up resources. **
+
+- **<ins>SUMMARY:</ins> The `Drop` trait combined with Rust’s ownership system means that you don’t have to worry about cleaning up resources and memory because Rust will do it automatically.**
+
+- <ins>Example:</ins>
+```Rust
+// struct which represents a smart pointer that stores a `String`
+struct CustomSmartPointer {
+    data: String,
+}
+
+// Implement the `Drop` trait for our struct — NOTE: unlike `Deref`, the `Drop` trait is included in the prelude so already in scope.
+//
+// The `Drop` trait requires that we implement one method called `drop()` which takes a mutable reference to
+// `self`. Inside the method is the cleanup code that runs when an instance of `CustomSmartPointer` goes out
+// of scope - here this is just printing something out.
+// 	
+impl Drop for CustomSmartPointer {
+    fn drop(&mut self) {
+        println!("Dropping CustomSmartPointer with data `{}`!", self.data);
+    }
+}
+
+fn main() {
+    let c = CustomSmartPointer {
+        data: String::from("my stuff"),
+    };
+    let d = CustomSmartPointer {
+        data: String::from("other stuff"),
+    };
+    println!("CustomSmartPointers created.");
+
+    // At the end of `main`, both of the `CustomSmartPointers` go out of scope and Rust will automatically
+    // call the `drop()` method for both. 
+    // NOTE: variables will be dropped in the reverse order of their creation, so first `d` is dropped and
+    // then `c (because c was created first and then d)
+}
+```
+**`cargo run`** —>  
+	CustomSmartPointers created.  
+	Dropping CustomSmartPointer with data `other stuff`!  
+	Dropping CustomSmartPointer with data `my stuff`!  
+
+<ins>What happens if you want to customize this cleanup behavior so you can manually clean up values early?</ins>
+
+- **In most cases, this isn’t necessary.**
+
+- However, in **some cases, you might want to clean up a value early.** For example, **when using smart pointers to manage locks.** In this case, you **might want to call the `drop()` method to release a lock so other code in the same scope could acquire the lock.**
+
+- **Rust doesn’t allow you to call the `drop()` method directly/manually** — “explicit destructor calls not allowed”. Rust doesn’t allow us to call `drop()` manually because when our variable goes out of scope, Rust will still automatically call `drop()` which would result in a **double free** (i.e., potentially calling free on memory that’s already been freed).
+ 
+- **<ins>TO MANUALLY CLEAN UP A VALUE EARLY:</ins>** Instead of calling the `drop()` method on the value, we **call the `drop()` function provided by Rust standard library and pass in the value we want to drop.**
+
+    - EXAMPLE:
+
+```Rust
+struct CustomSmartPointer {
+    data: String,
+}
+
+impl Drop for CustomSmartPointer {
+    fn drop(&mut self) {
+        println!("Dropping CustomSmartPointer with data `{}`!", self.data);
+    }
+}
+
+fn main() {
+    let c = CustomSmartPointer {
+        data: String::from("some data"),
+    };
+    println!("CustomSmartPointer created.");
+
+    drop(c);	// call the `drop()` function provided by Rust standard library and pass in `c`. It is
+		// included in the prelude so we don't have to bring it into scope manually.
+
+    println!("CustomSmartPointer dropped before the end of main.");
+}
+```
+**`cargo run`** —>  
+	CustomSmartPointer created.  
+	Dropping CustomSmartPointer with data `some data`!    <— we can see that our smart pointer was
+ 								 successfully dropped / cleaned up
+	  							 early before main() ends
+	   						         `CustomSmartPointer` dropped before the end of main.
+
+## Reference Counting
+
+
 
 
 
