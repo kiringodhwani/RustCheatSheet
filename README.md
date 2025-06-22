@@ -5037,6 +5037,50 @@ fn main() {
 
 ## `Deref` Trait
 
+As explained in the last section introducing smart pointers, smart pointers are structs that implement the `Deref` trait and the `Drop` trait. 
+
+- The **`Deref trait` allows you to treat pointers like regular references.**
+  
+- **Without the `Deref` trait, the compiler only knows how to dereference references.**
+
+- The **`Deref` trait allows the Rust compiler to take any value that implements `Deref` and call the `deref()` method to get a reference**, which the **compiler then knows how to dereference.**
+
+- The `Deref` trait allows you to **customize the behavior of the dereference operator `*`.**
+
+<ins>Example 1:</ins> How the dereference operator `*` works with with references...
+```Rust
+let x = 5;
+let y = &x;	// `y` is a reference to `x`, `y` is a memory address (or pointer) that
+		// points to the location where `5` is stored.
+
+assert_eq!(5, x);
+assert_eq!(5, *y);	// Assert that dereferencing `y` is equal to `5`. The dereference operator
+			// follows the memory address stored in `y` to the actual value.
+
+assert_eq!(5, y);	// ERRORS, can't compare an integer to a reference to an integer bc different types.
+```
+
+^^^<ins>Example 2:</ins> modifying the above example to use smart pointers (the `Box` smart pointer) instead of references...
+
+```Rust
+let x = 5;
+let y = Box::new(x);	// `Box` points to the value `5` stored in memory. HOWEVER, this is a copy
+			// of `5`, bc when primitives like ints get passed into functions, the value
+			// is copied instead of ownership being transferred.
+
+assert_eq!(5, x);
+assert_eq!(5, *y);	// We can use the dereference operator * the same way bc Box is a smart pointer that
+			// implements the Deref trait, which allows the dereference operator to work the same
+			// as if it were a reference
+```
+
+### Creating Our Own Smart Pointer that Implements the `Deref` Trait
+
+- We base our smart pointer on `Box`
+
+
+
+
 
 
 
