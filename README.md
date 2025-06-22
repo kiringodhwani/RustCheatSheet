@@ -5190,7 +5190,7 @@ hello(&(*m)[..])   // 1. Dereference `m` to a `String`
 
     - <ins>For example</ins>, with the `Box` smart pointer, the custom behavior we want when a `Box` goes out of scope is to deallocate the data stored on the heap.
   
-    - In some languages, you have to manually free memory or resources when you’re done using an instance of a smart pointer. BUT, **with the `Drop` trait**, this **cleanup happens automatically when a value goes out of scope.** So, you **don’t have to worry about manually cleaning up resources. **
+    - In some languages, you have to manually free memory or resources when you’re done using an instance of a smart pointer. BUT, **with the `Drop` trait**, this **cleanup happens automatically when a value goes out of scope.** So, you **don’t have to worry about manually cleaning up resources.**
 
 - **<ins>SUMMARY:</ins> The `Drop` trait combined with Rust’s ownership system means that you don’t have to worry about cleaning up resources and memory because Rust will do it automatically.**
 
