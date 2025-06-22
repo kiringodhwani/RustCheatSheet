@@ -5174,7 +5174,7 @@ hello(&(*m)[..])   // 1. Dereference `m` to a `String`
 
 2. From `&mut T` to `&mut U` when `T: DerefMut<Target=U>` — When going from a mutable reference to another mutable reference
 
-3. From `&mut T` to `&U` when `T: Deref<Target=U>` — When going from a mutable reference to another immutable reference.
+3. From `&mut T` to `&U` when `T: Deref<Target=U>` — When going from a mutable reference to an immutable reference.
 
 	- NOTE: **RUST cannot perform deref coercion when going from an immutable reference to a mutable reference**. This has to do with borrowing rules. See the borrowing rules from earlier. The borrowing rules state that you can either have one mutable reference or any number of immutable references, so you can’t have a mutable reference to a variable if an immutable reference already exists for it. Converting a mutable reference to an immutable reference won’t break that rule (bc go from 1 mutable to 1 immutable). HOWEVER, **converting an immutable reference to a mutable reference would require that the initial immutable reference is the only immutable reference to that piece of data** (otherwise you may end up with mutable reference and immutable 	reference/s), which is something the **borrowing rules cannot guarantee**.
 
