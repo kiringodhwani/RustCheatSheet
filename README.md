@@ -4898,7 +4898,7 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
   
 - Allows **immutable or mutable borrows checked at <ins>compile time</ins>** (i.e., enforces the borrowing rules at compile time). This means that if you want the value inside of a `Box` smart pointer to be mutable, then the `Box` smart pointer itself has to be mutable (see below how this is different for `RefCell`).
 
-**<ins>RefCell smart pointer</ins>:**   **`RefCell<T>`**
+<br>**<ins>RefCell smart pointer</ins>:**   **`RefCell<T>`**
 
 - Allows **single ownership** to a piece of data
   
