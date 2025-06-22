@@ -5428,7 +5428,7 @@ let d = &c;		// `d` is an immutable borrow to `c`
 **POSSIBLE SOLUTION WITH INDIRECTION:**
 - Imagine we have a data structure that stores some value, and inside the data structure, that val is mutable.
 
-- But, when we get a reference to the data structure, the reference itself is immutable. As a result, **code outside the data structure** would n**ot be able to mutate the value stored within the data structure directly.**
+- But, when we get a reference to the data structure, the reference itself is immutable. As a result, **code outside the data structure** would **not be able to mutate the value stored within the data structure directly.**
 
 - HOWEVER, outside the data structure, we could **call** some **public methods that would mutate the inner value.** —> <ins>THIS is called the interior mutability pattern</ins> and it is **essentially what the `RefCell<T>` smart pointer does.**
 
