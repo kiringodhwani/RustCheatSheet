@@ -5575,6 +5575,70 @@ fn send(&self, message: &str) {
 ```
 ^^^**NO COMPILE TIME ERRORS, bc `RefCell` checks borrowing rules at runtime**, **BUT when we run `cargo test`, the program <ins>panics at runtime</ins>…**
 
+<img width="650" alt="Image" src="https://github.com/user-attachments/assets/a43001ce-7a56-46fc-bbd1-fee95e46fe6a" />
+
+^^^<ins>LESSON:</ins> the interior mutability pattern gives flexibility but **we have to be careful and make sure that our code abides by the borrowing rules**. Also note that **bc we are checking the borrowing rules at runtime, this does results in a small runtime performance hit.**
+
+### Combining `Rc` with `RefCell` to Get Multiple Owners of Mutable Data
+
+In our previous section on the reference counting smart pointer (`Rc`), we talked about how we couldn’t change the values inside our `Cons` Lists once they were created bc **`Rc` only stores immutable values**. In the below example, we **use the `RefCell` smart pointer so that we can update the values inside our lists after they have been created.**
+
+```Rust
+#[derive(Debug)]
+enum List {
+    Cons(Rc<RefCell<i32>>, Rc<List>),	// Both the integer (first elem in tuple) and the list (second elem
+					// in tuple) are wrapped in the `Rc` smart pointer bc we want them
+					// to have multiple owners.
+					//
+					// Interior mutability —
+					// The integer value is additionally wrapped in the `RefCell` smart
+					// pointer so that it can be mutable even though the `Rc`
+					// smart pointer doesn’t allow multiple mutable references.
+
+	Nil,
+}
+
+use crate::List::{Cons, Nil};
+use std::cell::RefCell;
+use std::rc::Rc;
+
+fn main() {
+    let value = Rc::new(RefCell::new(5));	// create an integer of 5 that is wrapped in `RefCell` smart pointer and
+						// then an `Rc` smart pointer. This way it can be mutated and have
+						// multiple owners.
+
+    let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));	// Create the first `Cons` List `a`, which has a single
+								// node. For the value, we clone the `value`
+								// variable defined in the previous line. The
+								// `clone()` method of `Rc` gives us back an owned
+								// value, but makes is so that the `value` variable
+								// and the `a` list share ownership of the same
+								// underlying value. `clone()` does not deep copy
+								// the data; instead, it just increases the reference
+								// count.
+								// Also store the `Cons` List in an `Rc` smart
+								// pointer bc we want lists `b` and `c` to reference `a`.
+
+    // Create lists `b` and `c`, which store the values 3 and 4, respectively, and reference list `a`. We use `clone()` to 
+    // ensure `b` and `c` share ownership of `a`'s underlying value with `a`, they both reference `a`.
+    // We also make it so that the integers can be mutated with `RefCell` and can have multiple owners with `Rc`.
+    //
+    let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
+    let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&a));
+
+    *value.borrow_mut() += 10;	// We use the automatic dereferencing feature to automatically 
+                                // dereference `Rc<RefCell<5>>` to `RefCell<5>`, then call 
+                                // `.borrow_mut()` to take a mutable reference to the value in the
+				// `RefCell` smart pointer, then use `*` to modify the underlying value of
+				// the mutable reference.
+
+    println!("a after = {:?}", a);
+    println!("b after = {:?}", b);
+    println!("c after = {:?}", c);
+}
+```
+
+
 
 
 
