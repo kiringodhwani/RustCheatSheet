@@ -4927,7 +4927,7 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 - The **inner `Rc<T>` is a shared pointer to some data `T`**.
 
-- <ins>Summary in simple terms:</ins< You **can't share a `RefCell<Rc<T>>` except by reference**, so this configuration is more **limited** in how it can be used. In order to mutate the inner data, you would need to mutably borrow from the outer RefCell, but then you'd have access to an immutable Rc. **The only way to mutate it would be to replace it with a completely different Rc.** Far less useful.
+- <ins>Summary in simple terms:</ins> You **can't share a `RefCell<Rc<T>>` except by reference**, so this configuration is more **limited** in how it can be used. In order to mutate the inner data, you would need to mutably borrow from the outer RefCell, but then you'd have access to an immutable Rc. **The only way to mutate it would be to replace it with a completely different Rc.** Far less useful.
 
 
 
