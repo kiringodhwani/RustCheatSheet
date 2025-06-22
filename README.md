@@ -4876,35 +4876,35 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 - Many libraries implement their own smart pointers, so we won’t be covering every single smart pointer out there; instead, we’ll be covering the most common smart pointers used within the Rust standard library.
 
-## Smart Pointer Summary (for additional info on these, see the detailed sections below)
+## Smart Pointer Summary
 
-- **<ins>Reference Counting smart pointer</ins>:**   **`Rc<T`>**
+**<ins>Reference Counting smart pointer</ins>:**   **`Rc<T`>**
 
-    - **Heap-allocated type**. **Similar to `Box`, but the `T` value allocated on the heap is accompanied by two reference counts**. They allow value sharing, which can be an effective way to reduce memory usage.
+- **Heap-allocated type**. **Similar to `Box`, but the `T` value allocated on the heap is accompanied by two reference counts**. They allow value sharing, which can be an effective way to reduce memory usage.
   
-    - Enables **multiple owners (shared ownership) of the same data.**
+- Enables **multiple owners (shared ownership) of the same data.**
   
-    - Allows **only immutable borrows checked at compile time**.
+- Allows **only immutable borrows checked at compile time**.
   
-    - Internally stores a **strong count** (# references that have ownership of the data) and **weak count** (# references that don’t have ownership. A **value is dropped when its strong count is 0**, the weak count has no influence over whether the underlying value is dropped or not.
+- Internally stores a **strong count** (# references that have ownership of the data) and **weak count** (# references that don’t have ownership. A **value is dropped when its strong count is 0**, the weak count has no influence over whether the underlying value is dropped or not.
   
-    - <ins>NOTE:</ins> The **`Weak`** smart pointer is a version of the Reference Counting smart pointer (`Rc`) that holds a non-owning reference to the managed allocation. For more information see later section.
+- <ins>NOTE:</ins> The **`Weak`** smart pointer is a version of the Reference Counting smart pointer (`Rc`) that holds a non-owning reference to the managed allocation. For more information see later section.
 
-- **<ins>Box smart pointer</ins>**:   **`Box<T>`**
+<br>**<ins>Box smart pointer</ins>**:   **`Box<T>`**
 
-    - **Heap-allocated type**. A `Box<T>` value is a `T` value that is allocated on the heap. So, allocates memory on the heap.
+- **Heap-allocated type**. A `Box<T>` value is a `T` value that is allocated on the heap. So, allocates memory on the heap.
   
-    - Allows **single ownership** to a piece of data
+- Allows **single ownership** to a piece of data
   
-    - Allows **immutable or mutable borrows checked at <ins>compile time</ins>** (i.e., enforces the borrowing rules at compile time). This means that if you want the value inside of a `Box` smart pointer to be mutable, then the `Box` smart pointer itself has to be mutable (see below how this is different for `RefCell`).
+- Allows **immutable or mutable borrows checked at <ins>compile time</ins>** (i.e., enforces the borrowing rules at compile time). This means that if you want the value inside of a `Box` smart pointer to be mutable, then the `Box` smart pointer itself has to be mutable (see below how this is different for `RefCell`).
 
-- **<ins>RefCell smart pointer</ins>:**   **`RefCell<T>`**
+**<ins>RefCell smart pointer</ins>:**   **`RefCell<T>`**
 
-    - Allows **single ownership** to a piece of data
+- Allows **single ownership** to a piece of data
   
-    - Allows **immutable or mutable borrows checked at <ins>runtime</ins>** (i.e., enforces the borrowing rules at runtime). Because `RefCell<T>` allows mutable borrows checked at runtime, **you can mutate the value inside the `RefCell<T>` even when the `RefCell<T>` smart pointer itself is immutable (i.e., provides interior mutability).**
+- Allows **immutable or mutable borrows checked at <ins>runtime</ins>** (i.e., enforces the borrowing rules at runtime). Because `RefCell<T>` allows mutable borrows checked at runtime, **you can mutate the value inside the `RefCell<T>` even when the `RefCell<T>` smart pointer itself is immutable (i.e., provides interior mutability).**
   
-    - RefCell itself **does not allocate any memory on the heap**. It's a **mechanism for mutability within a type that is otherwise immutable**, and it works without requiring heap allocation. If you put a RefCell inside a Rc or Box, then the Rc or Box will allocate on the heap, but the RefCell itself doesn't (i.e., If you put a RefCell inside another heap-allocated type, like Box<RefCell<T>> or Rc<RefCell<T>>, then the RefCell (and its contents) will reside on the heap as part of that larger allocation). 
+- RefCell itself **does not allocate any memory on the heap**. It's a **mechanism for mutability within a type that is otherwise immutable**, and it works without requiring heap allocation. If you put a RefCell inside a Rc or Box, then the Rc or Box will allocate on the heap, but the RefCell itself doesn't (i.e., If you put a RefCell inside another heap-allocated type, like Box<RefCell<T>> or Rc<RefCell<T>>, then the RefCell (and its contents) will reside on the heap as part of that larger allocation). 
 
 ## IMPORTANT DISTINCTION: `Rc<RefCell<T>>` vs. `RefCell<Rc<T>>`
 
