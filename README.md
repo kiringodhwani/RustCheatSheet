@@ -5573,7 +5573,7 @@ fn send(&self, message: &str) {
 
 }
 ```
-^^^**NO COMPILE TIME ERRORS, bc `RefCell` checks borrowing rules at runtime**, **BUT when we run `cargo test`, the program panics at runtime…**
+^^^**NO COMPILE TIME ERRORS, bc `RefCell` checks borrowing rules at runtime**, **BUT when we run `cargo test`, the program <ins>panics at runtime</ins>…**
 
 
 
