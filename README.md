@@ -5532,11 +5532,11 @@ mod tests {
 								// reference to `self`.														
 
             // NOW, after applying our solution, `sent_messages` is our `RefCell` smart pointer and it is
-            // immutable bc we have `&self` (an immutable reference to `self`), so all of the fields inside
-            // of it (including `sent_messages`) are also immutable. BUT, bc `sent_messages` is a `RefCell`
-            // smart pointer, we can can get a mutable reference to the values stored inside our smart
-            // pointer by calling `.borrow_mut()`... then we can call the `.push()` method on our mutable reference 
-            // and append the message.
+            // immutable bc we have `&self` (an immutable reference to `self`). Bc we have `&self`, all of the 
+            //  fields inside the current `MockMessenger` instance are immutable. BUT, bc `sent_messages` 
+            // is a `RefCell` smart pointer, we can can get a mutable reference to the values stored inside 
+            // the smart pointer by calling `.borrow_mut()`... then we can call the `.push()` method on 
+            // our mutable reference and append the message.
             //
             self.sent_messages.borrow_mut().push(String::from(message));
         }
