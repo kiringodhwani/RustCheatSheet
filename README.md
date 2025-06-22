@@ -5533,7 +5533,7 @@ mod tests {
 
             // NOW, after applying our solution, `sent_messages` is our `RefCell` smart pointer and it is
             // immutable bc we have `&self` (an immutable reference to `self`). Bc we have `&self`, all of the 
-            //  fields inside the current `MockMessenger` instance are immutable. BUT, bc `sent_messages` 
+            // fields inside the current `MockMessenger` instance are immutable. BUT, bc `sent_messages` 
             // is a `RefCell` smart pointer, we can can get a mutable reference to the values stored inside 
             // the smart pointer by calling `.borrow_mut()`... then we can call the `.push()` method on 
             // our mutable reference and append the message.
