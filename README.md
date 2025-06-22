@@ -5078,6 +5078,58 @@ assert_eq!(5, *y);	// We can use the dereference operator `*` the same way bc `B
 
 - We base our smart pointer on `Box`
 
+```Rust
+// `Box` is implemented as a tuple struct (i.e., an anonymous struct without named fields) that holds one generic 
+// value. The big difference between the `Box` smart pointer in the Rust standard library and `MyBox` is that `x` in 
+// `MyBox` is not stored on the heap. This is just for the sake of this example focusing on `Deref`.
+//
+struct MyBox<T>(T);
+
+impl<T> MyBox<T> {
+    fn new(x: T) -> MyBox<T> {
+        MyBox(x)
+    }
+}
+
+use std::ops::Deref;	// bring the `Deref` trait into scope
+
+// Implement the`Deref` trait for `MyBox` so that it can use `*` like a reference.
+impl<T> Deref for MyBox<T> {
+
+    type Target = T;	// Associated type called `Target` which is equal to our generic `T`. Associated types are a
+			// slightly different way of declaring a generic parameter. See later section (chapter 19).
+
+    // The `Deref` trait requires that we one method called `deref()` which takes a reference to `self` and returns a 
+    // reference to the inner data, which in this case is going to be `&Self::Target` (or `&T`).
+    //
+    // In summary, this function's purpose: when the the deference operator `*` is used, we return a reference 
+    // to the first and only item stored in our `MyBox` tuple struct. 
+    //
+    // `deref()` returns a reference instead of the value itself for ownership reasons. If `deref()` returned the 
+    // value directly, then Rust would move ownership of the value outside of the smart pointer, and in most 
+    // cases when using the dereference operator `*`, we don't want this.
+    //
+    fn deref(&self) -> &Self::Target { 
+        &self.0    // `MyBox` is a tuple struct, so we return `&self.0`, which is a reference to the first item in the tuple.
+    }
+}
+
+fn main() {
+    let x = 5;
+    let y = MyBox::new(x);  
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);	// When we use the deference operator on `y`, Rust actually calls: `*(y.deref())`. This
+			// code first calls `deref()` on `y` to get a reference, and it then uses the dereference 
+			// operator `*` on the reference.
+			//
+			// ^^^Bc Rust does this automatically, we don't have to think about when we have to
+			// use the `deref()` method, so we can treat regular references and types that
+			// implement Deref the same.
+}
+```
+
+### Implicit Deref Coercion with Functions and Methods
 
 
 
