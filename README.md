@@ -4857,7 +4857,7 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 - References don’t have any special capabilities, which also means they don’t have much overhead, unlike smart pointers
 
-### Smart Pointers Introductio
+## Smart Pointers Introduction
 
 **<ins>Smart Pointers</ins>** are **data structures that act like a pointer but have metadata and extra capabilities tacked on.**
 
