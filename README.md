@@ -5300,7 +5300,7 @@ fn main() {
 
 <ins>Here is this example in code…</ins>
 ```Rust
-// See my detailed explanation of a Cons List in previous section
+// See my detailed explanation of a `Cons` List in previous section
 enum List {
     Cons(i32, Box<List>),
     Nil,
@@ -5311,13 +5311,76 @@ use crate::List::{Cons, Nil};
 fn main() {
     let a = Cons(5, Box::new(Cons(10, Box::new(Nil))));
 
-    // Both lists b and c point to list a
+    // Both lists `b` and `c` point to list `a`
     let b = Cons(3, Box::new(a));
     let c = Cons(4, Box::new(a));
 }
 ```
 ^^^**HOWEVER, this code errors**, as shown below. The error states that we are attempting to use a value that has already been moved. **A `Cons` variant owns the data that it holds**. So, **when we do let `b = Cons(3, Box::new(a));` we are moving `a` into `b`**, so **`b` now owns `a`**. For this reason, we **can’t use `a` in the next line when defining `c`, which causes the below error.**
 
+<img width="729" alt="Image" src="https://github.com/user-attachments/assets/067be855-c9f7-4dc3-bfa7-83d1fb14d411" />
+
+We **could solve this by changing the definition of the `Cons` variant to hold references instead of owned value, but that would require the use of lifetimes.** By **using lifetime parameters**, we would be **specifying that every element in `List` has to live at least as long as the `List` itself.** **Otherwise**, we would have **dangling references** where the `List` points to elements that don’t exist. In other words, if the data that a `Cons` variant points to goes out of scope and is dropped before the `Cons` variant itself, then the `Cons` variant would be left with a hanging reference to invalid memory.
+
+#### Solution: Use a Reference Counting smart pointer
+
+<ins>NOTE:</ins> **to get the reference counts** in the below, we use **`Rc::strong_count()`** instead of `Rc::weak_count()`. There is no plain count only these two options… (we explain them in detail in a later section)
+
+```Rust
+use std::rc::Rc; // bring the Reference Counting smart pointer into scope
+
+enum List {
+    Cons(i32, Rc<List>),
+    Nil,
+}
+
+use crate::List::{Cons, Nil};
+
+fn main() {
+    // Replace `Box` with `Rc` in the below.
+    // Also, wrap List `a` inside a Reference Counting smart pointer because we are passing it into List `b` and 
+    // List `c`. Creating List `a` increases reference count for `a` from 0 to 1.
+    //
+    let a = Rc::new(Cons(5, Rc::new(Cons(10, Rc::new(Nil))))); 
+
+    println!("count after creating a = {}", Rc::strong_count(&a));
+
+    // To pass List `a` into List `b` and List `c` (so that `b` and `c` both point to List `a`), call `Rc::clone()` and pass it a
+    // reference to `a`. `Rc::clone()` doesn't make deep copies of the data it is passed, unlike most clone 
+    // implementations. Instead, calling `Rc::clone()` here only increments the reference count. NOTE: another
+    // way to do this is replacing `Rc::clone(&a)` with `a.clone()`. What clone does is the following: `a` owns one `Rc`
+    // smart pointer to the data `(Cons(5, Rc::new(Cons(10, Rc::new(Nil)))))`, and `b` receives a new `Rc` smart 
+    // pointer (returned by `clone()`) that also points to and shares ownership of the same underlying data.
+    // They both hold separate `Rc` instances that refer to the same allocated content.
+    // 
+    // To summarize, we want both List `b` and List `c` point to List `a`. We can't just pass in a reference to `a` for
+    // the `Rc<List>` value in the tuple because what it expects is an owned type -> mismatched types error. We
+    // also can't pass List `a` in directly because it would move ownership of `a` into `b` (as it is passed into `b` 
+    // first). So, the solution here is to use the `clone()` method of `Rc`, which will give us back an owned value; 
+    // however, in this case, `clone()` does not deep copy the data; instead, it just increases the reference count.	
+    //
+    // Creating List `b`, which points to List `a`, increases the reference count for `a` from 1 to 2.
+    //
+    let b = Cons(3, Rc::clone(&a))
+    println!("count after creating b = {}", Rc::strong_count(&a));
+
+    {
+        // creating List `c`, which points to List `a`, increases the reference count for `a` from 2 to 3. 
+        // Done in this inner scope
+        let c = Cons(4, Rc::clone(&a)); 
+        println!("count after creating c = {}", Rc::strong_count(&a)); 
+    } 
+    // when the inner scope ends, `c` is dropped, so the reference count for List `a` will decrease from 3 to 2
+
+    println!("count after c goes out of scope = {}", Rc::strong_count(&a));
+}
+// NOTE: when we get to the end of `main()`, both `a` and `b` will also now be out of scope, so the reference count
+// for list `a` is 0. THUS, the Reference Counting smart pointer will be cleaned up.
+```
+
+**<ins>NOTE:</ins>** **the Reference Counting smart pointer only allows multiple parts of your program to <ins>read the same data not modify it.</ins>** If the Reference Counting smart pointer allowed multiple mutable references, then we would be violating the borrowing rules: either have 1 mutable reference of any number of immutable. **BUT, mutability is useful —> <ins>interior mutability pattern.</ins>**
+
+## Interior Mutability
 
 
 
