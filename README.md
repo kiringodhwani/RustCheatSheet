@@ -5015,7 +5015,27 @@ fn main() {
     let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
 }
 ```
+^^^THIS specific enum is called a **`Cons` List**. The `Cons` List is a data structure that comes from the programming language Lisp and its dialects. 
 
+- In these Lisp languages, pairs (nodes of linked lists) are used as the fundamental building blocks of data structures. Here is one way to create the 1,2,3 list in Common Lisp: `(cons 1 (cons 2 (cons 3 nil)))`.
+
+- In Rust, `Cons` is a variant of the `List` enum. **The `Cons` variant represents a non-empty node in a linked list and holds two pieces of data: a `u32` and a `Box<List>`**. **The `u32` is the value stored in the node (e.g., 5) and the `Box<List>` is a “next” pointer to the next node in the linked list.** Note that we could have the value be a generic type instead of a `u32`. The `Nil` variant represents Null (i.e., last node in the linked list points to None). Image of this:
+
+<img width="212" alt="Image" src="https://github.com/user-attachments/assets/3a3a14e6-70a2-4cbf-8458-e85fb5471fd5" />
+
+<ins>First node above:</ins> `Cons(42, next pointer to the next node in the linked list which contains 69)`
+
+<ins>Second node above:</ins> `Cons(69, next pointer to the next node in the linked list which contains 613)`
+
+<ins>Third node above:</ins> `Cons(613, Nil)`   —> `Nil` bc this is the last node in the linked list so next is None 
+
+^^^**writing the full linked list out, we have**:   `Cons(42, Cons(69, Cons(613, Nil) ) )`
+
+- Although functional programming languages use `Cons` lists (linked lists) frequently, it’s **not a data structure that’s commonly used in Rust**. Most of the time, when you have a list of items in Rust, it’s **better to use a Vector**.
+  
+    - Other more complex recursive data types are useful in Rust in various situations, so using the `Cons` list as an example helps us understand how Boxes allow for recursive data types. 
+
+## `Deref` Trait
 
 
 
