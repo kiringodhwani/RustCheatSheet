@@ -5551,7 +5551,7 @@ mod tests {
 
         // `sent_messages` is our `RefCell` smart pointer, but we want to get the length of the vector stored
         // inside of our smart pointer. In this case, we don't need a mutable reference. We can simply get
-        // an immutable reference using `.borrow() `
+        // an immutable reference using `.borrow()`
         //
         assert_eq!(mock_messenger.sent_messages.borrow().len(), 1);
     }
