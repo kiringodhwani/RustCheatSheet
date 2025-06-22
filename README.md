@@ -4869,8 +4869,8 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 - **Smart pointers are usually implemented using structs**. BUT, unlike regular structs, they implement the **`Deref`** and **`Drop`** traits.
 
-    - **<ins>`Deref` trait</ins>:** Allows instances of your smart pointer struct to be treated like references. So, you can write code which works with both references and smart pointers. 
-    - **<ins>`Drop` trait</ins>**: Allows you to customize the code that is run when an instance of your smart pointer goes out of scope.
+    - **`Deref` trait:** Allows instances of your smart pointer struct to be treated like references. So, you can write code which works with both references and smart pointers. 
+    - **`Drop` trait**: Allows you to customize the code that is run when an instance of your smart pointer goes out of scope.
  
 - Smart pointers are a general design pattern used frequently in Rust.
 
