@@ -4930,9 +4930,91 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 - <ins>Summary in simple terms:</ins> You **can't share a `RefCell<Rc<T>>` except by reference**, so this configuration is more **limited** in how it can be used. In order to mutate the inner data, you would need to mutably borrow from the outer RefCell, but then you'd have access to an immutable Rc. **The only way to mutate it would be to replace it with a completely different Rc.** Far less useful.
 
 
+## The `Box` Smart Pointer
 
+**`Box`**: **A smart pointer that allows you to allocate values on the heap.**
 
+- <ins>Example:</ins> **Pass the value we want to store on the heap into** the **`Box::new()`** function…
 
+```Rust
+let b = Box::new(5);	// Here, we store 5 on the heap. On the stack, we store a pointer (memory address)
+			// to the location of 5 on the heap. This pointer is stored in the ‘b’ variable here.
+
+println!("b = {}", b);	// can simply use the Box value as if it were a value on the stack
+```
+^^^THIS IS A CONTRIVED EXAMPLE. Typically you won’t store a single value, like `5`, on the heap. In fact, in this case, storing `5` on the stack would be much more appropriate. So, **typically Boxes ARE NOT used by themselves.**
+
+<br>**Boxes don’t have any overhead except storing the data on the heap**, but they also **don’t have many other capabilities**, so you would <ins>typically use them in the following situations</ins>…
+
+1. **When you have a type whose exact size can’t be known at compile time (e.g., DST) and you want to use a value of that type in a context which requires knowing the exact size.**
+
+2. When you have a **large amount of data and you want to transfer ownership of the data**, but you want to **make sure that the data isn’t copied** (bc it’s a large amount of data). 
+
+3. **<ins>Trait object</ins>**: When you own a value and you only care that the value implements a specific trait, rather than it being a specific type.
+
+Just like any other owned value, **when our `Box` goes out of scope, it will be deallocated**, meaning that the `Box` smart pointer on the stack will be deallocated AND the underlying data on the heap will also be deallocated.
+
+### `Box` Example
+
+<ins>SIDE NOTE TO INTRODUCE EXAMPLE:<ins> **How Rust computes the size of non-recursive enums. **
+
+```Rust
+enum Message {
+    Quit,
+    Move { x : i32, y : 132 },
+    Write(String),
+    ChangeColor(i32, i32, i32)
+}
+```
+^^^The way Rust will figure out the size needed to store a variant of `Message` is by going through each variant (`Quit`, `Move`, `Write`, `ChangeColor`) and seeing how much size each variant needs (`Quit` doesn’t need any space, `Move` is a struct with two values, `Write` is tuple with one `String`, `ChangeColor` is tuple with three integers). **Rust figures out which variant needs the most amount of space.** Because we **can only use one variant of the `Message` enum at a time, the most space `Message` is going to take up is equal to the space the largest variant takes up.**
+
+<ins>Example where Boxes are actually useful</ins>. **Enabling Recursive Types with Boxes**
+
+- **Rust needs to know how much space a type takes up at compile time**. BUT, <ins>in the below example</ins>, and **in general with recursive enums**, we **don't know how much space the enum could take up**. This is because, in theory, we **could recurse forever**…
+
+```Rust
+// Recursive enum called `List` with two variants: `Cons` and `Nil`. In our earlier example about how Rust figures out 
+// the size needed to store a variant of the `Message` enum, we looked at the space needed for each variant and 
+// took the space the largest variant takes up. To determine the size needed to store a variant of `List`, we have… 
+// 	
+//	`Cons` takes up some space — it stores a tuple containing a value (`i32`) and a `List`.
+//	`Nil` variant takes up no space.
+//
+// We see now that `Cons` is the variant that takes up the most space, and Rust must determine how much space
+// this is. To do so, Rust must now determine how much space `List` takes up — so we’re back again to 
+// determining the size needed to store a variant of `List`… recurse infinitely —> no way to tell how big our
+// `List` is going to be. TO FIX THIS, we wrap `List` in a `Box` smart pointer, as shown below…
+//
+enum List {
+    Cons(i32, Box<List>),	// `Cons`: Tuple that contains an element and a pointer to the
+				// next node (see full explanation below).
+				//
+				// Recursive type with infinite size. This is bc in the `Cons` variant, the `List` value in
+				// the tuple is recursive without indirection bc we could recurse forever. To add
+				// indirection, we wrap `List` inside the `Box` smart pointer: `Box<List>`. Indirection
+				// here means that instead of storing the `List` value directly, we store a pointer to the
+				// `List` value.
+				//
+				// FURTHER EXPLANATION OF WHY `Box` FIXES THIS ERROR: let’s try to figure out the
+				// size of `List` again… look at each variant and see how much space each takes up:
+				//
+				// 	`Cons` variant takes up some space — it stores a tuple containing a value (i32)
+				//		and it now stores a `Box` smart pointer. The `Box` smart pointer is going to be
+				// 		a fixed size pointer (so it is fixed size on the stack), and it’s going to point
+				//		to some arbitrary amount of data on the heap.  THUS, we now know
+				// 		exactly how much space we need for the `Cons` variant — Prob solved!
+				//
+				// 	`Nil` takes up no space again
+
+        Nil,	// `Nil` denotes end of the list (i.e., last node's next pointer points to Null)
+}
+
+use List::{Cons, Nil}; // bring the variants of `List` into scope
+
+fn main() {
+    let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+}
+```
 
 
 
