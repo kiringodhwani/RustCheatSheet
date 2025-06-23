@@ -5620,7 +5620,7 @@ fn main() {
 								// pointer bc we want lists `b` and `c` to share ownership.
 
     // Create lists `b` and `c`, which store the values 3 and 4, respectively, and point to list `a`. We use `clone()` to 
-    // ensure `b` and `c` share ownership of `a`'s underlying value with `a`, they both reference `a`.
+    // ensure `b` and `c` share ownership of `a`'s underlying value with `a`.
     // We also make it so that the integers can be mutated with `RefCell` and can have multiple owners with `Rc`.
     //
     let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
