@@ -5619,7 +5619,7 @@ fn main() {
 								// Also store the `a` `Cons` List in an `Rc` smart
 								// pointer bc we want lists `b` and `c` to share ownership.
 
-    // Create lists `b` and `c`, which store the values 3 and 4, respectively, and reference list `a`. We use `clone()` to 
+    // Create lists `b` and `c`, which store the values 3 and 4, respectively, and point to list `a`. We use `clone()` to 
     // ensure `b` and `c` share ownership of `a`'s underlying value with `a`, they both reference `a`.
     // We also make it so that the integers can be mutated with `RefCell` and can have multiple owners with `Rc`.
     //
