@@ -6437,8 +6437,8 @@ fn main() {
 						// ERROR: "cannot move counter bc it was already moved into
 						// the closure in the previous iteration of the for loop"
 						//
-						//  ^^^SOLUTION 1: we allow counter to have multiple owners
-						// with the Rc smart pointer above
+						//  ^^^SOLUTION 1: we allow `counter` to have multiple owners
+						// with the `Rc` smart pointer above
 						//
 						// ^^^ERROR 2: "`Rc<Mutex<i32>>` cannot be sent between
 						// threads safely" -- the `Rc` smart pointer gives us the
