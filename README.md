@@ -5593,7 +5593,7 @@ enum List {
 					// Interior mutability —
 					// The integer value is additionally wrapped in the `RefCell` smart
 					// pointer so that it can be mutable even though the `Rc`
-					// smart pointer doesn’t allow multiple mutable references.
+					// smart pointer doesn’t allow mutable references.
 
 	Nil,
 }
