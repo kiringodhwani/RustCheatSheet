@@ -5719,8 +5719,8 @@ impl List {
     // Returns the next value. If `self` is a `Cons` variant, then returns value in next pointer. If `self` is `Nil`, returns None.
     fn tail(&self) -> Option<&RefCell<Rc<List>>> {
         match self {
-            Cons(_, item) => Some(item),	// If the variant is `Cons`, then return the `List` stored in `Cons` 
-										// wrapped in Some()
+            Cons(_, item) => Some(item),	// If the variant is `Cons`, then return the `List` stored in `Cons`
+						// wrapped in `Some`.
             Nil => None,
         }
     }
