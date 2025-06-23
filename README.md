@@ -5773,10 +5773,107 @@ fn main() {
 
 When `b` gets cleaned up, the memory on the stack gets cleaned up; however, the memory on the heap will not get cleaned up bc this memory is still referenced inside of list `a` with its `Rc` smart pointer in next.
 
+<img width="476" alt="Image" src="https://github.com/user-attachments/assets/0f345f82-6d0d-4399-b3e4-1faa474daa86" />
 
 Then, `a` gets cleaned up. Again, the stack memory gets cleaned up; however, the memory on the heap does not get cleaned up bc this memory location is still being referenced by the heap memory for list `b`. 
 
+<img width="489" alt="Image" src="https://github.com/user-attachments/assets/94f97174-8997-49a0-8822-9c6e02941bb0" />
+
 ^^^NOW, we have a situation where we have two lists allocated on the heap but we don’t have any stack variables pointing to them. This means they are orphaned and won’t get cleaned up. 
+
+<ins>LESSON:</ins> **Reference cycles aren’t easy to create, but they are not impossible to create.** If mixing referencing counting (`Rc`) with interior mutability (`RefCell`), then you need to make sure that reference cycles aren’t being created. Creating reference cycles is a logical bug in your code that should be **prevented using automated tests, code reviews, and other SWE best practices**. 
+
+- So far, we’ve been using smart pointers that own the data they point to, but **if you’re in a situation where you can get away with using pointers that don’t own the data they point to** (i.e., **`Weak` smart pointers**), **then you can prevent reference cycles.**
+
+### `Weak` Smart Pointer
+
+**A version of the Reference Counting smart pointer (`Rc`) that <ins>holds a non-owning reference to the managed allocation</ins>**. Bc they are Non-Owning, a **`Weak<T>` pointer doesn't increase the reference count of the `Rc<T>` it points to**. This means that **if all `Rc<T>` instances pointing to a value are dropped, the value itself will be dropped, regardless of any existing `Weak<T>` pointers.** Because `Weak` pointers don't prevent the underlying value from being dropped, a **`Weak` pointer has no way of knowing at compile time whether the value it used to point to still exists**. It's an observer, not an owner.
+
+- Convert (**downgrade**) a **`Rc`** smart pointer **to** a **`Weak`** smart pointer using **`Rc::downgrade()`**.
+
+- Convert (**upgrade**) a **`Weak`** smart pointer to a **`Rc`** smart pointer using the **`.upgrade()` method**, which returns an `Option`. Returns an `Option` bc the underlying value in the pointer may have been dropped and in that case we want to get back `None` variant. If hasn’t been dropped, then get a `Some` variant containing the `Rc` smart pointer.
+
+    - **<ins>Whenever we want to see or mutate the value inside a `Weak` smart pointer, we have to call upgrade to upgrade it to an `Rc` smart pointer.</ins>** This is because the `Weak` smart pointer has no idea if the inner value has been dropped or not.
+ 
+    - <ins>Example:</ins>
+
+```Rust
+use std::cell::RefCell;
+use std::rc::{Rc, Weak};
+
+// Tree structure with nodes that know about their child nodes.
+#[derive(Debug)]
+struct Node {
+    value: i32,
+    children: RefCell<Vec<Rc<Node>>>,	// Vector of children, node wrapped in `Rc` bc we want variables
+					// outside of this tree to be able to point to node so we can traverse
+					// the tree. Wrap vector in `RefCell`, bc want to be able to modify a
+					// node's children, i.e., modify `Vec<Rc<Node>>` as a whole with
+					// push pop.
+
+
+    // Without a `parent` field, a parent node can access its children using `self.children`, but children don't have a
+    // reference to their parent.
+    parent: RefCell<Weak<Node>>,	// we want to be able to modify which `Weak<Node>` is the parent node
+					// so wrap whole thing in `RefCell`. We also want the ability for variables
+					// outside the tree to reference our parent
+					// (multiple ownership), but we can't use `Rc` due to creating reference
+					// cycles with children. Luckily, we don't need an `Rc` smart pointer bc
+					// children don't need to own their parent, when a child is dropped, the
+					// parent shouldn't also be dropped. So can use the `Weak` smart
+					// pointer here.
+}
+
+fn main() {
+    // Create a node that stores integer 3 and has no children
+    let leaf = Rc::new(Node {
+        value: 3,
+        parent: RefCell::new(Weak::new()),	// leaf node has no parent at this point
+        children: RefCell::new(vec![]),
+    });
+
+    // Print leaf's parent. The parent is `RefCell<Weak<Node>>`. To immutably borrow the value in
+    // `RefCell`, we use `borrow`. Then, we attempt to convert the `Weak` smart pointer to an `Rc` smart
+    // pointer using `upgrade()` which returns an `Option`. As I explained, we have to do this conversion
+    // bc the `Weak` pointer doesn't know if the value got dropped.
+    //
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+
+    // Create another node that stores integer 5 and has one child: the leaf node we just defined. 
+    // We call `clone()` to get back an owned value but have shared ownership.
+    let branch = Rc::new(Node {
+        value: 5,
+        parent: RefCell::new(Weak::new()), // branch node has no parent
+        children: RefCell::new(vec![Rc::clone(&leaf)]),
+    });
+
+    // modify leaf's parent to be branch
+    // `leaf.parent` gives `RefCell<Weak<Node>>`, use `borrow_mut()` to mutably borrow the value stored in the
+    // `RefCell`, use `*` to modify the underlying value.
+    // branch is a `Rc` smart pointer, but parent expects a `Weak` smart pointer. To transform a `Rc` smart pointer
+    // to a `Weak` smart pointer, call `Rc::downgrade()` and pass in the `Rc` smart pointer. 
+    //
+    *leaf.parent.borrow_mut() = Rc::downgrade(&branch);
+
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+}
+```
+
+### Rc smart pointer: `strong_count()` and `weak_count()` methods
+
+**Internally, the Rc smart pointer stores two counts**…
+
+- **Strong count** — the **number of references which have ownership** of the data, **`Rc::strong_count()`**
+
+    - A **value is dropped when its strong count is 0**
+
+- **Weak count** — the **number of references that don’t have ownership of the data**, **`Rc::weak_count()`**
+
+    - The weak count **has no influence over whether the underlying value is dropped or not.**
+
+# Concurrency in Rust
+ 
+
 
 
 
