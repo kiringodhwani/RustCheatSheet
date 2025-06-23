@@ -5789,14 +5789,34 @@ Then, `a` gets cleaned up. Again, the stack memory gets cleaned up; however, the
 
 ### `Weak` Smart Pointer
 
-**A version of the Reference Counting smart pointer (`Rc`) that <ins>holds a non-owning reference to the managed allocation</ins>**. Bc they are Non-Owning, a **`Weak<T>` pointer doesn't increase the reference count of the `Rc<T>` it points to**. This means that **if all `Rc<T>` instances pointing to a value are dropped, the value itself will be dropped, regardless of any existing `Weak<T>` pointers.** Because `Weak` pointers don't prevent the underlying value from being dropped, a **`Weak` pointer has no way of knowing at compile time whether the value it used to point to still exists**. It's an observer, not an owner.
+**A version of the Reference Counting smart pointer (`Rc`) that <ins>holds a non-owning (weak) reference to the data managed by an `Rc<T>`</ins>**. Bc they are Non-Owning, a **`Weak<T>` pointer doesn't increase the strong reference count of the `Rc<T>` it points to**. This means that **if all `Rc<T>` instances pointing to a value are dropped, the value itself will be dropped, regardless of any existing `Weak<T>` pointers.** Because `Weak` pointers don't prevent the underlying value from being dropped, a **`Weak` pointer has no way of knowing at compile time whether the value it used to point to still exists**. It's an observer, not an owner.
 
 - Convert (**downgrade**) a **`Rc`** smart pointer **to** a **`Weak`** smart pointer using **`Rc::downgrade()`**.
 
 - Convert (**upgrade**) a **`Weak`** smart pointer to a **`Rc`** smart pointer using the **`.upgrade()` method**, which returns an `Option`. Returns an `Option` bc the underlying value in the pointer may have been dropped and in that case we want to get back `None` variant. If hasn’t been dropped, then get a `Some` variant containing the `Rc` smart pointer.
 
-    - **<ins>Whenever we want to see or mutate the value inside a `Weak` smart pointer, we have to call upgrade to upgrade it to an `Rc` smart pointer.</ins>** This is because the `Weak` smart pointer has no idea if the inner value has been dropped or not.
- 
+- **<ins>Whenever we want to see or mutate the value inside a `Weak` smart pointer, we have to call upgrade to upgrade it to an `Rc` smart pointer.</ins>** This is because the `Weak` smart pointer has no idea if the inner value has been dropped or not.
+
+<ins>How `Weak<T>` Solves Reference Cycles:</ins>
+- Non-owning
+- Does not increment the reference count
+- Cannot directly access the data
+- Returns None if the `Rc<T>` is dropped
+
+<ins>When to Use `Weak<T>`:</ins>
+
+- **`Weak<T>` is inherently tied to `Rc<T>`. It exists to solve the specific problem of reference cycles that arise from Rc<T>'s shared ownership model.**
+
+- You **use Weak<T> specifically when you have a parent-child or peer-to-peer relationship where**:
+	- You **need shared ownership** (`Rc<T>`).
+	- **One part of the relationship** (e.g., a child pointing back to its parent, or two peers pointing to each other) **should not prevent the other part from being dropped.**
+	- You want to avoid memory leaks due to reference cycles.
+
+- <ins>Common Scenarios:</ins>
+	- **Doubly Linked Lists**: In a doubly linked list where each node has `Rc` pointers to its next and prev nodes, the prev pointer is often `Weak` to prevent cycles.
+	- **Graph Structures**: Similar to linked lists, if nodes in a graph have `Rc` pointers to their neighbors, using `Weak` for back-references can prevent cycles.
+	- **Parent-Child Relationships**: If a child holds an `Rc` to its parent, and the parent also holds an `Rc` to its children (e.g., in a tree structure), the child's reference back to the parent should be `Weak`. This way, dropping the parent (and its `Rc` to children) will eventually allow the children to be dropped, and the parent can be dropped even if children still exist.
+
     - <ins>Example:</ins>
 
 ```Rust
