@@ -4883,6 +4883,8 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 - **Heap-allocated type**. **Similar to `Box`, but the `T` value allocated on the heap is accompanied by two reference counts**. They allow value sharing, which can be an effective way to reduce memory usage.
   
 - Enables **multiple owners (shared ownership) of the same data.**
+
+	- Create a new owner using **`Rc::clone()`**. **When you clone an `Rc<T>`, the reference count increases. The data is only dropped when the last `Rc<T>` pointing to it is dropped.**
   
 - Allows **only immutable borrows checked at compile time**.
   
@@ -4902,7 +4904,7 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 - Allows **single ownership** to a piece of data
   
-- Allows **immutable or mutable borrows checked at <ins>runtime</ins>** (i.e., enforces the borrowing rules at runtime). Because `RefCell<T>` allows mutable borrows checked at runtime, **you can mutate the value inside the `RefCell<T>` even when the `RefCell<T>` smart pointer itself is immutable (i.e., provides interior mutability).**
+- Allows **immutable (`.borrow()`) or mutable borrows (`.borrow_mut()`) checked at <ins>runtime</ins>** (i.e., enforces the borrowing rules at runtime). Because `RefCell<T>` allows mutable borrows checked at runtime, **you can mutate the value inside the `RefCell<T>` even when the `RefCell<T>` smart pointer itself is immutable (i.e., provides interior mutability).**
   
 - `RefCell` itself **does not allocate any memory on the heap**. It's a **mechanism for mutability within a type that is otherwise immutable**, and it works without requiring heap allocation. If you put a `RefCell` inside a `Rc` or `Box`, then the `Rc` or `Box` will allocate on the heap, but the `RefCell` itself doesn't (i.e., If you put a `RefCell` inside another heap-allocated type, like `Box<RefCell<T>>` or `Rc<RefCell<T>>`, then the `RefCell` (and its contents) will reside on the heap as part of that larger allocation). 
 
