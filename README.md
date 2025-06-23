@@ -6064,6 +6064,140 @@ fn main() {
 
 - Rust gives us the hint to **force the closure to take ownership of `v` using `move`**.
 
+<img width="730" alt="Image" src="https://github.com/user-attachments/assets/4235ec97-5fe9-4c72-b671-6941aa519cfb" />
+
+**`move` keyword:** By default, **closures in Rust typically capture variables by borrowing when possible**. However, you can **force a closure to take ownership of the values it uses inside its environment by using the `move` keyword in front of the closure**. This is **,<ins>most useful when you’re passing a closure from one thread to another thread as it ensures that we also pass the ownership of the variables / values (captured data) from one thread to the other thread.</ins>**
+
+- <ins>How this solves the earlier problem:</ins> **By using `move`, we ensure that the ownership of `v` is transferred from the main thread into the closure's environment.** This means `v` now "belongs" to the new thread's execution context, and the **new thread can safely use it without worrying about the main thread dropping it prematurely.**
+
+- <ins>Solution to our earlier error with `move`</ins>:
+
+```Rust
+use std::thread;
+
+fn main() {
+    let v = vec![1, 2, 3]; 
+
+    // When we add the `move` keyword in front of our closure, we are telling Rust: don't infer that
+    // the values inside our closure are borrowed. Instead, what we explicitly want is to move values
+    // inside the closure (i.e., have the closure take ownership of the values). 
+    //
+    // Now, `v` is moved inside of the spawned thread, so it can longer be used inside of main().
+    //
+    let handle = thread::spawn(move || {
+        println!("Here's a vector: {:?}", v);  
+    });
+
+    handle.join().unwrap();
+}
+```
+
+## Message Passing
+
+**Using messages to pass data between threads.**
+
+- One increasingly popular approach to ensuring **safe concurrency** is **message passing**, where you have **threads** (or actors) **passing messages to each other which contain data.**
+
+- Go programming language slogan: “do not communicate by sharing memory; instead, share memory by communicating”
+
+### Channels
+
+One tool Rust provides to enable message passing concurrency is a **<ins>channel</ins>**, included in standard library.
+
+- **Channels are analogous to a channel of water** (like a river or stream). If you put something like a rubber duck on the stream, then the duck will travel downstream to the end of the waterway.
+
+- **A channel in program has two halves**: the **transmitter** and the **receiver**.
+
+    - **Transmitter** —  the upstream location where you would place the rubber duck
+  
+    - **Receiver** — the downstream location where the rubber duck will end up
+
+- <ins>How we use a channel to perform message passing:</ins>
+
+    1. **One part of your code calls methods on the transmitter, passing in the data you want to send.**
+  
+    2. **Another part of your code is listening to the receiver for arriving messages.**
+
+- The channel is said to be **closed** if either the transmitter or the receiver half is dropped.
+
+- <ins>Example use cases:</ins> Once you are familiar with channels, you can implement things like a chat system, or a program in which many threads perform part of a calculation and one thread aggregates the results. 
+
+### Creating Channels in Rust
+
+- <ins>Create a channel:</ins> **`let (tx, rx) = mpsc::channel();`**
+
+	- Where **`tx` is the sender / transmitter**, and **`rx` is the receiver**. Traditionally, `tx` is used for the sender / transmitter, and `rx` is used for the receiver.
+  
+	- **`mpsc::channel()` returns a tuple `(Sender<T>, Receiver<T>)`** which **contains the sender and receiver**.
+
+- <ins>Use the sender to send a message:</ins> **`tx.send(msg).unwrap();`**
+
+    - **`send()` attempts to send a value on the channel, returning it back if it could not be sent.**
+  
+    - The **value** being sent (i.e., `msg`) does not have to be a String, it **can be any type** we want.
+  
+    - A **successful send** occurs when it is determined that the **other end of the channel has not hung up** (i.e., **been dropped**) **already**. An **unsuccessful send** would be one where the **corresponding receiver has already been deallocated.**
+  
+    - **Returns a `Result` type - `Result<T, SendError>`**. **`Ok(T)` indicates the value was successfully placed on the channel**, but it **doesn't guarantee the receiver will process it before hanging up**. This is bc it is **possible for the corresponding receiver to hang up** (i.e., get dropped, go out of scope) **immediately after this function returns `[Ok]`**. **`Err(SendError)` means that the data will never be received bc the receiver has already hung up** (i.e., been dropped, gone out of scope) and the value couldn't be sent.  We **use `.unwrap()` to extract the `Ok` value or panic if an `Err` occurs.**
+
+- <ins>Use the receiver to receive the message:</ins>   **`let received = rx.recv().unwrap();`**
+
+    - **`recv()` attempts to wait for a value on the receiver (`rx`), returning an error if the corresponding channel has hung up** (i.e., all the senders (transmitters) corresponding to that receiver have been dropped or have gone out of scope.)
+    - **Returns a `Result` type - `Result<T, RecvError>`**. **`Ok(T)` contains the received value and `Err(RecvError)` signifies the channel has hung up / closed**. Err essentially indicates that no more values are coming. We **use`.unwrap()` to extract the `Ok` value or panic if an `Err` occurs.**
+  
+    - **`recv()` will always block the current/local thread if there is no data available and it's possible for more data to be sent (at least one sender still exists)**. i.e., it blocks the current thread's execution while it waits for a message to be sent down the channel.
+  
+        -  **If** we **don't want to block the current/local thread's execution, use `try_recv()` which returns a Result type immediately: `Ok` containing the received value if a value is available, or `Err` if no values are available at the time.**
+  
+        - **`try_recv()` is useful when you want your thread to do other work.** For example, we can have a **loop where every so often we call `try_recv()` to see if there are any new messages**; **otherwise, we keep looping and let the thread do other work.**
+
+- <ins>EXAMPLE:</ins>
+
+```Rust
+use std::sync::mpsc;	// Bring `mpsc` module into scope. `mpsc` stands for multi-producer, single-
+			// consumer. In Rust, the way channels are implemented you can have multiple
+			// producers of messages but only one receiver of messages.
+use std::thread;
+
+fn main() {
+
+    // Create a channel and store the sender / transmitter and the receiver
+    let (tx, rx) = mpsc::channel();
+
+    // Spawn a thread and use our sender (`tx`) to send a message
+    thread::spawn(move || {	// To use our sender (`tx`) to send a message, we HAVE TO `move` `tx` into
+				// the closure. If we remove `move`, ERROR: "Sender cannot be shared
+				// between threads safely"
+
+        let msg = String::from("hi");
+        tx.send(msg).unwrap();	// send the message from the sender with `send()`
+    });
+
+    // Use the receiver in the main thread to receive a message
+    let received = rx.recv().unwrap();      
+
+    println!("Got: {}", received);
+}
+```
+
+### Channels and Owner Transference
+
+- **Ownership rules help us prevent errors in our concurrent code.**
+
+- <ins>Example:</ins> Trying to use `msg` after we’ve already sent it down the channel to a different thread...
+
+```Rust
+thread::spawn(move || { 
+    let msg = String::from("hi");
+    tx.send(msg).unwrap(); 
+    println!("msg is {}", msg);    // if we were allowed to do this, it would be problematic, bc we would send a
+				   // message to another thread and then afterwards potentially modify or
+				   // drop the variable. BUT THIS ERRORS 
+});
+```
+
+^^^**When we call `send()` and pass in a value, <ins>`send()` takes ownership of the value.</ins>** So, in the above code, the ownership rules prevent us from doing something dangerous, which is modifying or dropping a value after is has been passed to another thread. 
+
 
 
 
