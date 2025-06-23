@@ -6351,6 +6351,7 @@ fn main() {
 					    //
 					    // `lock()` returns a `Result` type --
 					    //	    `Result<MutexGuard<T>, PoisonError<MutexGuard<T>>>`.
+					    //
 					    //  `Ok(MutexGuard<T>)` means the lock was successfully
 					    //   acquired, and `MutexGuard` is a smart pointer that provides
 					    //   mutable access to the inner data (`T`). The `Deref` trait of the
