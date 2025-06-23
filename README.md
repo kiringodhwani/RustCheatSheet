@@ -6195,8 +6195,120 @@ thread::spawn(move || {
 				   // drop the variable. BUT THIS ERRORS 
 });
 ```
+<img width="605" alt="Image" src="https://github.com/user-attachments/assets/f482ffb4-b01b-4af9-b894-8be50b74a2a0" />
 
 ^^^**When we call `send()` and pass in a value, <ins>`send()` takes ownership of the value.</ins>** So, in the above code, the ownership rules prevent us from doing something dangerous, which is modifying or dropping a value after is has been passed to another thread. 
+
+### Sending Multiple Messages
+
+**This is to prove our code is running concurrently...**
+
+```Rust
+use std::sync::mpsc; 
+use std::thread;
+use std::time::Duration;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || { 
+        let vals = vec![
+            String::from("hi"),
+            String::from("from"),
+            String::from("the"),
+            String::from("thread"),
+        ];
+        // Loop through the vector of values and send each value down the channel, also let
+        // the thread sleep for 1 second after each call to `send()`.
+        for val in vals {
+            tx.send(val).unwrap(); 
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    // Instead of calling `recv()` on our receiver once, use a `for` loop to get all the messages
+    // passed down the channel.
+    for received in rx {	// we are not calling `recv()` anymore; instead, we
+				// treat the receiver (`rx`) as an iterator. Every iteration
+				// will have a value that we pass down the channel. When the
+				// channel closes, the iteration will end.
+        println!("Got: {}", received);
+    }
+}
+```
+**`cargo run`** —> 
+	Got: hi  
+ 	Got: from  
+	Got: the  
+ 	Got: thread
+
+^^^**We get each of these printouts with a one second delay between them (bc of `thread::sleep()`) which shows that the spawned thread and the main thread are running concurrently**. This is because the **main thread doesn't wait for the spawned thread to finish sending all its messages before it starts printing**. If it did, then instead of seeing each message with a 1 second delay between them, we would see nothing for 4 seconds and then all of the messages at once. Instead, **as soon as the spawned thread sends a message, the main thread's `for received in rx` loop receives it and prints it**. When the spawned thread finishes its loop and `tx` (the sender) is dropped, the channel "hangs up," and the `for` loop on `rx` naturally concludes. This confirms that both threads are running in parallel, **exchanging messages as they become available.**
+
+### Creating Multiple Producers
+
+In our current examples, we have one thread that sends messages. However, **let’s say we want to have two threads that send messages**…
+
+```Rust
+use std::sync::mpsc; 
+use std::thread;
+use std::time::Duration;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    let tx2 = tx.clone();    // get a new sending handle to use in our second spawned thread
+
+    // Below, we have two threads that are passing messages down the channel to the main thread.
+    // Spawned Thread 1
+    thread::spawn(move || { 
+        let vals = vec![
+            String::from("hi"),
+            String::from("from"),
+            String::from("the"),
+            String::from("thread"),
+        ];
+        for val in vals {
+            tx.send(val).unwrap(); 
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    // Spawned Thread 2
+    thread::spawn(move || { 
+        let vals = vec![
+            String::from("more"),
+            String::from("message"),
+            String::from("for"),
+            String::from("you"),
+        ];
+        for val in vals {
+            tx2.send(val).unwrap(); 
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    // Receiver in main thread receives messages from both spawned threads
+    for received in rx {
+        println!("Got: {}", received);
+    }
+}
+```
+
+**`cargo run`** —>   
+	Got: hi  
+	Got: more  
+	Got: message  
+	Got: from   
+	Got: the   
+	Got: for   
+	Got: thread   
+	Got: you   
+
+^^^**We can see that the messages from each thread are being sent non-deterministically** (i.e., alternating between messages from each thread — `hi` from first thread, `more` from second thread, `message` from second thread,`from` from first thread…)
+
+## Sharing State
+
+
 
 
 
