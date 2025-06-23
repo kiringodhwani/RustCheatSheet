@@ -6457,6 +6457,23 @@ fn main() {
 	    // a smart pointer and we can use `*` to access the inner i32 in the `MutexGuard` and mutate it.
             let mut num = counter.lock().unwrap();
             *num += 1;
+	    //^^^
+	    // The way the above code works is the following...
+	    //    1. One Thread Acquires the Lock: Only one thread at a time can successfully acquire the
+	    //       `Mutex` lock. Whichever thread's `counter.lock()` call happens to execute first and
+	    //       finds the lock available will obtain it.
+	    //       
+	    //    2. Other Threads Wait: If a thread calls `counter.lock()` and the `Mutex` is already locked
+	    //       by another thread, that calling thread will block (pause its execution) until the lock is released.
+	    //
+	    //    3. The thread that successfully acquired the lock will increment the count.
+	    //
+	    //    4. `MutexGuard` is dropped and lock it automatically released. 
+	    //
+	    //    5. Another Thread Acquires the Lock: Once the lock is released by the previous
+	    //       thread, one of the waiting threads (the order is not guaranteed and depends
+	    //       on the operating system's scheduler) will be unblocked and will then acquire the lock.
+
         });
         handles.push(handle);	// after the new spawn thread is created, append it to the vector of threads
     }
