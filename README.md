@@ -6432,7 +6432,7 @@ fn main() {
         //
         let counter = Arc::clone(&counter);
 
-        // handle contains the new spawn thread
+        // `handle` contains the new spawn thread
         let handle = thread::spawn(move || {	// use `move` to move the `counter` variable into the thread.
 						// ERROR: "cannot move counter bc it was already moved into
 						// the closure in the previous iteration of the for loop"
