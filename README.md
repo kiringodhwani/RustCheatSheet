@@ -6449,7 +6449,8 @@ fn main() {
 						// smart pointer. Same functionality as `Rc` but thread safe!
 						// Atomics are a concurrency primitive. They are like primitive
 						// types except that they can be shared across threads.
-						// Acquire a lock to `counter` and increment the counter with `*`
+
+	    // Acquire a lock to `counter` and increment the counter with `*`
             let mut num = counter.lock().unwrap();
             *num += 1;
         });
