@@ -6143,7 +6143,7 @@ One tool Rust provides to enable message passing concurrency is a **<ins>channel
 - <ins>Use the receiver to receive the message:</ins>   **`let received = rx.recv().unwrap();`**
 
     - **`recv()` attempts to wait for a value on the receiver (`rx`), returning an error if the corresponding channel has hung up** (i.e., all the senders (transmitters) corresponding to that receiver have been dropped or have gone out of scope.)
-    - **Returns a `Result` type - `Result<T, RecvError>`**. **`Ok(T)` contains the received value and `Err(RecvError)` signifies the channel has hung up / closed**. Err essentially indicates that no more values are coming. We **use`.unwrap()` to extract the `Ok` value or panic if an `Err` occurs.**
+    - **Returns a `Result` type - `Result<T, RecvError>`**. **`Ok(T)` contains the received value and `Err(RecvError)` signifies the channel has hung up / closed**. `Err` essentially indicates that no more values are coming. We **use`.unwrap()` to extract the `Ok` value or panic if an `Err` occurs.**
   
     - **`recv()` will always block the current/local thread if there is no data available and it's possible for more data to be sent (at least one sender still exists)**. i.e., it blocks the current thread's execution while it waits for a message to be sent down the channel.
   
