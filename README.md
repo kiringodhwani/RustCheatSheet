@@ -5640,7 +5640,7 @@ fn main() {
 
 <img width="515" alt="Image" src="https://github.com/user-attachments/assets/97593b11-0647-4da5-ae5e-f2b1151e406b" />
 
-<br><ins>Panicking when breaking borrow rules with `borrow_mut()`</ins> — 
+### Panicking when breaking borrow rules with `borrow_mut()`
 
 ```Rust
 use std::rc::Rc;
