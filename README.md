@@ -5652,7 +5652,8 @@ struct MyData {
 }
 
 fn main() {
-    println!("--- Example 1: Multiple `borrow_mut()` at the same time ---");
+    // --- Example 1: Multiple `borrow_mut()` at the same time ---
+    //
     // Create an `Rc<RefCell<MyData>>`
     let shared_data_rc = Rc::new(RefCell::new(MyData { value: 10 }));
 
@@ -5673,6 +5674,8 @@ fn main() {
     // note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
+    // --- Example 2: `borrow_mut()` while  `borrow()` is active---
+    //
     // Reset or create new shared data for this example
     let shared_data_rc_2 = Rc::new(RefCell::new(MyData { value: 20 }));
     let shared_data_rc_2_clone = Rc::clone(&shared_data_rc_2);
