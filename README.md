@@ -6027,7 +6027,7 @@ fn main() {
 ```
 
 **`cargo run`** —> 
-
+<img width="391" alt="Image" src="https://github.com/user-attachments/assets/b45c5ed5-913a-4e30-942b-82076219f3d3" />
 
 ^^^<ins>LESSON:</ins> small details, such as where the `.join()` method is called, can affect whether or not your threads run at the same time.
 
