@@ -6460,15 +6460,15 @@ fn main() {
 	    //^^^
 	    // The way the above code works is the following...
 	    //    1. One Thread Acquires the Lock: Only one thread at a time can successfully acquire the
-	    //       `Mutex` lock. Whichever thread's `counter.lock()` call happens to execute first and
-	    //       finds the lock available will obtain it.
+	    //       `Mutex` lock. Whichever thread's `counter.lock()` call happens to execute first will
+	    //       find the lock available and obtain it.
 	    //       
 	    //    2. Other Threads Wait: If a thread calls `counter.lock()` and the `Mutex` is already locked
 	    //       by another thread, that calling thread will block (pause its execution) until the lock is released.
 	    //
 	    //    3. The thread that successfully acquired the lock will increment the count.
 	    //
-	    //    4. `MutexGuard` is dropped and lock it automatically released. 
+	    //    4. `MutexGuard` is dropped and the lock is automatically released. 
 	    //
 	    //    5. Another Thread Acquires the Lock: Once the lock is released by the previous
 	    //       thread, one of the waiting threads (the order is not guaranteed and depends
