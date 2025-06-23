@@ -6031,6 +6031,8 @@ fn main() {
 
 ^^^<ins>LESSON:</ins> small details, such as where the `.join()` method is called, can affect whether or not your threads run at the same time.
 
+### Using `move` Closures with Threads
+
 
 
 
