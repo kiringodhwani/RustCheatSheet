@@ -6007,8 +6007,29 @@ fn main() {
 
 ^^^Once again, the threads alternate in execution and **NOW, we can see that the spawned thread finishes executing and prints its entire range (1-9).**
 
+**As expected if we move the `handle.join()` call before the printing in the main thread, then the spawned thread will finish printing its entire range (1 - 9) before any of the printing in main even starts**. This is because the **main thread will be blocked from running until the spawned thread terminates / finishes execution…**
+
+```Rust
+fn main() {
+    let handle = thread::spawn(|| {
+        for i in 1..10 {
+            println!("hi number {} from the spawned thread!", i);
+            thread::sleep(Duration::from_millis(1));
+        }
+    });
+    handle.join().unwrap();
+
+    for i in 1..5 {
+        println!("hi number {} from the main thread!", i);
+        thread::sleep(Duration::from_millis(1));
+    }
+}
+```
+
+**`cargo run`** —> 
 
 
+^^^<ins>LESSON:</ins> small details, such as where the `.join()` method is called, can affect whether or not your threads run at the same time.
 
 
 
