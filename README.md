@@ -6335,7 +6335,7 @@ fn main() {
 
 #### Using a Mutex in Rust:
 
-```
+```Rust
 use std::sync::Mutex;	// import `Mutex` from the standard library
 
 fn main() {
