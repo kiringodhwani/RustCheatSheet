@@ -5674,7 +5674,7 @@ fn main() {
     // note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
-    // --- Example 2: `borrow_mut()` while  `borrow()` is active---
+    // --- Example 2: `borrow_mut()` while `borrow()` is active---
     //
     // Reset or create new shared data for this example
     let shared_data_rc_2 = Rc::new(RefCell::new(MyData { value: 20 }));
