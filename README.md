@@ -5638,6 +5638,58 @@ fn main() {
 }
 ```
 
+<img width="515" alt="Image" src="https://github.com/user-attachments/assets/97593b11-0647-4da5-ae5e-f2b1151e406b" />
+
+<br><ins>Panicking when breaking borrow rules with borrow_mut()</ins> — 
+
+```Rust
+use std::rc::Rc;
+use std::cell::RefCell;
+
+#[derive(Debug)]
+struct MyData {
+    value: i32,
+}
+
+fn main() {
+    println!("--- Example 1: Multiple `borrow_mut()` at the same time ---");
+    // Create an `Rc<RefCell<MyData>>`
+    let shared_data_rc = Rc::new(RefCell::new(MyData { value: 10 }));
+
+    // Clone the `Rc` to simulate multiple owners/references
+    let shared_data_rc_clone1 = Rc::clone(&shared_data_rc);
+    let shared_data_rc_clone2 = Rc::clone(&shared_data_rc);
+
+    // First mutable borrow
+    let mut_borrow_1 = shared_data_rc.borrow_mut();
+    println!("Successfully obtained first mutable borrow: {:?}", mut_borrow_1);
+	
+    // ATTEMPT TO GET A SECOND MUTABLE BORROW - THIS WILL PANIC!!!!
+    // The program will crash here because `RefCell` only allows one mutable borrow at a time.
+    println!("\nAttempting to get a second mutable borrow...");
+    let mut_borrow_2 = shared_data_rc_clone1.borrow_mut();
+    // ERROR MESSAGE: thread 'main' panicked at src/main.rs:25:46:
+    // already borrowed: BorrowMutError
+    // note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+    // Reset or create new shared data for this example
+    let shared_data_rc_2 = Rc::new(RefCell::new(MyData { value: 20 }));
+    let shared_data_rc_2_clone = Rc::clone(&shared_data_rc_2);
+
+    // Get an immutable borrow
+    let imm_borrow = shared_data_rc_2.borrow();
+    println!("Successfully obtained immutable borrow: {:?}", imm_borrow);
+
+    // ATTEMPT TO GET A MUTABLE BORROW WHILE IMMUTABLE BORROW IS ACTIVE - THIS WILL PANIC!!!!
+    let mut_borrow = shared_data_rc_2_clone.borrow_mut();
+    // ERROR MESSAGE: thread 'main' panicked at src/main.rs:40:45:
+    // already borrowed: BorrowMutError
+    //note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+}
+```
+
+## Reference Cycles and Memory Leaks
 
 
 
