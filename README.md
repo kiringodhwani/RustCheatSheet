@@ -6333,7 +6333,7 @@ fn main() {
 
 ^^^^This is a **pain point** that may lead people away from using Mutexes, but **Rust’s type system and ownership rules guarantee that you can’t get locking and unlocking wrong!!!!**
 
-#### Using a Mutex in Rust:
+### Using a Mutex in Rust:
 
 ```Rust
 use std::sync::Mutex;	// import `Mutex` from the standard library
