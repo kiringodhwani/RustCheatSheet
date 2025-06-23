@@ -6424,7 +6424,7 @@ fn main() {
     for _ in 0..10 {
 
         // Important notes about `Arc`:
-        // Just like `Rc`, `Arc::clone` increases the reference count of the `counter` variable, which stores `Mutex<i32>>` inside of `Arc`.
+        // Just like `Rc`, `Arc::clone` increases the reference count of the `counter` variable, which stores `Arc<Mutex<i32>>`.
         // It creates a new `Arc` pointer that points to and shares ownership of the same underlying data as the 
         // original `counter`. Each spawned thread will then take ownership of one of these cloned `Arc` 
         // pointers, allowing multiple threads to share ownership of the same `Mutex` (and thus the same
