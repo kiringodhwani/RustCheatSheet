@@ -5769,7 +5769,14 @@ fn main() {
     println!("a next item = {:?}", a.tail());
 }
 ```
+^^^ **THIS circular dependency also causes a <ins>memory leak</ins>…**
 
+When `b` gets cleaned up, the memory on the stack gets cleaned up; however, the memory on the heap will not get cleaned up bc this memory is still referenced inside of list `a` with its `Rc` smart pointer in next.
+
+
+Then, `a` gets cleaned up. Again, the stack memory gets cleaned up; however, the memory on the heap does not get cleaned up bc this memory location is still being referenced by the heap memory for list `b`. 
+
+^^^NOW, we have a situation where we have two lists allocated on the heap but we don’t have any stack variables pointing to them. This means they are orphaned and won’t get cleaned up. 
 
 
 
