@@ -6308,6 +6308,169 @@ fn main() {
 
 ## Sharing State
 
+- We can **transfer data using shared state.**
+
+- Think about **<ins>message passing</ins> as <ins>one-way data flow</ins> — one thread passes a message to another thread and then that receiving thread now owns the data.** 
+
+- On the other hand, with **<ins>shared state concurrency</ins>**, we have **some piece of data in memory that multiple threads can read and write to.**
+
+### The API of `Mutex`
+- **<ins>`Mutex`</ins>** — An abbreviation for **mutual exclusion**. Mutual exclusion means that you **have some piece of data and only one thread could access that piece of data at any given time.** 
+
+- To achieve this, Mutexes use a **<ins>locking system</ins>** — **<ins>when a thread wants access to a piece of data behind a `Mutex`, it will signal that it wants access to that data and acquire the Mutex’s lock.</ins>**
+
+    - The **lock** is a data structure that **keeps track of which thread has exclusive access to the piece of data.**
+
+    - **Once a thread has acquired a lock on a particular piece of data, no other thread can access that data.**
+
+    - **Once the thread is done with the piece of data, it can unlock the data and allow other threads to have access to it.**
+
+- **Mutexes** have a **reputation for being hard to manage**, because you have to remember **two rules**:
+
+    1. **You have to acquire a lock before you have access to data.**
+
+    2. **You have to release the lock when you’re done with the data, so that other threads can have access.** 
+
+^^^^This is a **pain point** that may lead people away from using Mutexes, but **Rust’s type system and ownership rules guarantee that you can’t get locking and unlocking wrong!!!!**
+
+#### Using a Mutex in Rust:
+
+```
+use std::sync::Mutex;	// import `Mutex` from the standard library
+
+fn main() {
+    let m = Mutex::new(5);	// create a new `Mutex` that holds the integer 5
+				// `new()` creates the new `Mutex` in an unlocked state ready for use.
+
+    // Access the data in our Mutex in an inner scope 
+    {
+        let mut num = m.lock().unwrap();    // Call the `lock()` method to acquire a lock on the `Mutex`.	
+					    //
+					    // `lock()` blocks the current/local thread until it successfully
+				            // acquires the lock.
+					    //
+					    // `lock()` returns a `Result` type --
+					    //	    `Result<MutexGuard<T>, PoisonError<MutexGuard<T>>>`.
+					    //  `Ok(MutexGuard<T>)` means the lock was successfully
+					    //   acquired, and `MutexGuard` is a smart pointer that provides
+					    //   mutable access to the inner data (`T`). The `Deref` trait of the
+					    //   `MutexGuard` smart pointer points to the inner data of the
+					    //    `Mutex`. Also, `MutexGuard` implements the `Drop` trait, such that
+					    //    when `MutexGuard` goes out of scope, it automatically
+					    //    releases the lock to the data. This means that releasing the
+					    //    lock is done for you so you don't have to remember.
+					    //
+					    //  `Err(PoisonError)` occurs if another thread that previously
+					    //   held the lock **panicked** while it held the lock. In other
+					    //   words, suppose you have a `Mutex` protecting some shared
+					    //   data. Suppose one thread acquires the lock, starts modifying the
+					    //   data, and then, before releasing the lock, that thread
+					    //   experiences a panic. A panic in Rust means the thread
+					    //   immediately unwinds its stack and exits. If this happens while a
+					    //   `Mutex` lock is held, the data protected by that `Mutex` might be
+					    //   left in an inconsistent or partially modified state. For example,
+					    //   if it was incrementing a counter, it might have only partially
+					    //   completed the operation, or if it was reordering a list, it might
+					    //   have left the list in a broken state. This "poisons" the `Mutex`,
+					    //   indicating the inner data might be in an inconsistent state. To
+					    //   indicate this, `lock()` returns `Err(PoisonError)`, which is designed
+					    //   to prevent other threads from unknowingly operating on
+					    //   potentially corrupt data. Calling `.unwrap()` here will panic if
+					    //   such an error occurs.
+					    //
+					    // Once `lock()` returns, the current thread is guaranteed to be
+					    // the sole holder of the lock.
+        
+        // Use the mutable `MutexGuard` to manipulate the underlying data with the dereference operator *
+        *num = 6;
+
+    }   // inner scope ends so the `MutexGuard` goes out of scope and the lock is released.
+
+    println!("m = {:?}", m);
+
+}
+```
+
+- **<ins>`Mutex` uses interior mutability</ins>** — i**n the same way that a `RefCell` smart pointer allows you to mutate a value that’s inside a `Rc` smart pointer (`Rc<RefCell<T>>`), the `Mutex` smart pointer allows you to mutate a value that's inside an `Arc` smart pointer (`Arc<Mutex<T>>`)**.
+
+    - The `RefCell` smart pointer comes with the risk of creating circular dependencies, the **`Mutex` smart pointer comes with the risk of creating deadlocks.** 
+    - <ins>See the example below…</ins>
+
+- **<ins>Sharing `Mutex` Between Multiple Threads:</ins>** We create a new `Mutex` that holds the integer 0. Then, we will spin up 10 threads that each increment the `Mutex` value by 1. At the end, the `Mutex` value should be 10. <ins>See below:</ins>
+
+```Rust
+use std::sync::{Arc, Mutex};	// import the Atomic Rc (`Arc`) smart pointer, provides the same functionality as the
+				// the `Rc` smart pointer of allowing multiple owners (shared ownership) but it
+				// thread safe! See below comments for more info.
+
+use std::thread;
+use std::rc::Rc;	// this doesn't work for us bc not thread safe :(, but we need its exact
+			// functionality, which Atomic Rc gives us.
+
+fn main() {
+    //let counter = Rc::new(Mutex::new(0));	// use `Rc` so `counter` can have multiple owners, BUT NOT THREAD SAFE SO CAN'T USE!!
+
+    let counter = Arc::new(Mutex::new(0)); 	// use `Arc` so that `counter` can have multiple owners and bc `Arc` is
+						// thread safe, unlike `Rc`.
+						// As explained above, `Mutex` uses interior mutability, so it allows
+						// us to mutate the count inside the `Arc` smart pointer even though
+						// the `Arc` itself provides only shared, immutable access to its 												// contents.
+
+
+    // Create a mutable vector that stores all 10 threads.
+    mut handles = vec![];
+
+    for _ in 0..10 {
+
+        // Important notes about `Arc`:
+        // Just like `Rc`, `Arc::clone` increases the reference count of the `counter` variable (inner value inside `Arc` is `Mutex<i32>>`).
+        // Also just like `Rc`, it creates a new `Arc` pointer that points to and shares ownership of the same underlying data as the 
+        // original `counter`. Each spawned thread will then take ownership of one of these cloned `Arc` 
+        // pointers, allowing multiple threads to share ownership of the same `Mutex` (and thus the same
+	// `i32` counter) safely.
+        //
+        let counter = Arc::clone(&counter);
+
+        // handle contains the new spawn thread
+        let handle = thread::spawn(move || {	// use `move` to move the `counter` variable into the thread.
+						// ERROR: "cannot move counter bc it was already moved into
+						// the closure in the previous iteration of the for loop"
+						//
+						//  ^^^SOLUTION 1: we allow counter to have multiple owners
+						// with the Rc smart pointer above
+						//
+						// ^^^ERROR 2: "`Rc<Mutex<i32>>` cannot be sent between
+						// threads safely" -- the `Rc` smart pointer gives us the
+						// functionality we want, but unfortunately, it's not thread safe.
+						// We want something that's exactly like `Rc`, but thread safe.
+						//
+						//  ^^^SOLUTION 2: Rust standard library has the Atomic Rc (`Arc`)
+						// smart pointer. Same functionality as `Rc` but thread safe!
+						// Atomics are a concurrency primitive. They are like primitive
+						// types except that they can be shared across threads.
+						// Acquire a lock to `counter` and increment the counter with `*`
+            let mut num = counter.lock().unwrap();
+            *num += 1;
+        });
+        handles.push(handle);	// after the new spawn thread is created, append it to the vector of threads
+    }
+
+    // After acquiring the threads, join them all to the main thread, meaning that we block the main thread 
+    // from terminating until all of the spawned threads finish execution.
+    for handle in handles {
+        handle.join().unwrap();
+    }
+    println!("Result: {}", *counter.lock().unwrap())	// have to acquire lock, unwrap to get the `MutexGuard`,
+							// and dereference to get int.
+}
+```
+
+**The Rust language itself provides few concurrency features**, but it does give you the building blocks to create your own concurrency features or use concurrency features written by others. 
+
+- Two basic concurrency concepts provided to you as building blocks by the standard library are the `Send` and `Sync` traits.
+
+# Object Oriented Programming in Rust
+
 
 
 
