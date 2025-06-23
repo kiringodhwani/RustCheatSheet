@@ -6409,9 +6409,9 @@ use std::rc::Rc;	// this doesn't work for us bc not thread safe :(, but we need 
 			// functionality, which Atomic Rc gives us.
 
 fn main() {
-    //let counter = Rc::new(Mutex::new(0));	// use `Rc` so `counter` can have multiple owners, BUT NOT THREAD SAFE SO CAN'T USE!!
+    //let counter = Rc::new(Mutex::new(0));	// use `Rc` so the counter can have multiple owners, BUT NOT THREAD SAFE SO CAN'T USE!!
 
-    let counter = Arc::new(Mutex::new(0)); 	// use `Arc` so that `counter` can have multiple owners and bc `Arc` is
+    let counter = Arc::new(Mutex::new(0)); 	// use `Arc` so that the counter can have multiple owners and bc `Arc` is
 						// thread safe, unlike `Rc`.
 						// As explained above, `Mutex` uses interior mutability, so it allows
 						// us to mutate the count inside the `Arc` smart pointer even though
@@ -6424,7 +6424,7 @@ fn main() {
     for _ in 0..10 {
 
         // Important notes about `Arc`:
-        // Just like `Rc`, `Arc::clone` increases the reference count of the `counter` variable (inner value inside `Arc` is `Mutex<i32>>`).
+        // Just like `Rc`, `Arc::clone` increases the reference count of the `counter` variable, which stores `Mutex<i32>>` inside of `Arc`.
         // Also just like `Rc`, it creates a new `Arc` pointer that points to and shares ownership of the same underlying data as the 
         // original `counter`. Each spawned thread will then take ownership of one of these cloned `Arc` 
         // pointers, allowing multiple threads to share ownership of the same `Mutex` (and thus the same
