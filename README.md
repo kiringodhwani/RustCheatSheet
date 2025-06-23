@@ -5895,6 +5895,46 @@ fn main() {
 
 # Concurrency in Rust
  
+One of the goals of the Rust language is handling concurrent programming safely and efficiently.
+
+- **Concurrent programming** — when different parts of your program execute independently.
+
+- **Parallel programming** — when different parts of your program execute at the same time.
+
+By leveraging Rust’s type system and powerful ownership model, a lot of concurrency errors are able to be caught at compile time. Bc of this, you’re able to write code that is free of subtle bugs and is easy to refactor without introducing new bugs, which is why Rust uses the term **fearless concurrency**. 
+
+Bc Rust is a low-level programming language, it has various solutions to handle concurrency problems. <ins>See below</ins>.
+
+## Using Threads
+
+- In most current operating systems, an executed program’s code is ran within a process and the operating system manages running multiple processes at once.
+
+- Within a program, you can have independent parts that run simultaneously and the features that run these independent parts are called **threads**.
+
+- **Splitting your program’s computation into multiple threads can improve performance**, **because multiple parts of your program are running at the same time. BUT, this also increases complexity.** 
+
+- **Because threads run simultaneously, you don’t have control over the order in which different parts of your program are executed**, which leads to **challenges** including the below:
+
+    - **Race Conditions:** Threads are accessing data or resources in an inconsistent order
+
+    - **Deadlocks:** Two threads that are both waiting for a resource that the other thread has, thus making both threads wait indefinitely.
+
+    - Because execution order is non-deterministic, bugs can appear that only happen in certain situations and are hard to reproduce and fix reliably.
+
+- Rust attempts to mitigate the negative effects of using threads; however, it’s on the programmer to be thoughtful when designing their program for a multi-threaded context.
+
+## Types of Threads
+
+Many operating systems provide an API to create new threads. There are two main types of threads:
+
+1. **One-to-One Threads** (also called OS threads, native threads, system threads, etc.) — **when you create a thread in your program, it maps to an operating system thread**, so there’s a **one-to-one mapping**.
+
+2. **Green Threads** (also called user threads or program threads) — Many programming languages provide their own special implementation of threads. These are called green threads. **DO NOT have a one-to-one mapping with operating system threads**, so you can have 20 green threads that map to only 5 operating system threads. This is why the green thread model is called an **`m` to `n` model (`m` green threads that map to `n` operating system threads).** 
+
+The tradeoff between these two types of threads that is most important to Rust is **runtime support**. **By runtime, we mean the code that’s included by the programming language in every single binary**. **Rust aims to have an extremely small runtime**; in fact, almost no runtime at all. The tradeoff with this is sacrificing features, because the more features we include out of the box, the larger the runtime will be. **Because green threads would require a larger language runtime, Rust ONLY included one-to-one threads in its standard library**. However, if you would like to use green threads with the tradeoff of having a larger binary, then you could use crates that provide such functionality. 
+
+## Creating New Threads in Rust
+
 
 
 
