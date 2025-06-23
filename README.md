@@ -5698,6 +5698,78 @@ Rust is known for being a memory safe language, so it provides certain guarantee
 
 <ins>EXAMPLE:</ins> In the below, we create a reference cycle where list `a` references list `b` and list `b` references list `a`.
 
+<img width="438" alt="Image" src="https://github.com/user-attachments/assets/d1b973ee-bb40-4ce3-92ce-acfe6ac3e78c" />
+
+```Rust
+use crate::List::{Cons, Nil};
+use std::cell::RefCell;
+use std::rc::Rc;
+
+#[derive(Debug)]
+enum List {
+    Cons(i32, RefCell<Rc<List>>),	// Store 32bit int and `List` wrapped in `Rc` (can have multiple owners).
+					// Wrap whole thing in `RefCell`, so you can change the `Rc<List>` but not
+					// the `List` (due to the order being `RefCell<Rc` and not `Rc<RefCell. This
+					// is fine bc all we want to do is change which shared `List` is the next
+					// pointer not actually change the contents of the `List`. 
+    Nil,
+}
+
+impl List {
+    // Returns the next value. If `self` is a `Cons` variant, then returns value in next pointer. If `self` is `Nil`, returns None.
+    fn tail(&self) -> Option<&RefCell<Rc<List>>> {
+        match self {
+            Cons(_, item) => Some(item),	// If the variant is `Cons`, then return the `List` stored in `Cons` 
+										// wrapped in Some()
+            Nil => None,
+        }
+    }
+}
+
+fn main() {
+    // list `a` is a `Cons` variant wrapped in `Rc` (so can have multiple owners), stores
+    // the number 5 and points to `Nil` (so just one node)
+    let a = Rc::new(Cons(5, RefCell::new(Rc::new(Nil))));
+
+    // Print out the initial reference count of list `a` using strong_count(): 1
+    println!("a initial rc count = {}", Rc::strong_count(&a));
+    // Print out the next item in `a` using `tail()`, it is `Nil`.
+    println!("a next item = {:?}", a.tail()); 
+
+    // list `b` is a `Cons` variant wrapped in `Rc` (so can have multiple owners), stores
+    // the number 10 and points to a clone of list `a`, so `a` and `b` share the underlying value
+    // stored in `a`.
+    let b = Rc::new(Cons(10, RefCell::new(Rc::clone(&a))));
+
+    // Print out the new reference count of list `a`: 2
+    println!("a rc count after b creation = {}", Rc::strong_count(&a));
+    // Print list `b`'s initial reference count: 1
+    println!("b initial rc count = {}", Rc::strong_count(&b));
+    // Print the next item in list `b`: list `a` whose value is 5
+    println!("b next item = {:?}", b.tail());
+
+    // Modifying list `a` to point to a clone of list `b`, call `tail()` to get next item in list `a`, use `if let` bc only care about 
+    // `Some` variant. At this point, `a` is a `Cons` variant so when we call `tail()` we match into the Cons part and 
+    // return `Some(RefCell::new(Rc::new(Nil)))` bc next pointer in `a` is `RefCell::new(Rc::new(Nil))`. We then change 
+    // the next pointer of `a` to be a reference to list `b`. To do so, use `.borrow_mut()` to get a mutable reference to the 
+    // data at `a` and then dereference it to change the data to a reference to list `b` (using `clone()`) so `a` shares 
+    // ownership of `b`'s underlying value.
+    if let Some(link) = a.tail() {
+        *link.borrow_mut() = Rc::clone(&b);
+    }
+
+    // Print out `b`'s new reference count: 2
+    println!("b rc count after changing a = {}", Rc::strong_count(&b));
+    // Print out `a`'s new reference count: 2
+    println!("a rc count after changing a = {}", Rc::strong_count(&a));
+
+    // The below line gives a stack overflow. This is bc when we try to print the next item in list `a`, it will be a 
+    // reference to list `b`,  which stores a reference to list `a`, which stores a reference to list `b`, and this goes on 
+    // infinitely!!!
+    println!("a next item = {:?}", a.tail());
+}
+```
+
 
 
 
