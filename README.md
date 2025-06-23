@@ -6450,7 +6450,11 @@ fn main() {
 						// Atomics are a concurrency primitive. They are like primitive
 						// types except that they can be shared across threads.
 
-	    // Acquire a lock to `counter` and increment the counter with `*`
+	    // The `Arc` smart pointer automatically dereferences to the `Mutex<i32>` inside it when we call
+            // `.lock()` to acquire a lock on the `Mutex`. The `.lock()` method returns a
+	    // `Result` type that, if successful, contains a `MutexGuard<i32>` in the `Ok` variant.
+  	    // We use `.unwrap()` to extract this `MutexGuard`. The `MutexGuard` itself acts as
+	    // a smart pointer and we can use `*` to access the inner i32 in the `MutexGuard` and mutate it.
             let mut num = counter.lock().unwrap();
             *num += 1;
         });
