@@ -4884,7 +4884,7 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
   
 - Enables **multiple owners (shared ownership) of the same data.**
 
-	- Create a new owner using **`Rc::clone()`**. **When you clone an `Rc<T>`, the reference count increases. The data is only dropped when the last `Rc<T>` pointing to it is dropped.**
+	- **Create a new owner using** **`Rc::clone()`**. **When you clone an `Rc<T>`, the reference count increases. The data is only dropped when the last `Rc<T>` pointing to it is dropped.**
   
 - Allows **only immutable borrows checked at compile time**.
   
