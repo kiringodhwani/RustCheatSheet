@@ -6236,7 +6236,7 @@ fn main() {
     }
 }
 ```
-**`cargo run`** —> 
+**`cargo run`** —>    
 	Got: hi  
  	Got: from  
 	Got: the  
