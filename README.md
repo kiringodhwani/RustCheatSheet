@@ -5616,7 +5616,7 @@ fn main() {
 								// underlying value. `clone()` does not deep copy
 								// the data; instead, it just increases the reference
 								// count.
-								// Also store the `Cons` List in an `Rc` smart
+								// Also store the `a` `Cons` List in an `Rc` smart
 								// pointer bc we want lists `b` and `c` to reference `a`.
 
     // Create lists `b` and `c`, which store the values 3 and 4, respectively, and reference list `a`. We use `clone()` to 
