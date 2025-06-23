@@ -6033,6 +6033,36 @@ fn main() {
 
 ### Using `move` Closures with Threads
 
+Up until this point, when we spawned a thread, the thread didn’t depend on any variables outside of the thread. <ins>This is not the case in the below example:</ins>
+
+```Rust
+use std::thread;
+
+fn main() {
+    // Create a vector called `v` in the main thread
+    let v = vec![1, 2, 3]; 
+
+    // We spawn a new thread. Inside the new thread, we use the `v` Vector that we created above in the 
+    // main thread.
+    let handle = thread::spawn(|| {
+        println!("Here's a vector: {:?}", v);  
+    });
+
+	// drop(v);	// BADDD!!!!!!
+
+	// Block the main thread from terminating until the spawned thread finishes execution
+	handle.join().unwrap();  
+}
+
+```
+^^**THIS ERRORS because...**
+
+- “The closure may outlive the current function, but it borrows `v`, which is owned by the current function” 
+
+- **<ins>ISSUE EXPLAINED:</ins>** **Rust sees `v` is being used inside our closure but it’s being declared outside our closure, so Rust will infer how to capture `v`**. **Bc `v` is only being used inside the `println!()` statement in the closure, Rust will infer that we only need a reference to `v`**. However, **this is a problem** because **Rust doesn’t know how long the spawn thread will run for so it doesn’t know if `v` will always be a valid reference**. Imagine if after spawning the new thread, we called the `drop` function on `v`. See this code above. If we were allowed to write this code, then there is a possibility that when we run it: we **spawn the thread, immediately switch back to the main thread, drop the value `v`, then switch back to the spawned thread at which point `v` would be invalid**. **Because Rust doesn’t know how long our thread will run for, Rust doesn’t allow us to take a reference to `v` inside the closure.**
+    - In other words, **if the closure were to borrow data from the main thread (e.g., `v`), there would be a problem: the main thread might finish or drop `v` while the new thread is still trying to access it.** This would lead to a use-after-free error, which Rust's ownership system is designed to prevent.
+
+- Rust gives us the hint to **force the closure to take ownership of `v` using `move`**.
 
 
 
