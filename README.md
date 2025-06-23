@@ -5595,7 +5595,7 @@ enum List {
 					// pointer so that it can be mutable even though the `Rc`
 					// smart pointer doesn’t allow mutable references.
 
-	Nil,
+    Nil,
 }
 
 use crate::List::{Cons, Nil};
