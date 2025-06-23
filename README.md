@@ -5935,6 +5935,78 @@ The tradeoff between these two types of threads that is most important to Rust i
 
 ## Creating New Threads in Rust
 
+```Rust
+use std::{thread, time::Duration};	// import `thread` from the standard library
+
+fn main() {
+    // In order to create a new thread, we call `thread::spawn()` and pass in a closure.
+    thread::spawn(|| {
+        // Inside of our spawned thread, we will loop through a range of integers.
+        for i in 1..10 {
+            println!("hi number {} from the spawned thread!", i);
+            thread::sleep(Duration::from_millis(1))	// `thread::sleep()` pauses execution of the thread
+							// for a specified amount of time. In this case, we
+							// have the thread sleep for 1 millisecond.
+        }
+    });
+
+    // By default, every program has one main thread.
+    // In our main thread, loop through a range, print the number and let the main thread sleep for 1 millisecond.
+    for i in 1..5 {
+        println!("hi number {} from the main thread!", i);
+        thread::sleep(Duration::from_millis(1));
+    }
+}
+```
+
+**`cargo run`** -->
+
+<img width="475" alt="Image" src="https://github.com/user-attachments/assets/943c1466-0fb8-419c-954c-fb1e255093b5" />
+
+<ins>^^^Observations in the above:</ins>
+- **We can see that the spawned thread and the main thread run concurrently and in parallel (i.e, at the same time)**, as the printed values appear to alternate between threads as opposed to us getting all of the printouts from the main thread first and then all of the printouts from the spawned thread after, or vice versa.
+
+-  **The main thread finishes printing its entire range (1-4) but the spawned thread does not finish printing all of its numbers (range is 1-9 but only got to 1-4).** This is because **<ins>when the main thread ends, the spawned is stopped no matter if it finishes executing or not</ins>**. We solve this next using **Join Handles**…
+
+### Join Handles
+
+- **Modifying our code above to allow the spawned thread to finish execution.**
+
+```Rust
+use std::{thread, time::Duration};
+
+fn main() {
+    // Store the return value of the `spawn()` function, which is a `JoinHandle` type.
+    let handle = thread::spawn(|| {
+        for i in 1..10 {
+            println!("hi number {} from the spawned thread!", i);
+            thread::sleep(Duration::from_millis(1));
+        }
+    });
+
+    for i in 1..5 {
+        println!("hi number {} from the main thread!", i);
+        thread::sleep(Duration::from_millis(1));
+    }
+
+    // Call `handle.join()` which will wait for the spawned thread to finish executing. 
+    //
+    // 	- Calling `.join()` blocks the thread currently running (which in this case is the main thread) until the
+    // 	  thread associated with the `handle` (in this case the spawned thread) terminates / finishes exec.
+    //
+    // 	- Blocking a thread means that the thread is prevented from doing any further work or exiting. 
+    //
+    // We have to call `.unwrap()` bc `.join()` returns a `Result` type.
+    //
+    handle.join().unwrap();
+}
+```
+
+**`cargo run`** --> 
+<img width="424" alt="Image" src="https://github.com/user-attachments/assets/b417ebab-cab5-4fc6-bc31-3503fbaca033" />
+
+^^^Once again, the threads alternate in execution and **NOW, we can see that the spawned thread finishes executing and prints its entire range (1-9).**
+
 
 
 
