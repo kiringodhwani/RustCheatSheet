@@ -6415,7 +6415,7 @@ fn main() {
 						// thread safe, unlike `Rc`.
 						// As explained above, `Mutex` uses interior mutability, so it allows
 						// us to mutate the count inside the `Arc` smart pointer even though
-						// the `Arc` itself provides only shared, immutable access to its 												// contents.
+						// the `Arc` itself provides only shared, immutable access to its contents.
 
 
     // Create a mutable vector that stores all 10 threads.
