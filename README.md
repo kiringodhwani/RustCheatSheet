@@ -5694,6 +5694,10 @@ fn main() {
 
 ## Reference Cycles and Memory Leaks
 
+Rust is known for being a memory safe language, so it provides certain guarantees (e.g., you can’t have data races). However, it does not provide the same guarantee for memory leaks. **Rust makes it difficult, but not impossible, to create memory that is never cleaned up.** We **can create a memory leak by using the `Rc` smart pointer and the `RefCell` smart pointer**. Using these two smart pointers, we can **create references where items reference each other in a cycle**, which will create a memory leak. 
+
+<ins>EXAMPLE:</ins> In the below, we create a reference cycle where list `a` references list `b` and list `b` references list `a`.
+
 
 
 
