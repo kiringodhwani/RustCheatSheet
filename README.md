@@ -6501,7 +6501,7 @@ fn main() {
 
 - There are many different competing definitions describing what object-oriented programming is. Some of these definitions would classify Rust as an object-oriented programming language and others would not. 
 
-There are arguably <ins>3 characteristics that most object-oriented programming languages share</ins>:
+<br>There are arguably <ins>3 characteristics that most object-oriented programming languages share</ins>:
 
 1. **<ins>Objects</ins>**
 
