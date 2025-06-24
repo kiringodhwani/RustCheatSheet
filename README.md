@@ -6681,6 +6681,85 @@ impl Screen {
 }
 ```
 
+<ins>Implementing drawable components…</ins> **i.e., implementing structs that implement the `Draw` trait…**
+
+- **Each drawable component can have whatever fields are relevant to that component, there is no set template or required set of fields.**
+
+        - For example, a `Button` component may have just `width` and `height` fields, whereas a `TextInput` component may have a `text` field.
+
+- **Each drawable component can have custom functionality**. They **all have to implement the `Draw` trait with its `draw(&self)` method, but they can have other methods defined as well that are unique to them.**
+
+        - For example, the `Button` component might have an `on-click handler` which is a function that does something when the user clicks a button. Other components may not have this function.
+
+**<ins>lib.rs continued</ins>**
+
+```Rust
+// Button component
+pub struct Button {
+    // These are the fields relevant to a `Button` component, but a `TextInput` component might
+    // have different fields.
+    pub width: u32,
+    pub height: u32,
+    pub label: String,
+}
+// Implement the `Draw` trait for our `Button` component. `Draw` trait requires that we implement one method  
+// called `draw(&self)` which takes a reference to `self`.
+impl Draw for Button {
+    fn draw(&self) {
+        // draw button
+    }
+}
+```
+
+<ins>How do consumers of our library define their own drawable components?</ins>
+
+**<ins>main.rs</ins>**
+
+```Rust
+
+// Import the `Draw` trait from our GUI library (lib.rs), as well as `Screen` and `Button`.
+use gui_lib::{Draw, Screen, Button};
+
+// With the `Draw` trait in scope, define another drawable component called `SelectBox`.
+struct SelectBox {
+    width: u32,
+    height: u32,
+    options: Vec<String>,
+}
+// Implement the `Draw` trait for the `SelectBox` component. `Draw` trait requires that we implement one 
+// method called `draw(&self)` which takes a reference to `self`.
+impl Draw for SelectBox {
+    fn draw(&self) {
+        // draw select box
+    }
+}
+
+// Use our GUI library inside of `main`
+fn main() {
+    // Create an instance of our `Screen` struct. `components` field stores a Vector of `Box` smart pointers, 
+    // where each `Box` contains any type that implements the `Draw` trait.
+    let screen = Screen {
+        components: vec![
+            // The first drawable component is a `SelectBox`
+            Box::new(SelectBox {
+                width: 100,
+                height: 100,
+                options: vec![String::from("yes"), String::from("no"), String::from("maybe")],
+            }),
+            // The second drawable component is a `Button`
+            Box::new(Button {
+                width: 100,
+                height: 100,
+                label: String::from("ok"),
+            })
+        ],
+    };
+
+    // `run()` iterates through the `components` vector and draws the items to the screen
+    screen.run();
+}
+```
+^^^**<ins>NOTE:</ins>** IN THE ABOVE, if we tried to **add an object to the `components` vector that DOES NOT implement the Draw trait…**	
 
 
 
