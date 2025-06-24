@@ -6638,9 +6638,9 @@ pub struct Screen {
 					   // Why not use generics instead of trait objects? like the
 					   // below...
 					   //      pub struct Screen<T:Draw> {
-					   //          pub components: Vec<T>, // Vector of components 
-					   //                                  // where each component 												   //                                 // is of generic type `T`. `T`
-					   //                                 // must implement the
+					   //          pub components: Vec<T>,   // Vector of components 
+					   //                                    // where each component 												   //                                    // is of generic type `T`. `T`
+					   //                                    // must implement the
 					   //                                 // `Draw` trait.
 					   //      }
 					   //  ^^^THE CRUCIAL DIFFERENCE with the above 
