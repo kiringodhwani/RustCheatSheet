@@ -6684,12 +6684,10 @@ impl Screen {
 <ins>Implementing drawable components…</ins> **i.e., implementing structs that implement the `Draw` trait…**
 
 - **Each drawable component can have whatever fields are relevant to that component, there is no set template or required set of fields.**
-
-        - For example, a `Button` component may have just `width` and `height` fields, whereas a `TextInput` component may have a `text` field.
+	- For example, a `Button` component may have just `width` and `height` fields, whereas a `TextInput` component may have a `text` field.
 
 - **Each drawable component can have custom functionality**. They **all have to implement the `Draw` trait with its `draw(&self)` method, but they can have other methods defined as well that are unique to them.**
-
-        - For example, the `Button` component might have an `on-click handler` which is a function that does something when the user clicks a button. Other components may not have this function.
+	- For example, the `Button` component might have an `on-click handler` which is a function that does something when the user clicks a button. Other components may not have this function.
 
 **<ins>lib.rs continued</ins>**
 
