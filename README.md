@@ -6503,7 +6503,7 @@ fn main() {
 
 <br>There are arguably <ins>3 characteristics that most object-oriented programming languages share</ins>:
 
-1. **<ins>Objects</ins>**
+<br>1. **<ins>Objects</ins>**
 
 - Made out of **data and methods that operate on that data.**
    
