@@ -6511,7 +6511,7 @@ There are arguably <ins>3 characteristics that most object-oriented programming 
    
 	- So, Structs and Enums provide the **same functionality as Objects**.
 
-2. **<ins>Encapsulation</ins>**
+<br>2. **<ins>Encapsulation</ins>**
 
 - Means that **implementation details of an Object are hidden from the code using that object.**
    
@@ -6575,7 +6575,7 @@ BC WE DO THIS, **we can change the internals without changing code that uses our
 
 - <ins>LESSON:</ins> **In Rust, the fact that everything is private by default but you can use the `pub` keyword to make things public, gives you the ability to encapsulate implementation details in Rust.**
 
-3. **<ins>Inheritance</ins>**
+<br>3. **<ins>Inheritance</ins>**
 
 - **Inheritance is the ability for an object to inherit from another object’s definition, gaining the data and behavior of that other object without having to define the data and behavior itself.**
 
