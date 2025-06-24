@@ -6627,7 +6627,7 @@ pub struct Screen {
 					   //     relevant trait.
 					   //
 					   //  - Because we use trait objects `Box<dyn Draw>`, Rust
-					   //     will ensure at compile time that any object in the 
+					   //     will ensure at compile time that any type in the 
 					   //     `components` Vector implements the `Draw` trait.
 					   //
 					   //  - NOTE: we discuss why trait objects need to use some 
