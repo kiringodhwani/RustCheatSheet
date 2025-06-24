@@ -6596,7 +6596,91 @@ BC WE DO THIS, **we can change the internals without changing code that uses our
 ---
 
 # Trait Objects in Rust
- 
+
+ As explained in the previous section, Rust doesn’t support classical inheritance; however, **Rust achieves polymorphism**, which is the **ability for code to work on multiple types of data through trait objects.**
+
+<ins>Example:</ins> Imagine you are building a GUI (graphical user interface) library. The goal of this library is to take in a list of visual elements, such as buttons, text boxes, sliders, etc., and be able to draw them to the screen. In addition, we would like users of our library to be able to extend our library, meaning they could create their own visual components that are able to be drawn to the screen. This means that **at compile time, we won’t know the full breadth of objects that are going to be used; however, we do know that all of these visual objects are going to have a method called `draw()` which we can execute.**
+
+- **Classical Inheritance:** If we were using a language with classical inheritance, then we might create a base class called visual component, which has a `draw()` method. Then, other visual components, such as buttons, text boxes, and sliders, can inherit from the visual component base class and thus inherit the `draw()` method. They could also overwrite the `draw()` method with their own implementation.
+
+- **Trait Objects in Rust:** **In Rust, we define shared behavior using traits**. We create a trait called `Draw` which has one method called `draw()`… <ins>see this below</ins>
+
+**<ins>lib.rs</ins>**
+```Rust
+// Define a public trait called `Draw`
+pub trait Draw {
+    fn draw(&self);	// The `Draw` trait requires that we implement one method 
+    			// called `draw(&self)` which takes a reference to `self`.
+}
+
+// Define a struct called `Screen` which holds a public list of drawable components.
+pub struct Screen {
+    pub components: Vec<Box<dyn Draw>>,    // Public field called `components` which is a Vector of 
+					   // `Box` smart pointers, where each `Box` contains any type
+					   // that implements the `Draw` trait. 
+					   //
+					   // `components` = Vector of trait objects `Box<dyn Draw>`
+					   //
+					   //  - We define a trait object by first specifying some sort 
+					   //     of pointer, such as a reference or a `Box` smart pointer, 
+					   //     and then using the `dyn` keyword followed by the 
+					   //     relevant trait.
+					   //
+					   //  - Because we use trait objects `Box<dyn Draw>`, Rust 													   //     will ensure at compile time that any object in the 
+					   //     `components` Vector implements the `Draw` trait.
+					   //
+					   //  - NOTE: we discuss why trait objects need to use some 
+					   //     sort of pointer in a later section.
+					   // 
+					   //  - The `dyn` keyword stands for dynamic dispatch.
+					   //
+					   // Why not use generics instead of trait objects? like the 												   // below...
+					   //      pub struct Screen<T:Draw> {
+					   //          pub components: Vec<T>, // Vector of components 
+					   //					// where each component 												   //					// is of generic type `T`. `T` 
+					   //					// must implement the 													   //					// `Draw` trait.
+					   //      }
+					   //  ^^^THE CRUCIAL DIFFERENCE with the above 
+					   // compared to our trait object implementation is that
+					   // it limits the `components` Vector to items of one type 
+					   // (e.g., just buttons, just sliders,  just text input fields, 
+					   // etc.) -- the `components` vector has to be 
+					   // homogenous. `components` can't store a mixture of 
+					   // types that implement the `Draw` trait, which is what we 
+					   // want and what the trait object implementation gives us 
+					   // (e.g., a list of buttons, sliders, and text input fields mixed 
+					   // together). 
+					   //      
+					   // LESSON: If you want the list to be homogenous, then 
+					   // you should use Generics with trait bounds as there is no 
+					   // runtime cost. However, if you need the flexibility to store 
+					   // any type that implements a certain trait, then use trait 
+					   // objects, which do have a performance cost.
+}
+
+impl Screen {
+    // `run()` iterates through the `components` vector and draws the items to the screen
+    pub fn run(&self) {
+        for component in self.components.iter() {	// we have to use `.iter()` otherwise if we 
+							// do `for component in self.components`, then Rust would try 
+       							// to take ownership of the `self.components` vector 
+	      						// and then move each `Box<dyn Draw>` out of the vector 
+	     						// and into the `component` variable during each 
+	    						// iteration. Bc `self` is an immutable reference (`&self`), 
+	   						// we can't move `self.components` out of it bc you 
+	  						// can't move data out of something you only have an 
+							// immutable reference to. As a result, without `.iter()`, 
+       							// we get the compile-time error "cannot move out of 
+	      						// self.components because it is behind an & reference".
+            component.draw()
+        }
+    }
+}
+```
+
+
+
+
 
 
 
