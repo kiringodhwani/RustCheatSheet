@@ -6757,7 +6757,44 @@ fn main() {
     screen.run();
 }
 ```
-^^^**<ins>NOTE:</ins>** IN THE ABOVE, if we tried to **add an object to the `components` vector that DOES NOT implement the Draw trait…**	
+^^^**<ins>NOTE:</ins>** IN THE ABOVE, if we tried to **add an object to the `components` vector that DOES NOT implement the `Draw` trait…**	
+
+<img width="739" alt="Image" src="https://github.com/user-attachments/assets/2558bd84-5e8c-47eb-8b75-223e1dbae0f1" />
+
+^^^THIS is a **very helpful error message** that even tells us which types implement `Draw` and are thus eligible to be added to the `components` vector.
+
+### Static vs Dynamic Dispatch
+
+**Monomorphization** (<ins>see earlier explanation/example of this using command-f</ins>) 
+
+- **Happens when we use generics and trait bounds**.
+
+- A process where the **compiler will generate non-generic implementations of functions based on the concrete types used in place of generic types.**
+
+- For example, **suppose you have a generic `add<T>(x: T, y: T)` function that takes two generic parameters and adds them**. **Suppose the function is used with both `f64` (floating-point) and `i32` (integer) types**. The **compiler will generate separate, optimized versions of `add` like `add_f64(x: f64, y: f64)` and `add_i32(x: i32, y: i32)`**. It then **replaces each call to the generic `add` function with the appropriate specialized versio**n. This essentially means **we get a specific, non-generic implementation of the `add` function for each concrete usage.**
+
+- **This is called <ins>static dispatch</ins>** — static dispatch is **when the compiler knows the concrete functions you’re calling at compile time.**
+
+<br>The opposite is **<ins>dynamic dispatch</ins>** — happens **when the compiler DOES NOT know the concrete functions you’re calling at compile time**. INSTEAD, it **figures out the concrete functions you’re calling at runtime**. 
+
+- When using **trait objects**, the **Rust compiler must use dynamic dispatch**, because, at compile time, the compiler doesn’t know all of the concrete objects that are going to be used. 
+
+- INSTEAD, the **compiler will add code to figure out the correct method to call at runtime, which means there is a runtime performance cost**. The **upside is you get to write flexible code that can accept any object that implements a certain trait.**
+
+### Object Safety for Trait Objects
+
+- **ONLY traits that are <ins>object safe</ins> can be used to create trait objects.**
+
+- What does it mean for a **trait** to be **object safe**? **A trait is object safe when all of the methods implemented on that trait have these two properties…**
+	1. **The return type is not `self`**
+	2. **There are no generic parameters**
+
+- If a trait DOES NOT have the above two properties, then the Rust compiler can’t figure out the concrete type of that trait and therefore doesn’t know the correct method to call.
+
+---
+
+State Design Pattern in Rust
+
 
 
 
