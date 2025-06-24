@@ -6694,7 +6694,7 @@ impl Screen {
 **<ins>lib.rs continued</ins>**
 
 ```Rust
-// Button component
+// `Button` component
 pub struct Button {
     // These are the fields relevant to a `Button` component, but a `TextInput` component might
     // have different fields.
