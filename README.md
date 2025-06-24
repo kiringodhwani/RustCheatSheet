@@ -5892,6 +5892,9 @@ fn main() {
 - **Weak count** — the **number of references that don’t have ownership of the data**, **`Rc::weak_count()`**
 
     - The weak count **has no influence over whether the underlying value is dropped or not.**
+ 
+
+---
 
 # Concurrency in Rust
  
@@ -6492,8 +6495,105 @@ fn main() {
 
 - Two basic concurrency concepts provided to you as building blocks by the standard library are the `Send` and `Sync` traits.
 
+---
+
 # Object Oriented Programming in Rust
 
+- There are many different competing definitions describing what object-oriented programming is. Some of these definitions would classify Rust as an object-oriented programming language and others would not. 
+
+There are arguably <ins>3 characteristics that most object-oriented programming languages share</ins>:
+
+1. **<ins>Objects</ins>**
+
+- Made out of **data and methods that operate on that data.**
+   
+- In Rust, **Structs** and **Enums** hold data and you can use implementation blocks to create methods on the structs and enums.
+   
+	- So, Structs and Enums provide the **same functionality as Objects**.
+
+2. **<ins>Encapsulation</ins>**
+
+- Means that **implementation details of an Object are hidden from the code using that object.**
+   
+- **Instead of changing the internals directly, the code outside of the object is limited to interacting with the object through its public API (i.e., public methods).** This enables the programmer to change the internals of an object without changing code which uses that object.
+   
+- **In Rust, everything is private by default**, but you can use the **`pub`** keyword to **decide which modules, types, functions, and methods are public.**
+   
+- <ins>Example</ins>:
+
+```Rust
+
+// struct is public so code outside of this library can use our struct.
+pub struct AveragedCollection { 
+
+    // BUT, the fields are private, so outside code can't manipulate these fields directly. Instead, they  
+    // have to use the methods in the implementation block below which modify the internal state.
+    list: Vec<i32>,
+    average: f64,	// average of the numbers in the list
+}
+
+impl AveragedCollection {
+
+    // Add a new value to the list and update the average of the list accordingly.
+    pub fn add(&mut self, value: i32) {
+        self.list.push(value);
+        self.update_average();
+    }
+
+    // Remove the last element from the list (if the list is not empty) and update the list accordingly.
+    pub fn remove(&mut self) -> Option<i32> {
+        let result = self.list.pop();	// `pop()` removes the last element from a vector and return it in
+					// `Some`, or None if the vector is empty.
+        match result {
+            Some(value) => {
+                self.update_average();
+                Some(value)
+            }
+            None => None
+        }
+    }
+
+    // Return the current average of the list (stored in the `average` field)
+    // We don't have to do any extra work here bc the `add()` and `remove()` methods that modify the list
+    // make sure to update the average of the accordingly. 
+    //
+    pub fn average(&self) -> f64 {
+        self.average
+    }
+
+    // Updates the average of the list in the 'average' field
+    // Private method, bc code outside the struct doesn’t needed to call it
+    fn update_average(&mut self) {
+        let total: i32 = self.list.iter().sum();
+        self.average = total as f64 / self.list.len() as f64;
+    }
+}
+```
+^^^^IN THE ABOVE, **we encapsulate the internals of the struct** (i.e., we **make the fields of the struct private**) so **code outside of the struct can’t change the internals directly and is limited to interacting with it through its public API**. 
+
+BC WE DO THIS, **we can change the internals without changing code that uses our structure**. **For example, we can switch from storing our list of numbers in a Vector and use a Hashset**. We would **then** need to **change** the **`add()` and `remove()` methods** to add and remove numbers from the hashset, BUT **as long as our public `add()` and `remove()` methods have the same signature, code using our struct doesn’t have to change.**
+
+- <ins>LESSON:</ins> **In Rust, the fact that everything is private by default but you can use the `pub` keyword to make things public, gives you the ability to encapsulate implementation details in Rust.**
+
+3. **<ins>Inheritance</ins>**
+
+- **Inheritance is the ability for an object to inherit from another object’s definition, gaining the data and behavior of that other object without having to define the data and behavior itself.**
+
+- **Rust does not have this ability**; specifically, you can’t define a structure that inherits fields and methods from another struct.
+
+- **However**, **Rust does have some other tools you can use depending on why you’re reaching for inheritance**. There are <ins>two main reasons for using inheritance</ins>:
+
+	1. **Code Sharing** — you can implement behavior on one type and then all the other types that inherit from it can reuse that behavior.  
+                - In **Rust**, you can accomplish the same thing by using **default trait method implementations**. <ins>NOTE:</ins> there is a limitation, as of this video, traits can only define methods, not fields.
+
+        2. **Polymorphism** — **allows you to substitute multiple objects for each other at runtime if they share certain characteristics.** In classical inheritance, this shared characteristic is a parent class. For example, you could have a **base class called vehicle and then subclasses that inherit from vehicle such as truck, motorcycle, or car**. Then, you can **define a function which takes in a vehicle and then at runtime you can pass in a truck, motorcycle, or car into the function.**
+                - **Rust takes a MUCH different approach**. In Rust, you can use **generics** to abstract away concrete types and you can use **trait bounds** to restrict the characteristics of the generics (e.g., the generic type has to implement the Debug trait). 
+                - In addition, Rust provides **trait objects**, which are similar to generics except they use dynamic dispatch, whereas generics use static dispatch. See next section for more info on trait objects.
+
+---
+
+# Trait Objects in Rust
+ 
 
 
 
