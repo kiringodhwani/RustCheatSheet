@@ -6641,7 +6641,7 @@ pub struct Screen {
 					   //          pub components: Vec<T>,   // Vector of components 
 					   //                                    // where each component 												   //                                    // is of generic type `T`. `T`
 					   //                                    // must implement the
-					   //                                 // `Draw` trait.
+					   //                                    // `Draw` trait.
 					   //      }
 					   //  ^^^THE CRUCIAL DIFFERENCE with the above 
 					   // compared to our trait object implementation is that
