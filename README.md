@@ -6581,7 +6581,7 @@ BC WE DO THIS, **we can change the internals without changing code that uses our
 
 - **Rust does not have this ability**; specifically, you can’t define a structure that inherits fields and methods from another struct.
 
-- **However**, **Rust does have some other tools you can use depending on why you’re reaching for inheritance**. There are <ins>two main reasons for using inheritance</ins>:
+<br>**However**, **Rust does have some other tools you can use depending on why you’re reaching for inheritance**. There are <ins>two main reasons for using inheritance</ins>:
 
 1. **Code Sharing** — you can implement behavior on one type and then all the other types that inherit from it can reuse that behavior.  
 	- In **Rust**, you can accomplish the same thing by using **default trait method implementations**. <ins>NOTE:</ins> there is a limitation, as of this video, traits can only define methods, not fields.
