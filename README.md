@@ -6583,12 +6583,12 @@ BC WE DO THIS, **we can change the internals without changing code that uses our
 
 - **However**, **Rust does have some other tools you can use depending on why you’re reaching for inheritance**. There are <ins>two main reasons for using inheritance</ins>:
 
-	1. **Code Sharing** — you can implement behavior on one type and then all the other types that inherit from it can reuse that behavior.  
-                - In **Rust**, you can accomplish the same thing by using **default trait method implementations**. <ins>NOTE:</ins> there is a limitation, as of this video, traits can only define methods, not fields.
+1. **Code Sharing** — you can implement behavior on one type and then all the other types that inherit from it can reuse that behavior.  
+	- In **Rust**, you can accomplish the same thing by using **default trait method implementations**. <ins>NOTE:</ins> there is a limitation, as of this video, traits can only define methods, not fields.
 
-        2. **Polymorphism** — **allows you to substitute multiple objects for each other at runtime if they share certain characteristics.** In classical inheritance, this shared characteristic is a parent class. For example, you could have a **base class called vehicle and then subclasses that inherit from vehicle such as truck, motorcycle, or car**. Then, you can **define a function which takes in a vehicle and then at runtime you can pass in a truck, motorcycle, or car into the function.**
-                - **Rust takes a MUCH different approach**. In Rust, you can use **generics** to abstract away concrete types and you can use **trait bounds** to restrict the characteristics of the generics (e.g., the generic type has to implement the Debug trait). 
-                - In addition, Rust provides **trait objects**, which are similar to generics except they use dynamic dispatch, whereas generics use static dispatch. See next section for more info on trait objects.
+2. **Polymorphism** — **allows you to substitute multiple objects for each other at runtime if they share certain characteristics.** In classical inheritance, this shared characteristic is a parent class. For example, you could have a **base class called vehicle and then subclasses that inherit from vehicle such as truck, motorcycle, or car**. Then, you can **define a function which takes in a vehicle and then at runtime you can pass in a truck, motorcycle, or car into the function.**
+	- **Rust takes a MUCH different approach**. In Rust, you can use **generics** to abstract away concrete types and you can use **trait bounds** to restrict the characteristics of the generics (e.g., the generic type has to implement the Debug trait). 
+	- In addition, Rust provides **trait objects**, which are similar to generics except they use dynamic dispatch, whereas generics use static dispatch. See next section for more info on trait objects.
 
 ---
 
