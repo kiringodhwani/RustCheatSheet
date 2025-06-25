@@ -6909,7 +6909,7 @@ impl Post {
 
     // Public `request_review()` method that modifies the `state` field.
     // We can see some of the advantages of the state design pattern: The `request_review()` method on 
-    // the `Post` struct is the same no matter what state we’re in (just like `content` above). Instead, each state is responsible for its 
+    // the `Post` struct is the same no matter what state we’re in (just like the `content` method above). Instead, each state is responsible for its 
     // own rules that govern what happens when we call the `request_review()` trait method on that 
     // particular `State` trait object. 
     //
