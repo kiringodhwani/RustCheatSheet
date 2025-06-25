@@ -6957,7 +6957,7 @@ trait State {
     // `request_review()` takes ownership of a `Box` containing `Self` (bc no `&`). `Self` contains the current
     // state (i.e., `dyn State` like `Draft`) bc this method is defined with structs implementing the `State` trait, like `Draft` and 
     // `PendingReview`.
-
+    //
     // Why Not Just Use `Self` Instead of `Box<Self>`? We call `request_review()` on a 
     // `Box<dyn State>`, but the main reason is because `Self` can be any of the concrete types (`Draft`, 
     // `PendingReview`, `Published`) so it is a dynamically sized type (DST), and Rust needs to know the size of a 
