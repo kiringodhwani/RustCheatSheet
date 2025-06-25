@@ -6795,7 +6795,252 @@ fn main() {
 
 # State Design Pattern in Rust
 
+Implementing the state object oriented pattern using Rust.
 
+- **In the state pattern, we have some value which has internal state, and that internal state is represented by state objects.**
+
+    - Each state object is responsible for its own behavior and deciding when to transition into another state.
+ 
+    - The value that holds the state objects knows nothing about the different behaviors of states or when to transition to different states.
+
+-  The benefits of using the state pattern is that when business requirements change, we don’t need to change the code which uses the value; instead, we simply need to change code inside one of the state objects or perhaps add new state objects.
+
+<ins>Example:</ins> **Implementing a Blog post workflow in Rust…**
+
+1. A Blog post **starts off as an empty draft**.
+
+2. Once the draft is done, **then a review of the post is required.**
+
+    - Make sure that changes to the blog post follow a specific sequence: If somebody attempts to review a blog post before a review is requested, then that blog post should remain in a draft state. 
+
+4. **Once the post is approved, it gets published**. **Only published posts return content for print** (i.e., unpublished blog posts cannot be printed).
+
+**<ins>main.rs</ins>**
+```Rust
+use blog::Post;
+
+fn main() {
+    let mut post = Post::new();    // create a new `Blog` post, in `Draft` state 
+
+    post.add_text("I ate a salad for lunch today");     // call `add_text()` method to populate the post with text.
+    
+    assert_eq!("", post.content());    // assert that calling `post.content()` returns an empty string bc the post
+				       // is in a `Draft` state, not a `Published` state, and only `Published` posts 
+	   			       // return content for print.
+
+    post.request_review();	// call `request_review()` to move the `Blog` from `Draft` state to being in review
+	assert_eq!("", post.content());    // assert that `post.content()` still returns an empty string bc has not 
+ 					   // yet been approved so it is not in a `Published` state, and only `Published` 
+								 // posts return content for print.
+
+
+    post.approve();	// use `approve()` method to approve the post, moving it to a `Published` state.
+    assert_eq!("I ate a salad for lunch today", post.content());    // `post` is in a `Published` state so it can 
+    								    // return content for print.
+}
+```
+
+^^^**IN THE ABOVE, we only interact with the `Post` type...**
+
+- The **`Post` type will store a value representing the state of the post**, which could be either **`Draft`, `PendingReview`, or `Published`.**
+
+- Changing from one state to another will be managed inside of the `Post` type. **The state will change in response to methods being called on the `Post` type.** 
+
+- Users won't be allowed to make a mistake such as publishing a `Post` before it has been reviewed.
+
+<ins>Defining the `Post` type in lib.rs according to the above notes:</ins>
+
+**<ins>lib.rs</ins>**
+
+pub struct Post {
+    state: Option<Box<dyn State>>,    // `state`` is an optional `State` trait object wrapped in a `Box`
+    content: String,
+}
+impl Post {
+    // Because the fields of the `Post` struct are private, the only way to create a new `Post` instance
+    // is using the below constructor. This constructor, called `new()` creates a new `Post` with the state
+    // set to the `Draft` state, which ensures that when a `Post` is created, it's always going to start
+    // off in a `Draft` state. 
+    //
+    pub fn new() -> Post {
+        Post {
+            state: Some(Box::new(Draft {})),    // the initial state is the `Draft` state
+            content: String::new(),
+        }
+    }
+
+    // The `content` field is private so outside code can't modify it directly. As a result, we add
+    // a public method that allows user's to modify the internal `content` field in order to add/append
+    // text to the `Post`. 
+    // This `add_text()` functionality doesn't depend on the state the post is in, so it is not part of
+    // the state pattern. You can see this from the fact that the `add_text()` method doesn't interact
+    // with the `state` field. 
+    //
+    pub fn add_text(&mut self, text: &str) {
+        self.content.push_str(text);
+    }
+
+    // Once again, `content` field is private so we must add a public method that allows outside code
+    // to return its value.
+    //
+    // `content()` is part of our state pattern: it returns an empty string if the post is not in a 
+    // `Published` state. If the post is in a `Published` state, then it returns the contents of the `Post`. 
+    // The goal is to keep all of the rules like this within the `State` trait objects and not in this 
+    // `Post` class, so the rules are not in this `Post.content()` method and instead in the State trait
+    // object implementations. 
+    //
+    pub fn content(&self) -> &str { 
+
+        // self.state is an `Optional` that owns the `State` trait object wrapped in a `Box`. We want a reference to
+        // the State trait object so call `as_ref()`. We know that there is always going to be a valid state object,
+        // so we can call `unwrap` to get the value in `Some` without having to worry about it panicking. Then, we
+        // have `&Box<dyn State>` (`State` trait object wrapped in `Box`) which calls its `content()` method passing 
+        // in the current `Post`. We can call `content()` even though we have `&Box<dyn State>` instead of `&dyn State`
+        // (reference to a `State` trait object) bc of Deref coercion.
+        //
+        // `Option<Box<dyn State>>`     —>     `Option<&Box<dyn State>>`     —>     `&Box<dyn State>`
+        // then call `.content(self)` on `&Box<dyn State>` to return `&str`
+        //
+        // The `content()` method of the `State` trait objects takes a reference to the current `Post` (`self`) so 
+        // that it has access to the `content` field.
+        //
+        self.state.as_ref().unwrap().content(self)
+    }
+
+    // Public `request_review()` method that modifies the `state` field.
+    // We can see some of the advantages of the state design pattern: The `request_review()` method on 
+    // the `Post` struct is the same no matter what state we’re in. Instead, each state is responsible for its 
+    // own rules that govern what happens when we call the `request_review()` trait method on that 
+    // particular `State` trait object. 
+    //
+    pub fn request_review(&mut self) {
+
+        // `self.state` contains an `Option`. `take()` takes the value out of the `Option`, leaving a `[None]` in
+        // its place. SO we are moving the value inside our `Option` (i.e., the state) outside of the `Option`
+        // and into the `state` variable here which gains ownership of the value. This is why we needed to 
+        // make the `state` field on the `Post` struct optional, bc in this case, we move the state out of our 
+        // `Post` instance but Rust doesn't allow unpopulated struct fields. BUT, with an optional value we're 
+        // able to call `take()` which will give us ownership of the `state` field and in its place it's going to leave 
+        // the `None` variant. 
+        // 
+        match self.state.take() {        
+
+            // If the state exists, call `.request_review()` on it to get the new state
+            // After calling `take()`, the value in `self.state` is moved into the `state` variable, so the 
+            // `state` variable has ownership of the value and `self.state` is `None` here when we do 
+            // `self.state =`. We then reassign `self.state` to a `Some` variant and inside we call the 
+            // `request_review()` method on `state`. `request_review()` consumes the current state in 
+            // `state`, invalidates it, and returns a new state (`PendingReview` if the current state is `Draft`, 
+            // `PendingReview` if the current state is `PendingReview`, `self` if `Published`).
+            //
+            Some(state) => self.state = Some(state.request_review()),
+
+            // If the state doesn't exit, do nothing.
+            None => ()
+        };
+    }
+
+    // Public `approve()` method that modifies the `state` field. Very similar to `request_review()`
+    pub fn approve(&mut self) {
+        match self.state.take() {        
+            Some(state) => self.state = Some(state.approve()),
+            None => ()
+        };
+    }
+}
+
+// `State` trait, defines shared behavior between the various states of a `Post` (i.e., the `State`
+// trait objects: `Draft`, `PendingReview`, and `Published`).
+trait State {
+
+    // `request_review()` takes ownership of a `Box` containing `Self` (bc no `&`). `Self` contains the current
+	// state (i.e., `dyn State` like `Draft`) bc this method is defined with structs implementing the `State` trait, like `Draft` and 
+	// `PendingReview`. Why Not Just Use `Self` Instead of `Box<Self>`? We call `request_review()` on a 
+	// `Box<dyn State>`, but the main reason is because `Self` can be any of the concrete types (`Draft`, 
+	// `PendingReview`, `Published`) so it is a dynamically sized type (DST), and Rust needs to know the size of a 
+	// type at compile time to move it by value. As a result, we take ownership of the fixed-size pointer (`Box`) 
+	// that manages the dynamically sized data.
+	//
+	// `request_review()` returns a `State` trait object (i.e., any type that implements the `State` trait, wrapped in 
+	// a `Box`). Doesn't have a default implementation, so requires a custom implementation for each type /
+	// struct that implements the `State` trait.
+	//
+	fn request_review(self: Box<Self>) -> Box<dyn State>;
+
+        // `approve()` method just like `request_review` (same param and same return type)
+        fn approve(self: Box<Self>) -> Box<dyn State>;
+
+	// `content()` takes `&self`, which for a trait method defined on the `State` trait, means `&dyn State`.
+	// Has a default implementation which returns an empty string. The `Draft` and `PendingReview` `State`
+ 	// objects use this default because we return an empty string if the `Post` is not `Published`. 
+	//
+	fn content<'a>(&self, post: &'a Post) -> &'a str {    // see reason for lifetimes in the custom
+ 							      // implementation in `Published`
+		""
+	}
+}
+
+// The different `State` trait objects...
+
+// `Draft` state
+struct Draft {}
+impl State for Draft {
+
+    // As noted previously, `request_review()` takes ownership of a `Box` containing `Self` (bc no `&`) and `Self`
+    // contains the current state (`dyn State`). In this custom implementation of `request_review()` for `Draft`, we don't
+    // use `self` within the function, so we are essentially invalidating the current state (`Draft`) and then
+    // returning a new state (`PendingReview`) that is used in its place.
+    //
+    fn request_review(self: Box<Self>) -> Box<dyn State> {
+        Box::new(PendingReview {})
+    }
+
+    // A `Draft` state object can't be approved because it is not yet in review. So return `self`.
+    fn approve(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+}
+
+// `PendingReview` state
+struct PendingReview {}
+impl State for PendingReview {
+
+    // If we call `request_review()` on a `PendingReview` `State` object, then we don't want to invalidate the current
+    // state (`PendingReview`), because the `Post` is already in review, so we return the current state in `self`.
+    fn request_review(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+
+    // If we call `approve()` on a `PendingReview` `State` object, then we transition into a `Published` state by
+    // taking ownership of the current state in `self` and returning a new state (`Published`) that is used in its 
+    // place.
+    fn approve(self: Box<Self>) -> Box<dyn State> {
+        Box::new(Published {})
+    }
+}
+
+// `Published` state 
+struct Published {}
+impl State for Published {
+
+    // If we call `request_review()` on a `Published` `State` object, it doesn't need to be reviewed bc it was already
+    // reviewed and approved. So just return the current `Published` state.
+    fn request_review(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+
+    // If we call `approve()` on a `Published` `State` object, return `self` because it was already published.
+    fn approve(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+
+    // If the post is `Published`, then return a reference to the post's `content` field.
+    fn content<'a>(&self, post: &'a Post) -> &'a str {
+        &post.content    // the lifetime of the return type is tied to the lifetime of the post bc we return 
+			 // `post.content`.
+    }
+}
+```
 
 
 
