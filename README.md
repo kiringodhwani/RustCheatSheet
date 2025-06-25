@@ -6851,7 +6851,7 @@ fn main() {
 <ins>Defining the `Post` type in lib.rs according to the above notes:</ins>
 
 **<ins>lib.rs</ins>**
-
+```Rust
 pub struct Post {
     state: Option<Box<dyn State>>,    // `state`` is an optional `State` trait object wrapped in a `Box`
     content: String,
