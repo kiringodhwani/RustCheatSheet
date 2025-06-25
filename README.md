@@ -6977,8 +6977,8 @@ trait State {
     //
     fn content<'a>(&self, post: &'a Post) -> &'a str {    // see reason for lifetimes in the custom
 							  // implementation in `Published`
-		""
-	}
+        ""
+    }
 }
 
 // The different `State` trait objects...
