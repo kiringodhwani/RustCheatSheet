@@ -7045,6 +7045,11 @@ impl State for Published {
 }
 ```
 
+## Extensions to the State Pattern
+
+#### Add a method called `reject()` that takes a post that’s PendingReview and return in to Draft
+
+- This would be almost the same as approve(): Draft’s implementation return self, Published’s implementation return self, and PendingReview’s implementation returns a Box::new(Draft {}) (i.e., Draft instance wrapped in Box).
 
 
 
