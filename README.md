@@ -6955,28 +6955,28 @@ impl Post {
 trait State {
 
     // `request_review()` takes ownership of a `Box` containing `Self` (bc no `&`). `Self` contains the current
-	// state (i.e., `dyn State` like `Draft`) bc this method is defined with structs implementing the `State` trait, like `Draft` and 
-	// `PendingReview`. Why Not Just Use `Self` Instead of `Box<Self>`? We call `request_review()` on a 
-	// `Box<dyn State>`, but the main reason is because `Self` can be any of the concrete types (`Draft`, 
-	// `PendingReview`, `Published`) so it is a dynamically sized type (DST), and Rust needs to know the size of a 
-	// type at compile time to move it by value. As a result, we take ownership of the fixed-size pointer (`Box`) 
-	// that manages the dynamically sized data.
-	//
-	// `request_review()` returns a `State` trait object (i.e., any type that implements the `State` trait, wrapped in 
-	// a `Box`). Doesn't have a default implementation, so requires a custom implementation for each type /
-	// struct that implements the `State` trait.
-	//
-	fn request_review(self: Box<Self>) -> Box<dyn State>;
+    // state (i.e., `dyn State` like `Draft`) bc this method is defined with structs implementing the `State` trait, like `Draft` and 
+    // `PendingReview`. Why Not Just Use `Self` Instead of `Box<Self>`? We call `request_review()` on a 
+    // `Box<dyn State>`, but the main reason is because `Self` can be any of the concrete types (`Draft`, 
+    // `PendingReview`, `Published`) so it is a dynamically sized type (DST), and Rust needs to know the size of a 
+    // type at compile time to move it by value. As a result, we take ownership of the fixed-size pointer (`Box`) 
+    // that manages the dynamically sized data.
+    //
+    // `request_review()` returns a `State` trait object (i.e., any type that implements the `State` trait, wrapped in 
+    // a `Box`). Doesn't have a default implementation, so requires a custom implementation for each type /
+    // struct that implements the `State` trait.
+    //
+    fn request_review(self: Box<Self>) -> Box<dyn State>;
 
-        // `approve()` method just like `request_review` (same param and same return type)
-        fn approve(self: Box<Self>) -> Box<dyn State>;
+    // `approve()` method just like `request_review` (same param and same return type)
+    fn approve(self: Box<Self>) -> Box<dyn State>;
 
-	// `content()` takes `&self`, which for a trait method defined on the `State` trait, means `&dyn State`.
-	// Has a default implementation which returns an empty string. The `Draft` and `PendingReview` `State`
- 	// objects use this default because we return an empty string if the `Post` is not `Published`. 
-	//
-	fn content<'a>(&self, post: &'a Post) -> &'a str {    // see reason for lifetimes in the custom
- 							      // implementation in `Published`
+    // `content()` takes `&self`, which for a trait method defined on the `State` trait, means `&dyn State`.
+    // Has a default implementation which returns an empty string. The `Draft` and `PendingReview` `State`
+    // objects use this default because we return an empty string if the `Post` is not `Published`. 
+    //
+    fn content<'a>(&self, post: &'a Post) -> &'a str {    // see reason for lifetimes in the custom
+							  // implementation in `Published`
 		""
 	}
 }
