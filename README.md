@@ -6799,9 +6799,9 @@ Implementing the state object oriented pattern using Rust.
 
 - **In the state pattern, we have some value which has internal state, and that internal state is represented by state objects.**
 
-    - Each state object is responsible for its own behavior and deciding when to transition into another state.
+    - **<ins>Each state object is responsible for its own behavior and deciding when to transition into another state.</ins>**
  
-    - The value that holds the state objects knows nothing about the different behaviors of states or when to transition to different states.
+    - **<ins>The value that holds the state objects knows nothing about the different behaviors of states or when to transition to different states.</ins>**
 
 -  The benefits of using the state pattern is that when business requirements change, we don’t need to change the code which uses the value; instead, we simply need to change code inside one of the state objects or perhaps add new state objects.
 
