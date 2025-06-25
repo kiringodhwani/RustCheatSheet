@@ -6829,9 +6829,9 @@ fn main() {
 	   			       // return content for print.
 
     post.request_review();	// call `request_review()` to move the `Blog` from `Draft` state to being in review
-    assert_eq!("", post.content());    // assert that `post.content()` still returns an empty string bc has not 
- 					   // yet been approved so it is not in a `Published` state, and only `Published` 
-								 // posts return content for print.
+    assert_eq!("", post.content());    // assert that `post.content()` still returns an empty string bc has not
+                                       // yet been approved so it is not in a `Published` state, and only `Published`
+				       // posts return content for print.
 
 
     post.approve();	// use `approve()` method to approve the post, moving it to a `Published` state.
