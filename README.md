@@ -6844,7 +6844,7 @@ fn main() {
 
 - The **`Post` type will store a value representing the state of the post**, which could be either **`Draft`, `PendingReview`, or `Published`.**
 
-- Changing from one state to another will be managed inside of the `Post` type. **The state will change in response to methods being called on the `Post` type.** 
+- **The state will change in response to methods being called on the `Post` type, BUT, `Post` type doesn't know the logic about when to transition to different states and what states to transition to, THIS is defined in the state objects.** 
 
 - Users won't be allowed to make a mistake such as publishing a `Post` before it has been reviewed.
 
