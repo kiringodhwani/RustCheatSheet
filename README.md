@@ -7047,11 +7047,12 @@ impl State for Published {
 
 ## Extensions to the State Pattern
 
-#### Add a method called `reject()` that takes a post that’s `PendingReview` and return in to `Draft`
+### Add a method called `reject()` that takes a post that’s `PendingReview` and return in to `Draft`
 
-- This would be almost the same as `approve()`: `Draft`’s implementation would return `self`, `Published`’s implementation returns self, and `PendingReview`’s implementation returns a `Box::new(Draft {})` (i.e., `Draft` instance wrapped in `Box`).
+- This would be almost the same as `approve()`: `Draft`’s implementation would return `self`, `Published`’s implementation returns `self`, and `PendingReview`’s implementation returns a `Box::new(Draft {})` (i.e., `Draft` instance wrapped in `Box`).
 
-#### Require two approvals before a post is published
+
+### Require two approvals before a post is published
 
 Introduce a new state and modify the `PendingReview` state's approve logic.
 
@@ -7087,7 +7088,7 @@ impl State for PendingReview {
 }
 ```
 
-#### Make it so that you can only add text to a post when it’s in `Draft` mode
+### Make it so that you can only add text to a post when it’s in `Draft` mode
 
 To only allow text to be added in the `Draft` state, you need to delegate the decision to the current state — just like with `content()`. 
 
