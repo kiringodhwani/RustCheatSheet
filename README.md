@@ -7047,9 +7047,110 @@ impl State for Published {
 
 ## Extensions to the State Pattern
 
-#### Add a method called `reject()` that takes a post that’s PendingReview and return in to Draft
+#### Add a method called `reject()` that takes a post that’s `PendingReview` and return in to `Draft`
 
-- This would be almost the same as approve(): Draft’s implementation return self, Published’s implementation return self, and PendingReview’s implementation returns a Box::new(Draft {}) (i.e., Draft instance wrapped in Box).
+- This would be almost the same as `approve()`: `Draft`’s implementation would return `self`, `Published`’s implementation returns self, and `PendingReview`’s implementation returns a `Box::new(Draft {})` (i.e., `Draft` instance wrapped in `Box`).
+
+#### Require two approvals before a post is published
+
+Introduce a new state and modify the `PendingReview` state's approve logic.
+
+1. **Introduce a new state**: Let's call it `PendingSecondReview` or `AwaitingSecondApproval`. This state will represent the post after the first approval but before the second and final one. When `approve` is called on a `PendingSecondReview` post, it finally transitions to the `Published` state.
+
+```Rust
+struct PendingSecondReview {}
+
+impl State for PendingSecondReview {
+    fn request_review(self: Box<Self>) -> Box<dyn State> {
+        self	// if we are already in `SecondReview`, don’t need to request review, return `self`
+    }
+
+    fn approve(self: Box<Self>) -> Box<dyn State> {
+        Box::new(Published {})    // if call for approval when state = `SecondReview`, then this is the second
+				  // approval so we can publish and move to `Published` state!
+	}
+}
+```
+
+2. **Modify `PendingReview`'s `approve` method**: When `approve` is called on a `PendingReview` post, it should transition to the new `PendingSecondReview` state, not directly to `Published`.
+
+```Rust
+
+impl State for PendingReview {
+    fn request_review(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+
+    fn approve(self: Box<Self>) -> Box<dyn State> {
+        Box::new(PendingSecondReview {})    // first approval → `PendingSecondReview`
+    }
+}
+```
+
+#### Make it so that you can only add text to a post when it’s in `Draft` mode
+
+To only allow text to be added in the `Draft` state, you need to delegate the decision to the current state — just like with `content()`. 
+
+1. **Add a method to the `State` trait to control adding text:**
+
+```Rust
+trait State {
+    fn request_review(self: Box<Self>) -> Box<dyn State>;
+    fn approve(self: Box<Self>) -> Box<dyn State>;
+    fn content<'a>(&self, post: &'a Post) -> &'a str {
+        ""
+    }
+
+    // Whether text can be added in the current state. By default, it can’t be added (Applies to `Published` and
+    // `PendingReview` `State` trait objects so they use the default implementation).
+    fn can_add_text(&self) -> bool {
+        false
+    }
+}
+```
+
+2. **Override `can_add_text` in `Draft` so that we can add text in `Draft` —> `can_add_text` return True**:
+
+```Rust
+impl State for Draft {
+    fn request_review(self: Box<Self>) -> Box<dyn State> {
+        Box::new(PendingReview {})
+    }
+
+    fn approve(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+
+    fn can_add_text(&self) -> bool {
+        true
+    }
+}
+```
+
+**3. Update `Post::add_text` to check the current state:**
+
+```Rust
+impl Post {
+    pub fn add_text(&mut self, text: &str) {
+        if self.state.as_ref().unwrap().can_add_text() {    // same method call in `pub content()`, see explan.
+            self.content.push_str(text);
+        } else {
+            println!("Cannot add text unless the post is in Draft state.");
+        }
+    }
+}
+```
+
+## Downsides of the State Design Pattern:
+
+- **Some states are coupled to each other**
+    - For example, if we wanted to add a state between `PendingReview` and `Published`. This state is going to be called `Scheduled`. After adding the `Scheduled` state, we would need to edit the `PendingReview` state such that when `approve()` is called it would transition to the `Scheduled` state instead of the Published state. 
+
+- **Duplication:** For example, in `Post`, we have very similar implementations of the `request_review()` method and the `approve()` method. If we had many more methods with similar code, then we can consider using macros to reduce some of the repetition.
+
+## Encoding States and Behaviors as Types
+
+
 
 
 
