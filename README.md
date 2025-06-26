@@ -7193,11 +7193,11 @@ impl Post {
 // `Draft` state
 pub struct DraftPost {
     content: String,    // private `content` field. `DraftPost` doesn't have its own `content()` method, so `DraftPosts`
-                        // can’t print their `content`. This ensures can only get `content` when `Published`.
+                        // can’t print their `content`. This ensures we can only get `content` when `Published`.
 }
 impl DraftPost {
 	
-    // ENFORCING that can ONLY add text to the post in the `Draft` state: The only type/struct that has a
+    // HERE, WE ENFORCE that you can ONLY add text to the post in the `Draft` state: The only type/struct that has a
     // method to modify `content` is the `Draft` state, which makes sense bc we require that you can only add 
     // text to the post in the `Draft` state.
     //
@@ -7209,7 +7209,7 @@ impl DraftPost {
     // Takes ownership of `self` (no `&`), meaning that it consumes and invalidates the current state and  
     // returns the new state (`PendingReviewPost`).
     //
-    // ENFORCING that can ONLY get to `PendingReview` state from `Draft` state: This method is the only way to 
+    // HERE, WE ENFORCE that you can ONLY get to `PendingReview` state from `Draft` state: This method is the only way to 
     // get a `PendingReviewPost` instance, so you can only get to the `PendingReview` state by calling 
     // `request_review()` on a post in the `Draft` state (`DraftPost`). 
     //
@@ -7232,7 +7232,7 @@ impl PendingReviewPost {
     // Takes ownership of `self` (no `&`), meaning that it consumes and invalidates the current state and  
     // returns the new state (`Post`).
     //
-    // ENFORCES that can ONLY get to `Published` state from the `PendingReview` state: This method is the 
+    // HERE, WE ENFORCE that you can ONLY get to `Published` state from the `PendingReview` state: This method is the 
     // only way to get a `Post` instance, so you can only get to the `Published` state by calling `approve()` on a post 
     // in the `PendingReview` state (`PendingReviewPost`)
     //
