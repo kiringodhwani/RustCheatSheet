@@ -7054,7 +7054,7 @@ impl State for Published {
 
 ### Require two approvals before a post is published
 
-Introduce a new state and modify the `PendingReview` state's approve logic.
+Introduce a new state and modify the `PendingReview` state's `approve` logic.
 
 1. **Introduce a new state**: Let's call it `PendingSecondReview` or `AwaitingSecondApproval`. This state will represent the post after the first approval but before the second and final one. When `approve` is called on a `PendingSecondReview` post, it finally transitions to the `Published` state.
 
