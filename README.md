@@ -7088,7 +7088,7 @@ impl State for PendingReview {
 }
 ```
 
-### Make it so that you can only add text to a post when it’s in `Draft` mode
+### Make it so that you can only add text to a post when it’s in `Draft` state
 
 To only allow text to be added in the `Draft` state, you need to delegate the decision to the current state — just like with `content()`. 
 
