@@ -7149,8 +7149,135 @@ impl Post {
 
 - **Duplication:** For example, in `Post`, we have very similar implementations of the `request_review()` method and the `approve()` method. If we had many more methods with similar code, then we can consider using macros to reduce some of the repetition.
 
-## Encoding States and Behaviors as Types
+## Encoding States and Behaviors as Types (MUCH BETTER !!!)
 
+By implementing the state pattern exactly as we would in an object oriented programming language, we’re **not taking full advantage of Rust’s strengths**. 
+
+- We can **<ins>modify our library such that invalid states and transitions are compile time errors.</ins>**
+
+- Rather than encapsulating states and transitions completely so that outside code has no knowledge of them, we’ll **encode different states as different types.**
+
+- **Don’t use the `state` field anymore because we’re moving the encoding of state to the Type of the Struct.**
+
+**<ins>lib.rs</ins>**
+```Rust
+
+use std::future::Pending;
+
+// `Published` state
+pub struct Post {
+    content: String,    // private `content` field
+}
+impl Post {
+    // The `new()` function in `Post` returns a `DraftPost`.
+    // HERE, WE ENFORCE that all posts start in `Draft` state:  Bc the `content` field is private for `Post`, `DraftPost`,
+    // and `PendingReviewPost`, AND this is the only constructor, the ONLY WAY to create new posts is via 
+    // `Post::new()`, so all new posts must begin as a `DraftPost`.
+    //
+    pub fn new() -> DraftPost {
+        DraftPost {
+            content: String::new(),
+        }
+    }
+    // HERE, WE ENFORCE that ONLY `Published` posts return content for print: Both `DraftPost` and
+    // `PendingReviewPost` don't have `content()` methods and `content` field is private for all of the structs, so 
+    // we can't get the `content` of a post when it is in the `Draft` or `PendingReview` states. THE ONLY WAY to 
+    // get the `content` of the post is through the `content()` method in the `Published` state HERE. This matches 
+    // our requirement that only `Published` posts return content for print.
+    //
+    pub fn content(&self) -> &str {
+        &self.content
+    }
+}
+
+// `Draft` state
+pub struct DraftPost {
+    content: String,    // private `content` field. `DraftPost` doesn't have its own `content()` method, so `DraftPosts`
+                        // can’t print their `content`. This ensures can only get `content` when `Published`.
+}
+impl DraftPost {
+	
+    // ENFORCING that can ONLY add text to the post in the `Draft` state: The only type/struct that has a
+    // method to modify `content` is the `Draft` state, which makes sense bc we require that you can only add 
+    // text to the post in the `Draft` state.
+    //
+    pub fn add_text(&mut self, text: &str) {
+        self.content.push_str(text);
+    }
+
+    // Method to get from the `DraftPost` state to the `PendingReviewPost` state
+    // Takes ownership of `self` (no `&`), meaning that it consumes and invalidates the current state and  
+    // returns the new state (`PendingReviewPost`).
+    //
+    // ENFORCING that can ONLY get to `PendingReview` state from `Draft` state: This method is the only way to 
+    // get a `PendingReviewPost` instance, so you can only get to the `PendingReview` state by calling 
+    // `request_review()` on a post in the `Draft` state (`DraftPost`). 
+    //
+    pub fn request_review(self) -> PendingReviewPost {
+        PendingReviewPost {
+            content: self.content,
+        }
+    }
+}
+
+// `PendingReview` state
+pub struct PendingReviewPost {
+    content: String,    // private `content` field. `PendingReviewPost` doesn't have its own `content()` method, so
+			// `PendingReviewPosts` can’t print their content. This ensures can only get `content` when `Published`.
+}
+impl PendingReviewPost {
+
+    // One method called `approve()` which returns an instance of `Post`, so you can get from the `PendingReview`
+    // state to the `Published state` (`Post`). 
+    // Takes ownership of `self` (no `&`), meaning that it consumes and invalidates the current state and  
+    // returns the new state (`Post`).
+    //
+    // ENFORCES that can ONLY get to `Published` state from the `PendingReview` state: This method is the 
+    // only way to get a `Post` instance, so you can only get to the `Published` state by calling `approve()` on a post 
+    // in the `PendingReview` state (`PendingReviewPost`)
+    //
+    pub fn approve(self) -> Post {
+        Post {
+            content: self.content,
+        }
+    }
+}
+```
+
+
+**<ins>main.rs</ins>**
+```Rust
+use blog::Post;
+
+fn main() {
+    let mut post = Post::new();    // ONLY WAY to create new posts is via `Post::new()`, so all new posts
+				   // must begin as a `DraftPost`.
+
+
+    post.add_text("I ate a salad for lunch today");    // can ONLY add text to the `Post` in the `Draft` state
+    // assert_eq!("", post.content())    // can't call `content()` until the post is `Published`, throws COMPILE TIME ERROR
+
+
+    // NOTE: `request_review()` and `approve()` no longer change internal state, instead return a new post type, 
+    // use shadowing
+
+    let post = post.request_review();    // can ONLY get to the `PendingReview` state by calling
+					 // `request_review()` on a post in the `Draft` state (`DraftPost`).
+    // assert_eq!("", post.content())    // can't call `content()` until the post is `Published`, throws COMPILE TIME ERROR
+
+    let post = post.approve();    // can ONLY get to the `Published` state by calling `approve()` on a
+				  // post in the `PendingReview` state (`PendingReviewPost`)
+
+    assert_eq!("I ate a salad for lunch today", post.content());  	// we are in `Published` state, ONLY `Published`
+									// posts return content for print
+
+}
+```
+**<ins>^^^^ THIS IMPLEMENTATION</ins> doesn’t quite follow the object oriented state pattern** anymore; however, the **advantage of it is that invalid states are impossible due to the type system and type checking.**
+
+---
+
+# Patterns
 
 
 
