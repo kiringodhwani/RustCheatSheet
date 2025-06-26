@@ -7067,7 +7067,7 @@ impl State for PendingSecondReview {
     }
 
     fn approve(self: Box<Self>) -> Box<dyn State> {
-        Box::new(Published {})    // if call for approval when state = `SecondReview`, then this is the second
+        Box::new(Published {})    // if call for approval when state = `PendingSecondReview`, then this is the second
 				  // approval so we can publish and move to `Published` state!
     }
 }
