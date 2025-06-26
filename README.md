@@ -7197,7 +7197,7 @@ pub struct DraftPost {
 }
 impl DraftPost {
 	
-    // HERE, WE ENFORCE that you can ONLY add text to the post in the `Draft` state: The only type/struct that has a
+    // HERE, WE ENFORCE that you can ONLY add text to the post when its in the `Draft` state: The only type/struct that has a
     // method to modify `content` is the `Draft` state, which makes sense bc we require that you can only add 
     // text to the post in the `Draft` state.
     //
@@ -7223,7 +7223,7 @@ impl DraftPost {
 // `PendingReview` state
 pub struct PendingReviewPost {
     content: String,    // private `content` field. `PendingReviewPost` doesn't have its own `content()` method, so
-			// `PendingReviewPosts` can’t print their content. This ensures can only get `content` when `Published`.
+			// `PendingReviewPosts` can’t print their content. This ensures we can only get `content` when `Published`.
 }
 impl PendingReviewPost {
 
