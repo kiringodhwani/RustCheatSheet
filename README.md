@@ -7503,6 +7503,8 @@ let x: Option<&str> = None;
 let Some(x) = x;        		// `x` is a `None` variant, not `Some`, so this `let` never matches => ERROR
 ```
 
+<img width="740" alt="Image" src="https://github.com/user-attachments/assets/9ab97073-50f9-4565-8d0d-a3c686b31b40" />
+
 <ins>Example 2:</ins>
 
 ```Rust
@@ -7514,6 +7516,11 @@ if let x = 5 {    // the pattern `x` will match any expression, so we will alway
 }
 ```
 
+<img width="671" alt="Image" src="https://github.com/user-attachments/assets/5fab8079-325f-4e60-bf0c-9fcc921bef3c" />
+
+---
+
+# Pattern Syntax in Rust
 
 
 
