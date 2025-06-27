@@ -7500,7 +7500,7 @@ if let Some(x) = x {    // Pattern matches the `Some` variant. If `x` is a `None
  
 ```Rust
 let x: Option<&str> = None;
-let Some(x) = x;        		// `x` is a `None` variant, not `Some`, so this `let` never matches => ERROR
+let Some(x) = x;    // `x` is a `None` variant, not `Some`, so this `let` never matches => ERROR
 ```
 
 <img width="740" alt="Image" src="https://github.com/user-attachments/assets/9ab97073-50f9-4565-8d0d-a3c686b31b40" />
