@@ -7435,7 +7435,87 @@ let (x, y, z) = (1, 2, 3);
 
 - Rust compares the tuple `(1, 2, 3)` to the pattern being used `(x, y, z)`, and in this case, they match because the **tuple has three elements** and the **pattern has three elements**. As a result, **1 binds to `x`, 2 binds to `y`, and 3 binds to `z`.**
 
-- <ins>NOTE:</ins> **If the pattern DID NOT match (e.g., if the expression tuple had three elements and the pattern had two elements), then we would get a compile time error** (shown below). The error shows that we expect a tuple pattern that matches three integers, but we have a pattern (x, y) that only matches 2 values when the expression being evaluated has 3 values (1, 2, 3)
+- <ins>NOTE:</ins> **If the pattern DID NOT match (e.g., if the expression tuple had three elements and the pattern had two elements), then we would get a compile time error** (shown below). The error shows that we expect a tuple pattern that matches three integers, but we have a pattern `(x, y)` that only matches 2 values when the expression being evaluated has 3 values `(1, 2, 3)`.
+
+<img width="665" alt="Image" src="https://github.com/user-attachments/assets/4dea6e4b-78d8-4499-b850-18ae19a95663" />
+
+- <ins>NOTE:</ins> If we want to **ignore a value in the expression** being evaluated, **use an underscore `_`**:
+
+```Rust
+let (x, y, _) = (1, 2, 3);    //  bind 1 to `x`, bind 2 to `y`, and ignore the third value `3`
+```
+
+### 6. Function Parameters
+
+- <ins>Example:</ins>
+```Rust
+fn main() {
+    let point = (3, 5);
+    print_coordinates(&point);    // call `print_coordinates()` passing in a reference to the `point` tuple `(3, 5)`.
+}
+
+// `print_coordinates()` deconstructs the passed in tuple into `x` and `y` using the pattern `(x, y)`.
+//
+fn print_coordinates(&(x, y): &(i32, i32)) {
+    println!("Current location: ({}, {})", x, y);
+}
+```
+^^^**THIS ALSO WORKS with closures**
+
+## Irrefutable and Refutable Patterns
+
+- **<ins>Irrefutable</ins>** — Irrefutable patterns are **patterns that will always match.**
+
+	- <ins>Example:</ins> The **pattern `x` in the below example is irrefutable** because it will **always match no matter what the expression is**…
+
+```Rust
+let x = 5;
+```
+
+- **<ins>Refutable</ins>** — Refutable patterns are **patterns that might not match.**
+
+	- <ins>Example:</ins>
+
+```Rust
+let x: Option<&str> = None;
+
+if let Some(x) = x {    // Pattern matches the `Some` variant. If `x` is a `None` variant, which it is in
+			// in this case, then this pattern will not match. 
+    println!("{}", x);
+}
+```
+	
+- **The following can <ins>only accept irrefutable patterns</ins>:**
+    1. **Function parameters**
+    2. **`let` statements**
+    3. **`for` loops**
+  
+^^^This is the bc the **program can’t do anything meaningful if the pattern fails to match.**
+
+- **`if let` and `while let` expressions accept both irrefutable and refutable patterns**, but you’ll get a **compiler warning if you use an irritable pattern**, because by definition, **<ins>`if let` and `while let` are meant to handle matching failures</ins>**. For example, a **`while let` with a pattern that always matches with loop infinitely as opposed to stopping**, for example, when a list becomes empty or a counter reaches a particular point. 
+
+- **<ins>IN GENERAL, you don’t need to worry about the distinction between refutable and irrefutable patterns.</ins>** However, you do **need to be familiar with the concept of refutability, so you can respond to compile time errors**… See two examples below...
+
+<ins>Example 1 :</ins>
+ 
+```Rust
+let x: Option<&str> = None;
+let Some(x) = x;        		// `x` is a `None` variant, not `Some`, so this `let` never matches => ERROR
+```
+
+<ins>Example 2:</ins>
+
+```Rust
+let x: Option<&str> = None;
+
+if let x = 5 {    // the pattern `x` will match any expression, so we will always enter this
+		  // code block to print `x` making the `if let` useless. COMPILER WARNING
+    println!("{}", x);
+}
+```
+
+
+
 
 
 
