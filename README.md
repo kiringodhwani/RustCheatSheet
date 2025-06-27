@@ -7279,6 +7279,162 @@ fn main() {
 
 # Patterns
 
+- **Patterns are a special syntax in Rust for matching against the structure of types**.
+
+- **Patterns** consist of some combination of the following:
+    - Literals
+    - Destructed Arrays, Enums, Structs, or Tuples
+    - Variables
+    - Wildcards
+    - Placeholders
+
+^^^These components **describe the shape of the data we’re working with**, which we can then **match against values to determine whether our program has the correct data** to continue running a particular piece of code.
+
+## Places where Patterns can be Used
+
+### 1. Inside the Arms of `match` expressions
+
+- **`match` arms consist of a pattern mapping to an expression:** {pattern} => {expression}
+
+- `match` expressions have to be **exhaustive** (i.e., every possible value for the variable we are matching on MUST be accounted. 
+
+- If don’t want to individually specify every case, can use a **catch-all pattern**. I.e.,  if we go through all of the arms and none of them match the variable, then we execute this last catch-all arm. <ins>Examples:</ins>
+
+```Rust
+_ => println!("Unsupported language :(“),    // In catch-all arm, if we DON’T want to bind to the
+					     // variable we’re matching on, use  `_`
+
+lang => println!(“Unsupported language! {:?}”, lang),	// If in the catch-all arm, we DO want to bind
+							// to the variable we're matching on, specify a
+							// variable name (e.g., `lang`) instead of `_`. 
+
+```
+
+- <ins>Example:</ins>
+
+```Rust
+#[derive(Debug)]
+enum Language {
+    English,
+    Spanish,
+    Russian,
+    Japanese,
+}
+let language = Language::English;
+
+// match on the value in `language`
+match language {
+    Language::English => println!("Hello World!"),
+    Language::Spanish => println!("Hola Mundo!"),
+    Language::Russian => println!("Hello World in Russian!"),
+    _ => println!("Unsupported language :("),       	
+
+    // lang: => println!(“Unsupported language! {}”, lang),
+}
+```
+
+### 2. Conditional `if let` Expressions — 
+
+- You can **use if-let expressions if you want to match on some variable but you <ins>only care about one case.</ins>**
+
+- **Downside of `if let` expressions**: the **compiler doesn’t enforce that they’re exhaustive**. For example, in the below, even if we delete the `else` block at the end, the code will still compile even though this might introduce a defect as we are not handling certain cases. 
+
+- <ins>Example:</ins>
+
+```Rust
+let authorization_status: Option<&str> = None;
+let is_admin = false;
+let group_id: Result<u8, _> = "34".parse();
+
+// If `authorization_status` is a `Some` variant, then store the string slice contained in `Some` in `status`
+if let Some(status) = authorization_status {
+    println!("Authorization status: {}", status);
+
+// If `authorization_status` is a `None` variant, we enter this `else if` block.
+// If `is_admin` is True, then print out "Authorization status: admin"
+} else if is_admin {
+    println!("Authorization status: admin")
+
+// If `is_admin` is False, enter this `if let` expression.
+// If `group_id` is an `Ok` variant, then store the integer contained in `Ok` in a new, shadowed `group_id` 
+// variable and enter the `if else`.
+} else if let Ok(group_id) = group_id {
+    if group_id > 30 {
+        println!("Authorization status: privileged");
+    } else {
+        println!("Authorization status: basic");
+    }
+} else {
+    println!("Authorization status: guest");
+}
+```
+
+### 3. `While let` Syntax — 
+
+- `while let` syntax allows you to **run a loop as long as the pattern specified continues to match.**
+
+- <ins>Example:</ins>
+
+```Rust
+let mut stack = Vec::new();
+stack.push(1);
+stack.push(2);
+stack.push(3);
+
+// `while let` matches on the return value of `stack.pop()`, which is an `Option`.
+// If the `Option` variant returned is `Some`, then we store the value contained in `Some` in `top`.
+// The loop keeps running while the `Option` variant returned from `stack.pop()` is `Some`, so the 
+// loop exits when `stack.pop()` returns `None`, indicating that the stack is now empty.
+//
+while let Some(top) = stack.pop() {
+    println!("{}", top);
+}
+```
+
+### 4. `for` Loops — 
+
+- <ins>Example:</ins>
+
+```Rust
+let v = vec!['a', 'b', 'c'];
+
+// Call `for` on `v.iter().enumerate()`. `enumerate()` works just like Python returning
+// tuples with (index in `v`, value in `v`). 
+// We use the `(index, value)` pattern to destructure each tuple into two variables, `index` and `value`.
+//
+for (index, value) in v.iter().enumerate() {
+    println!("{} is at index {}", value, index);
+}
+```
+
+### 5. `let` Statements — 
+
+- Surprisingly, patterns are used in `let` statements.
+
+- <ins>Example 1:</ins>
+
+```Rust
+let x = 5;
+```
+^^^^^^^
+- Here we declare a variable `x` and set it equal to 5
+- More formally, it looks something like this: **`let PATTERN = EXPRESSION;`**
+	- In our example, 
+		- **`x` is an identifier pattern** (all identifier patterns are **irrefutable**), meaning it **matches any value and binds that value to the given identifier (`x`).**
+		- The **expression (5)** is **matched against the pattern (`x`)**. **Since `x` is an identifier pattern, it successfully matches 5 and creates a new variable named `x` in the current scope, assigning the value 5 to it.**
+
+- <ins>Example 2:</ins>
+
+```Rust
+let (x, y, z) = (1, 2, 3);
+```
+^^^^^
+- Here, the **expression is the tuple `(1, 2, 3)`** which is **matched against the pattern `(x, y, z)`**, which **deconstructs the tuple.**
+
+- Rust compares the tuple `(1, 2, 3)` to the pattern being used `(x, y, z)`, and in this case, they match because the **tuple has three elements** and the **pattern has three elements**. As a result, **1 binds to `x`, 2 binds to `y`, and 3 binds to `z`.**
+
+- <ins>NOTE:</ins> **If the pattern DID NOT match (e.g., if the expression tuple had three elements and the pattern had two elements), then we would get a compile time error** (shown below). The error shows that we expect a tuple pattern that matches three integers, but we have a pattern (x, y) that only matches 2 values when the expression being evaluated has 3 values (1, 2, 3)
+
 
 
 
