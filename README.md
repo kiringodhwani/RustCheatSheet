@@ -7337,7 +7337,7 @@ match language {
 
 ### 2. Conditional `if let` Expressions — 
 
-- You can **use if-let expressions if you want to match on some variable but you <ins>only care about one case.</ins>**
+- You can **use `if-let` expressions if you want to match on some variable but you <ins>only care about one case.</ins>**
 
 - **Downside of `if let` expressions**: the **compiler doesn’t enforce that they’re exhaustive**. For example, in the below, even if we delete the `else` block at the end, the code will still compile even though this might introduce a defect as we are not handling certain cases. 
 
