@@ -7294,7 +7294,9 @@ fn main() {
 
 ### 1. Inside the Arms of `match` expressions
 
-- **`match` arms consist of a pattern mapping to an expression:** {pattern} => {expression}
+- **`match` arms consist of a pattern mapping to an expression:**
+
+**`{pattern} => {expression}`**
 
 - `match` expressions have to be **exhaustive** (i.e., every possible value for the variable we are matching on MUST be accounted. 
 
