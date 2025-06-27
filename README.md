@@ -7492,7 +7492,7 @@ if let Some(x) = x {    // Pattern matches the `Some` variant. If `x` is a `None
   
 ^^^This is the bc the **program can’t do anything meaningful if the pattern fails to match.**
 
-- **`if let` and `while let` expressions accept both irrefutable and refutable patterns**, but you’ll get a **compiler warning if you use an irritable pattern**, because by definition, **<ins>`if let` and `while let` are meant to handle matching failures</ins>**. For example, a **`while let` with a pattern that always matches with loop infinitely as opposed to stopping**, for example, when a list becomes empty or a counter reaches a particular point. 
+- **`if let` and `while let` expressions accept both irrefutable and refutable patterns**, but you’ll get a **compiler warning if you use an irrefutable pattern**, because by definition, **<ins>`if let` and `while let` are meant to handle matching failures</ins>**. For example, a **`while let` with a pattern that always matches with loop infinitely as opposed to stopping**, for example, when a list becomes empty or a counter reaches a particular point. 
 
 - **<ins>IN GENERAL, you don’t need to worry about the distinction between refutable and irrefutable patterns.</ins>** However, you do **need to be familiar with the concept of refutability, so you can respond to compile time errors**… See two examples below...
 
