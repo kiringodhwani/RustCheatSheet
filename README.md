@@ -7298,7 +7298,7 @@ fn main() {
 
 **`{pattern} => {expression}`**
 
-- `match` expressions have to be **exhaustive** (i.e., every possible value for the variable we are matching on MUST be accounted. 
+- `match` expressions have to be **exhaustive** (i.e., every possible value for the variable we are matching on MUST be accounted for ). 
 
 - If don’t want to individually specify every case, can use a **catch-all pattern**. I.e.,  if we go through all of the arms and none of them match the variable, then we execute this last catch-all arm. <ins>Examples:</ins>
 
