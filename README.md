@@ -7704,7 +7704,7 @@ fn main() {
 ```Rust
 enum Message {
     Quit,                        // variant with no values
-    Move { x: i32, y: i32 },     // struct variants with two integer fields
+    Move { x: i32, y: i32 },     // struct variant with two integer fields
     Write(String),               // tuple variant with one String value
     ChangeColor(i32, i32, i32),  // tuple variant with three integer values
 }
