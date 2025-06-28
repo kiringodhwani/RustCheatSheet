@@ -7880,6 +7880,187 @@ match numbers {
 
     - <ins>NOTE:</ins> **Prefixing a variable name with an `_` is different than using just an `_`. Prefixing a variable name with an `_` still binds the value.** For example, **in the below, the value 5 is still bound to the `x` field even though we prefix it with an `_` like `_x`**. On the other hand,**`_` (bare underscore) is a wildcard pattern that does not create a binding**.
  
+<img width="163" alt="Image" src="https://github.com/user-attachments/assets/6b8cdb9f-1ab8-49ca-86f1-6a86652e1557" />
+
+^^^ `y` has a yellow squiggly but `x` doesn’t because we prefix it with an `_`
+
+- <ins>Example 5:</ins> **If you only care about certain parts of a value and want to ignore all of the other parts, then you can use the range syntax.** 
+
+```Rust
+struct Point {
+    x: i32,
+    y: i32,
+    z: i32,
+}
+
+let origin = Point { x: 0, y: 0, z: 0 };
+
+match origin {
+
+    // This pattern binds the value in the `x` field to the local `x` variable, then using
+    // the range syntax (`..`) ignores all of the other fields of the `Point` struct.
+    //
+    Point { x, ..} => println!("x is {}", x)
+}
+```
+
+- <ins>Example 5.2:</ins> **The range syntax expands to as many values as it needs to be…**
+
+```Rust
+let numbers = (2, 4, 8, 16, 32);
+
+match numbers {
+
+    // This pattern binds the first value in the `numbers` tuple to the local variable `first`, it binds
+    // the last value in the tuple to the local variable `last`, and it ignores all of the values in between. 
+    //
+    (first, .., last) => {
+        println!("Some numbers: {}, {}", first, last);
+    } 
+}
+```
+^^^<ins>NOTE:</ins> **Using the range syntax `..` must be unambiguous.** For example, if we change the pattern in Example 5.2 to `(.., second, ..)`, then we would get an error because we have the range syntax on both sides of the `second` variable. In this case, Rust can’t determine what value the `second` variable should bind to: the first value in the tuple? The second? The third? The fourth? The fifth?
+
+
+## Match Guards
+
+- A **<ins>match guard</ins>** is an **extra if condition you can add to a match arm**. **For that arm to be chosen, <ins>both the pattern must match AND the if condition must evaluate to true.</ins>**
+
+- Useful for expressing complex ideas that patterns themselves cannot express.
+
+- <ins>Example 1:</ins>
+
+```Rust
+let num = Some(4);
+
+match num {
+
+    // Match on any `Some` variant. Bind the value in `Some` to the local `x` variable AND
+    // check if `x < 5`. If so, then enter this match arm.
+    //
+    Some(x) if x < 5 => println!("less than five: {}", x),
+
+    // Enter this arm if we match on a `Some` variant but `x >= 5`...
+    Some(x) => println!("{}", x),
+
+    // Match on a `None` variant
+    None => (),
+}
+```
+^^^<ins>NOTE:</ins> In the above example, we **can’t express that we want `x < 5` using just patterns, so match guards are here to fulfill that role.**
+
+- <ins>Example 2:</ins> **Match guards solve issues with shadowing inside the match block**
+
+```Rust
+let x = Some(5);
+let y = 10;
+
+match x {
+
+    // Match on any `Some` variant and bind the value in `Some` to the local `n` variable.
+    // Enter this arm if `n` is equal to `y` (as defined previously with `let y = 10`).
+    //
+    Some(n) if n == y => println!("Matched, n = {}", n),
+
+    _ => println!("Default case, x = {:?}", x),
+}
+```
+^^^<ins>NOTE:</ins> In the above, we can’t use the variable `y` inside of the pattern, like `Some(y)` to check if equal, because the `y` inside of the pattern would shadow the `y` defined outside of the match block with `let y = 10;`. However, we can solve this by just using `y` inside of the match guard.
+
+- <ins>Example 3:</ins> **You can specify multiple patterns and have the match guard apply to each pattern**
+
+```Rust
+let x = 4;
+let y = false;
+
+match x {
+
+    // If `x` is equal to 4, 5, or 6 AND `y` is true, then enter this arm...
+    //
+    // This match guard (`if y`) doesn't just apply to the last pattern (`6`), it applies to
+    // each pattern (`4`, `5`, and `6`).  
+    //
+    4 | 5 | 6 if y => println!("yes"),
+
+    _ => println!("no"),
+}
+```
+
+## Bindings, `@` Operator
+
+- The **`@` Operator** allows us to **create a variable that holds a value at the same time we are testing that value to see whether it matches a pattern**.
+
+- <ins>Example:</ins>
+
+```Rust
+enum Message {
+    Hello { id: i32} ,
+}
+
+let msg = Message::Hello { id: 5 };
+
+match msg {
+
+    // Match a `Hello` variant where the value in the `id` field is in the range [3, 7]. Also, bind the value
+    // in the `id` field to the local `id_variable` variable.
+    //
+    // In essence, the `@` operator allows us to test a value (e.g., if the value is in a certain range), while also
+    // saving it to a variable.
+    //
+    Message::Hello { id: id_variable @3..=7, } => { 
+        println!("Found an id in range: {}", id_variable)
+    }
+
+    // If we don't care about saving the `id` value in a variable, then we can just use the range
+    // operator without `@`
+    //
+    Message::Hello { id: 10..=12 } => {             
+        println!("Found an id in another range")
+    }
+
+    // If we want to bind the value in the `id` field to a local `id` variable without checking if it's in a
+    // certain range, then we can just use a named variable like below...
+    //
+    Message::Hello { id } => {
+        println!("Found some other id: {}", id)
+    }
+```
+
+^^^^<ins>NOTE:</ins> **Can also do this with match guard**
+
+```Rust
+let msg = Message::Hello { id: 5 };
+
+match msg {
+
+    // Match a `Hello` variant, and if the `id` is within the range [3, 7].
+    // The `id` field's value is bound to a local `id` variable here.
+    //
+    Message::Hello { id } if id >= 3 && id <= 7 => {
+        println!("Found an id in range: {}", id)
+    }
+
+    // Match a Hello variant, and if the `id` is within the range [10, 12].
+    //
+    Message::Hello { id: other_id } if other_id >= 10 && other_id <= 12 => {
+        println!("Found an id in another range")
+    }
+
+    // Catch-all for any other `Hello` variant.
+    // The `id` field's value is bound to a local `id` variable.
+    //
+    Message::Hello { id } => {
+        println!("Found some other id: {}", id) 
+    }
+ }
+```
+
+---
+
+# Writing Unsafe Rust
+
+
+
 
 
 
