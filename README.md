@@ -7522,6 +7522,371 @@ if let x = 5 {    // the pattern `x` will match any expression, so we will alway
 
 # Pattern Syntax in Rust
 
+This section discusses all the valid syntax you can use inside patterns and why you might want to use each one.
+
+## Matching Against Literals:
+
+- This pattern is **useful when you want your code to take action when it receives a concrete value.**
+
+- <ins>Example:</ins>
+
+```Rust
+let x = 1;
+
+// match on `x`, which is the integer 1
+match x {
+    // The pattern in the match arms is simply a literal (`1`, `2`, `3`, etc.)
+    1 => println!("one"),
+    2 => println!("two"),
+    3 => println!("three"),
+    _ => println!("anything"),
+}
+```
+
+## Matching Named Variables:
+
+- <ins>Example:</ins>
+
+```Rust
+let x = Some(5);    // `x` is a `Some` variant containing `5`
+let y = 10;
+
+// match on `x`, which is `Some(5)`
+match x {
+    // If `x` is a `Some` variant containing `50`...
+    Some(50) => println!("Got 50"),
+
+    // If `x` is a `Some` variant containing any other value, then bind that value to the local `y` variable…
+    // 
+    // This arm uses the named variable pattern, in this case `y` is the named variable.
+    // 
+    // NOTE: the match block creates a new scope, so variables defined within the match block shadow
+    // variables defined outside. Specifically, in this case, the `y` defined inside the match block, will shadow 
+    // the `y` defined earlier outside of the match block. As a result, in this `println!()` with `y`, the `y` that is 
+    // printed contains the value stored in the `Some` variant. BUT, for the `x` println!() below in the catch-all
+    // arm, this `x` is the same variable as defined above outside of the match block bc there's no variable 
+    // named `x` defined inside this match block to shadow it.
+    // 
+    Some(y) => println!("Matched, y = {:?}", y),
+
+    // Catch-all arm if previous two arms don't match
+    _ => println!("Default case, x = {:?}", x),
+}
+```
+
+## Matching Multiple Patterns:
+
+- <ins>Example:</ins>
+
+```Rust
+let x = 1;
+
+// match on `x`, which is the integer 1
+match x {
+
+    // `|` is an "or" operator, so here we say: if `x` is 1 or 2 or 3, then enter this arm...
+    // 
+    1 | 2 | 3 => println!("one or two or three"),
+
+    4 => println!("four"),
+    _ => println!("anything"),
+}
+```
+
+## Matching Ranges of Values:
+
+- <ins>NOTE:</ins> **the range operator only works on numeric values and characters**
+
+- <ins>Example 1:</ins>
+
+```Rust
+let x = 5;
+
+// match on `x`, which is the integer `5`
+match x {
+
+    // match the inclusive range of values [1, 5], so if `1 <= x <= 5`, then enter this arm...
+    //
+    1..=5 => println!("one through five inclusive"),
+
+    _ => println!("something else"),
+}
+```
+
+- <ins>Example 2:</ins>
+
+```Rust
+let x = 'c';
+
+// match on `x`, which is the character `c`
+match x {
+
+     // if `x` is a character between `a` and `j` inclusive, then enter this arm...
+    //
+    'a'..='j' => println!("early ASCII letter"),
+
+    // if `x` is a character between `k` and `z` inclusive, then enter this arm...
+    //
+    'k'..='z' => println!("late ASCII letter"),
+
+    _ => println!("something else"),
+}
+```
+
+## Patterns that Destructure Values (i.e, break apart values)
+
+- We **can destructure structs, enums, tuples, and references in order to use different parts of these values.**
+
+- <ins>Example 1:</ins> **Destructing structs**
+
+```Rust
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
+    let p = Point { x: 0, y: 7};    // create a new `Point` stored in `p` with `x = 0` and `y = 7`
+
+    // Deconstruct `p`, which is a `Point` instance with `x = 0` and `y = 7`.
+    // We create two variables, `a` and `b`.
+    // `a` is mapped to whatever value is inside of the `x` field of `p`, so `a = 0`.
+    // `b` is mapped to whatever value is inside of the `y` field of `p`, so `b = 7`.
+    //
+    let Point { x: a, y: b} = p;    // if we wanted to bind the values to the variables `x` and `y` instead
+				    // of `a` and `b`, we would do: `let Point { x, y } = p;`
+
+    assert_eq!(0, a);
+    assert_eq!(7, b);
+}
+```
+
+- <ins>Example 2:</ins> **When we are destructing a struct, we can use named variables and literals…**
+
+```Rust
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
+    let p = Point { x: 0, y: 7};    // create a new `Point` stored in `p` with `x = 0` and `y = 7`
+
+    // match on `p`
+    match p {
+
+        // Match any `Point` where the `y` field =0. Bind the value in the `x` field to the local `x` variable.
+        //
+        Point { x, y: 0 } => {
+            println!("On the x-axis at {}", x)
+        },
+
+        // Match any `Point` where the `x` field =0. Bind the value in the `y` field to the local `y` variable.
+        // NOTE: This arm is only reached if the Point's `y` field != 0, due to the order of match arms.
+        //	
+        Point { x: 0, y } => {
+            println!("On the y axis at {}", y)
+        },
+
+        // Match any `Point` instance no matter the values in the `x` and `y` fields. Bind the values to
+        // the local `x` and `y` variables, respectively.
+        // NOTE: This arm is a catch-all for all Points where `y` field != 0 and `x` field` != 0.
+        //
+        Point { x, y } => {
+            println!("On neither axis: ({}, {})", x, y)
+        }
+    }
+} 
+```
+
+- <ins>Example 3:</ins> **Destructing enums**
+
+```Rust
+enum Message {
+    Quit,                        // variant with no values
+    Move { x: i32, y: i32 },     // struct variants with two integer fields
+    Write(String),               // tuple variant with one String value
+    ChangeColor(i32, i32, i32),  // tuple variant with three integer values
+}
+
+fn main() {
+    let msg = Message::ChangeColor(0, 160, 25);
+
+    // Match on the `msg` variable which contains a variant of the `Message` enum.
+    match msg {
+
+        // If the variant is `Quit`...
+        //
+        Message::Quit => {
+            println!("Quit");
+        },
+
+        // If the variant is `Move`, then destruct the struct: bind the values in the `x` and `y` fields to
+        // the local `x` and `y` variables, respectively...
+        //
+        Message::Move {x, y} => {
+            println!(
+                "Move to x: {} y: {}",
+                x, y
+            )
+        },
+
+        // If the variant is `Write`, then extract the `String` value from the tuple and bind it to the
+        // local `text` variable...
+        //
+        Message::Write(text) => {
+            println!("Text message: {}", text)
+        },
+
+        // If the variant is `ChangeColor`, then destruct the tuple: bind the three integer values to
+        // the local `r`, `g`, and `b` variables, respectively...
+        //
+        Message::ChangeColor(r, g, b) => {
+            println!(
+                "Change color: red {}, green {}, and blue {}",
+                r, g, b
+            )
+        }
+    }
+}
+```
+
+- <ins>Example 4:</ins> **Destructing nested enums and structs**
+
+ ```Rust
+enum Color {
+    Rgb(i32, i32, i32),     // a tuple of three integers
+    Hsv(i32, i32, i32),     // a tuple of three integers
+}
+
+enum Message {
+    Quit,                      
+    Move { x: i32, y: i32 },   
+    Write(String),             
+    ChangeColor(Color),         // stores a variant of the `Color` enum
+}
+
+fn main() {
+    // `msg` stores a `ChangeColor` variant of `Message` that contains an `Hsv` variant of `Color`
+    let msg = 
+        Message::ChangeColor(
+            Color::Hsv(0, 160, 255)
+        );
+
+    // Match on the `msg` variable
+    match msg {
+
+        // Match on a `ChangeColor` variant that contains an `Rgb` variant. Bind the values
+        // inside the `Rgb` variant to the local `r`, `g`, and `b` variables.
+        //
+        Message::ChangeColor(Color::Rgb(r, g, b)) => {
+            println!(
+                "Change color: red {}, green {}, and blue {}",
+                r, g, b
+            );
+        },
+
+        // Match on a `ChangeColor` variant that contains an `Hsv` variant. Bind the values
+        // inside the `Hsv` variant to the local `h`, `s`, and `v` variables.
+        Message::ChangeColor(Color::Hsv(h, s, v)) => {
+            println!(
+                "Change color: hue {}, saturation {}, and value {}",
+                h, s, v
+            );
+        },
+        _ => (),
+    }
+}
+```
+
+- <ins>Example 5:</ins> **More complex destructuring**
+
+```Rust
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
+    // From (3, 10), bind `3` to `feet`, bind `10` to `inches`, 
+    // From Point {x: 3, y: -10}, bind `3` to `x`, bind `-10` to `y`
+    //
+    let ((feet, inches), Point {x, y}) = ((3, 10), Point {x: 3, y: -10});
+}
+```
+
+## Ignoring Values in Patterns:
+
+- <ins>Example 1:</ins> **<ins>Ignoring function parameters</ins>** — This can be **useful when you need a function signature to be something specific (e.g., implementing a trait method for a specific struct), but you're not going to use all the arguments passed in**. This stops the compiler from throwing a warning ("unused arguments”).
+
+```Rust
+fn main() {
+    foo(3, 4);
+}
+
+// We use `_` as an argument name to have the `foo()` function completely ignore the first
+// parameter passed into it.
+//
+fn foo(_: i32, y: i32) {
+    println!("This code only uses the y parameter: {}", y);
+}
+```
+
+
+- <ins>Example 2:</ins> **Ignoring part of a value**
+
+```Rust
+// Here, we are managing some setting, and the business requirement is that if the setting has no
+// value, then we can set a new value. However, if the setting already has a value, then we can't 
+// modify it. 
+let mut setting_value = Some(5);    // the current setting
+let new_setting_value = Some(10);   // the potential new setting if the current setting has no value
+
+// Match on a tuple containing the current setting value and the potential new setting value
+match (setting_value, new_setting_value) {
+
+    // Match a tuple with two `Some` variants, use `_` bc we don't care what's stored in the `Some` variants.
+    // If both the current setting value and the new setting value are `Some` variants...
+    //
+    (Some(_), Some(_)) => {
+        println!("Can't overwrite an existing customized value");
+    }
+
+    // Otherwise, bc setting does not have a value (None variant), set the value...
+    _ => {
+        setting_value = new_setting_value;
+    }
+}
+
+println!("setting is {:?}", setting_value)
+```
+
+- <ins>Example 3:</ins> **Using `_` in multiple places in one pattern to ignore particular values**
+
+```Rust
+let numbers = (2, 4, 8, 16, 32);
+
+match numbers {
+
+    // Ignore the 2nd and 4th value in the tuple
+    //
+    (first, _, third, _, fifth) => {
+        println!("Some numbers: {}, {}, {}", first, third, fifth);
+    }
+}
+```
+
+- <ins>Example 4:</ins> If you’re prototyping and have an **unused variable that you don’t want the Rust compiler to complain about, you can prefix the variable name with an `_`.**
+
+    - <ins>NOTE:</ins> **Prefixing a variable name with an `_` is different than using just an `_`. Prefixing a variable name with an `_` still binds the value.** For example, **in the below, the value 5 is still bound to the `x` field even though we prefix it with an `_` like `_x`**. On the other hand,**`_` (bare underscore) is a wildcard pattern that does not create a binding**.
+ 
+
+
+
+
+
+
+
 
 
 
