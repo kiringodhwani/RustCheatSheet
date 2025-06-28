@@ -7986,7 +7986,7 @@ match x {
 }
 ```
 
-## Bindings, `@` Operator
+## `@` Operator
 
 - The **`@` Operator** allows us to **create a variable that holds a value at the same time we are testing that value to see whether it matches a pattern**.
 
