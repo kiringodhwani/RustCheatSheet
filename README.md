@@ -8298,7 +8298,7 @@ fn main() {
 }
 ```
 
-- We can **allow other language to call our Rust functions by using the `extern` keyword in the function signature.**
+- We can **allow other languages to call our Rust functions by using the `extern` keyword in the function signature.**
 
 ```Rust
 #[unsafe(no_mangle)]	// <— This `no_mangle` annotation let’s the Rust compiler know not to mangle the
