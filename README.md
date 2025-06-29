@@ -8111,7 +8111,7 @@ let mut num = 5;
 // Create a mutable reference to `num` (`&mut num`), then use `as` to cast the mutable reference to a 
 // mutable raw pointer (`*mut i32`).
 //
-let r2 = &mut num as *mut i32;	// mutable raw pointers are written as *mut followed
+let r2 = &mut num as *mut i32;	// mutable raw pointers are written as `*mut` followed
 				// by the type the pointer points to. 
 ```
 ^^^
