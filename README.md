@@ -8311,7 +8311,7 @@ pub extern "C" fn call_from_c() {
 }
 ```
 
-## Accessing or Modifying Mutable Static Variable
+## Accessing or Modifying Mutable Static Variables
 
 - **Unsafe Rust gives us the ability to access and modify mutable static variables.**
 
