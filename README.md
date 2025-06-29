@@ -8222,6 +8222,153 @@ fn split_at_mut(slice: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
 }
 ```
 
+<img width="725" alt="Image" src="https://github.com/user-attachments/assets/23b1c484-6dec-4d81-a424-c735755a26cb" />
+
+- **Implementing `split_at_mut()` correctly using `unsafe` code:**
+
+```Rust
+fn split_at_mut(slice: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
+    
+    // Slices are a pointer to some data and the length of that data...
+    let len = slice.len();
+    let ptr = slice.as_mut_ptr();    // returns a mutable raw pointer (unsafe) to the slice
+
+    assert!(mid <= len);    // By doing this check, we know the midpoint is valid, so we know the raw
+			    // pointers we use in the below `unsafe` block are also valid. Therefore, this is
+			    // an appropriate use of `unsafe`.
+
+    // Create an `unsafe` block within our safe `split_at_mut()` function.
+    // This allows us to wrap unsafe code inside of a safe function, such that the function can be called from 
+    // safe rust code - safe abstraction around unsafe code.
+    //
+    unsafe {
+        // Create and return a tuple of two slices after the split
+        (
+
+            // `slice::from_raw_parts_mut()` takes in a pointer to some data and a length, and creates a new 
+            // mutable slice.
+            //
+            // `slice::from_raw_parts_mut` is unsafe because it relies on the caller to ensure the pointer 
+            // and length are valid and refer to unique memory.
+            //
+            // `add()` is also unsafe bc it must trust that the pointer it passes back at an offset is valid.			
+            //
+            // ^^^ in order to use these unsafe functions, we have to create this `unsafe` block.
+            //
+
+            // The first slice starts at the original `ptr` and has `mid` elements.
+            //
+            slice::from_raw_parts_mut(ptr, mid),
+
+            // The second slice starts at `ptr` offset by `mid` elements and covers the
+            // remaining `len - mid` elements.
+            //
+            slice::from_raw_parts_mut(ptr.add(mid), len - mid),    // `ptr.add()` moves a pointer forward
+								   // by the passed in offset and returns it.
+        )
+    }
+}
+```
+
+## Functions that Call External Code
+
+- Sometimes your Rust code may need to **interact with code in a different language**. For this purpose, Rust has the **`extern`** keyword, which **facilitates the creation and use of a foreign function interface (FFI)**.
+
+- A **foreign function interface (FFI)** is a **way for a programming language to define a function that another language,  or a foreign language, could call.**
+
+- **Calling a function defined within an `extern` block is always unsafe**, because we **don’t know if the language we’re calling into has the same rules and guarantees as Rust.** It’s the **developer’s responsibility to make sure that the functions defined within an `extern` block are safe to call.** 
+
+- <ins>Example:</ins> In the below, we have an **integration with the `abs()` function from the C standard library**
+
+```Rust
+// Within an `extern` block, we specify the name and signature of the foreign function we want to call.
+//  
+// `"C"` defines which application binary interface (ABI), the external function uses. The ABI defines how
+// to call the function at the assembly level. The `"C"` ABI is the most common ABI and follows the C
+// programming language's ABI.
+//
+unsafe extern "C" {
+    fn abs(input: i32) -> i32;
+}
+
+fn main() {
+    unsafe {
+        println!("Absolute value of -3 according to C: {}", abs(-3));
+    }
+}
+```
+
+- We can **allow other language to call our Rust functions by using the `extern` keyword in the function signature.**
+
+```Rust
+#[unsafe(no_mangle)]	// <— This `no_mangle` annotation let’s the Rust compiler know not to mangle the
+			// name of our function (`call_from_c`). Mangling is when the compiler
+			// changes the name of a function to give it more information for other parts
+			// of the compilation process. Here, we want to prevent that behavior so that
+			// external code knows exactly what the name of our function is.
+pub extern "C" fn call_from_c() {
+    println!("Just called a Rust function from C!")
+}
+```
+
+## Accessing or Modifying Mutable Static Variable
+
+- **Unsafe Rust gives us the ability to access and modify mutable static variables.**
+
+- **Global variables are supported in Rust, but can be problematic with Rust’s ownership rules**. **If two threads are accessing the same mutable global state, then it could cause a data race.**
+
+-  **In Rust, Global variables are called <ins>static variables.</ins>**
+
+    - Static variables are similar to constants in that the convention for naming the variable is to use all upper case and underscores for spaces
+
+    - They have to be **type annotated**. 
+
+    - They **must have a static lifetime** (i.e., **valid for the entire duration of the program**).
+
+    - <ins>Example:</ins> static variable called HELLO_WORLD…
+
+```Rust
+static HELLO_WORLD: &str = "Hello, world!";	// string literals have a static lifetime, but we don’t have
+						// to specify it with `&'static` because Rust can infer that
+
+fn main() {
+    println!("name is: {}", HELLO_WORLD);
+}
+```
+
+- You might think that constants and immutable static variables are similar, but there is a slight difference:
+
+    - **static variables have a fixed address in memory**, meaning that you’re always accessing the same data.
+  
+    - **constants are allowed to duplicate their data whenever they’re used**. For example, if you’re referencing a constant throughout your code base, then the compiler can replace all of those instances of the constant with the concrete value. 
+
+    - **constants can't be made mutable**
+  
+    - **<ins>static variables can be mutable, but accessing and modifying mutable static variables is unsafe.</ins>** <ins>Example:</ins>
+
+```Rust
+static mut COUNTER: u32 = 0;	// mutable static variable called `COUNTER`, which is an
+				// integer initially set to `0`.
+
+// `add_to_count()` takes in a number and increments `COUNTER` by that number inside an `unsafe` block.
+fn add_to_count(inc: u32) {
+    unsafe {
+        COUNTER += inc;
+    }
+}
+
+fn main() {
+    // The `add_to_count()` function is safe so it can be used inside `main()` without an `unsafe` block
+    add_to_count(3);
+
+    // However, we still have to create an `unsafe` block when we access `COUNTER`.
+    unsafe {
+        println!("COUNTER: {}", COUNTER);
+    }
+}
+```
+^^^<ins>NOTE:</ins> THIS CODE DOESN’T RUN BC OF NEWER RUST VERSION
+
 
 
 
