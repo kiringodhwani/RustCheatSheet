@@ -8115,7 +8115,7 @@ let r2 = &mut num as *mut i32;	// mutable raw pointers are written as `*mut` fol
 				// by the type the pointer points to. 
 ```
 ^^^
-<ins>NOTE 1:</ins> In the above two example, because we create the raw pointers from references, we know that the memory they’re pointing to is valid, but in general, we can’t make that assumption for raw pointer types. 
+<ins>NOTE 1:</ins> In the above two examples, because we create the raw pointers from references, we know that the memory they’re pointing to is valid, but in general, we can’t make that assumption for raw pointer types. 
 
 <ins>NOTE 2:</ins> We **don’t see** the **`unsafe` keyword** anywhere, because **Rust allows us to create raw pointers outside of an `unsafe` block**, BUT **Rust doesn’t allow us to dereference the raw pointers unless it’s in an `unsafe` block.**
 
