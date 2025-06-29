@@ -8375,7 +8375,7 @@ fn main() {
 
 - **A trait is unsafe when at least one of its methods is unsafe.**
 
-- We can **mark a trait as unsafe by adding the `unsafe` keyword to its definition and also to its implementation blocks** (i.e., the implementation blocks where types implement the trait, “impl State for Draft {}”).
+- We can **mark a trait as unsafe by adding the `unsafe` keyword to its definition and also to its implementation blocks** (i.e., the implementation blocks where types implement the trait, `impl State for Draft {}`).
 
 - <ins>Example:</ins>
 
