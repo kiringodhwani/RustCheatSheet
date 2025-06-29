@@ -8059,6 +8059,172 @@ match msg {
 
 # Writing Unsafe Rust
 
+- So far, **all of the code we have written has been enforced to follow Rust’s memory safety guarantees at compile time**.
+
+- **If we want to opt out of the memory safety guarantees, then we can use unsafe Rust**. <ins>Unsafe Rust exists for two reasons:</ins>
+
+    1. Static analysis is conservative by nature, so **Rust will reject a valid program if it can’t guarantee that the program is memory safe, even though you as the developer knows that the program is memory safe.**
+
+    2. The underlying computer hardware is inherently unsafe. If Rust didn’t allow you to do unsafe operations, then you couldn’t do certain tasks.
+
+- Rust is a systems programming language so it must allow you to do low-level systems programming, which sometimes requires unsafe code. 
+
+- **TO write unsafe Rust, use the `unsafe` keyword**, which **gives you 5 abilities that you don’t have in the safe Rust world…**
+
+    1. **Dereference a raw pointer**
+
+    2. **Call an unsafe function or method**
+
+    3. **Access or modify a mutable static variable** 
+
+    4. **Implement an unsafe trait**
+
+    5. **Access fields of unions**
+
+- <ins>NOTE:</ins> The **`unsafe` keyword does not turn off the borrow checker and it does not disable Rust’s safety checks.**
+    - So, unsafe code isn’t necessarily dangerous but the developer has to make sure that memory inside of unsafe blocks is handled appropriately.
+ 
+## Raw Pointers in Rust
+
+- The compiler will ensure references are valid (i.e., no dangling references pointing to invalid data)
+
+**Unsafe Rust has two types of raw pointers that are similar to references:**
+
+1. **<ins>Immutable Raw Pointer</ins>** — 
+
+```Rust
+let mut num = 5;
+
+// Create an immutable reference to `num` (`&num`), then use `as` to cast the immutable reference to an 
+// immutable raw pointer (`*const i32`).
+//
+let r1 = &num as *const i32;    // immutable raw pointers are written as `*const` followed
+				// by the type the pointer points to.
+```
+
+2. **<ins>Mutable Raw Pointer</ins>** —
+	- In the context of raw pointers, immutable means that the pointer can’t be directly assigned after it has been dereferenced. 
+
+```Rust
+let mut num = 5;
+
+// Create a mutable reference to `num` (`&mut num`), then use `as` to cast the mutable reference to a 
+// mutable raw pointer (`*mut i32`).
+//
+let r2 = &mut num as *mut i32;	// mutable raw pointers are written as *mut followed
+				// by the type the pointer points to. 
+```
+^^^
+<ins>NOTE 1:</ins> In the above two example, because we create the raw pointers from references, we know that the memory they’re pointing to is valid, but in general, we can’t make that assumption for raw pointer types. 
+
+<ins>NOTE 2:</ins> We **don’t see** the **`unsafe` keyword** anywhere, because **Rust allows us to create raw pointers outside of an `unsafe` block**, BUT **Rust doesn’t allow us to dereference the raw pointers unless it’s in an `unsafe` block.**
+
+### Characteristics of Raw Pointers (as compared to references / smart pointers)
+
+- **<ins>Allowed to ignore Rusts’s borrowing rules by having mutable and immutable pointers at the same time, or multiple mutable pointers to the same location in memory.</ins>**
+
+	- Bypass Rust’s borrowing rules (bc this is not allowed for regular immutable and mutable references). However, we have to be careful bc this may create a data race. 
+
+- **Not guaranteed to point to valid memory.**  
+
+- Allowed to be **Null**
+
+- **Do not implement any type of automatic cleanup**
+
+- Especially useful when interfacing with C code or building up safe abstractions that the Borrow Checker doesn’t understand.
+
+- <ins>Example 1:</ins> **Creating a raw pointer that points to an arbitrary memory address**
+
+```Rust
+let address = 0x012345usize;
+let r3 = address as *const i32;	// Create an immutable raw pointer that points to the address, there might
+				// be valid memory at that address or there might not be, we have no idea.
+```
+
+- <ins>Example 3:</ins> **Dereferencing raw pointers using an `unsafe` block**
+
+```Rust
+let mut num = 5;
+
+// Use our same raw pointers from the previous example, see explanations above.
+// We have an immutable raw pointer and a mutable raw pointer pointing to the same location in memory,
+// and as mentioned in the characteristics above, this is allowed for raw pointers. 
+//
+let r1 = &num as *const i32;    
+let r2 = &mut num as *mut i32;  
+
+// Create an `unsafe` block
+unsafe {
+
+    // Use the dereference operator `*` to dereference `r1` and `r2` and print out the values.
+    //
+    println!("r1 is {}", *r1);
+    println!("r2 is {}", *r2);
+}
+```
+
+## Calling Unsafe Functions or Methods
+
+- **Unsafe functions and methods look the same as regular functions and methods** **except** that they **have the `unsafe` keyword at the beginning of their definition.**
+
+```Rust
+unsafe fn dangerous() {}
+
+// `unsafe` functions and methods can only be called inside of other `unsafe` functions or `unsafe` blocks.
+unsafe {
+    dangerous();
+}
+```
+
+- The **`unsafe` keyword in this context means** that the function has requirements that we need to uphold when calling the function. More specifically, it means that **when calling the function, we need to give it the correct arguments. If we give it the incorrect arguments, then it could lead to undefined behavior.**
+
+- **By calling an unsafe function, you’re saying that you’ve read the function’s documentation and you’re taking responsibility for upholding the function’s contract.**
+
+- **Unsafe functions can only be called inside of other `unsafe` functions or `unsafe` blocks.** They can be called within `unsafe` functions because the bodies of `unsafe` functions are effectively `unsafe` blocks.
+
+
+## Creating a Safe Abstraction Over Unsafe Code
+
+- Just because a function contains unsafe code, doesn’t make it an unsafe function. In fact, **you can wrap unsafe code inside of a safe function.**
+
+- <ins>Example:</ins> **`split_at_mut()` function from the standard library**. This function **implements some unsafe code**. It is a **safe method implemented on mutable slices which will split the slice into two slices along the passed-in index.**
+
+```Rust
+let mut v = vec![1, 2, 3, 4, 5, 6];
+
+let r = &mut v[..];
+
+// We have the vector `v` containing `[1,2,3,4,5,6]`, we create a mutable slice of the entire vector
+// called `r`, and we then call `r.split_at_mut(3)` to get `[1, 2, 3]` and `[4, 5, 6]`.
+//
+let (a, b) = r.split_at_mut(3);
+
+assert_eq!(a, &mut [1, 2, 3]);
+assert_eq!(b, &mut [4, 5, 6]);
+```
+
+
+- <ins>If we tried to implement `split_at_mut()` using only safe Rust code</ins>… **ERROR** — 
+
+```Rust
+fn split_at_mut(slice: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
+    let len = slice.len();
+
+    assert!(mid <= len);
+
+    (&mut slice[..mid], &mut slice[mid..])	// This ERRORS bc we are breaking the borrowing rules: taking
+						// two mutable references to the same piece of data within
+						// the same scope.
+						//
+						// We know this code is ok, but the Borrow Checker can't
+						// understand that we're borrowing different parts of the
+						// slice.
+}
+```
+
+
+
+
 
 
 
