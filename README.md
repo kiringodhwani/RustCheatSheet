@@ -8369,7 +8369,42 @@ fn main() {
 ```
 ^^^<ins>NOTE:</ins> THIS CODE DOESN’T RUN BC OF NEWER RUST VERSION
 
+<img width="740" alt="Image" src="https://github.com/user-attachments/assets/8295cf87-3578-489e-a028-1a60b91a5e26" />
 
+## Implementing an Unsafe Trait
+
+- **A trait is unsafe when at least one of its methods is unsafe.**
+
+- We can **mark a trait as unsafe by adding the `unsafe` keyword to its definition and also to its implementation blocks** (i.e., the implementation blocks where types implement the trait, “impl State for Draft {}”).
+
+- <ins>Example:</ins>
+
+```Rust
+unsafe trait Foo {
+    //
+}
+
+unsafe impl Foo for i32 {
+    //
+}
+```
+
+## Accessing Fields of a Union
+
+- A **union** is similar to a structure but only one field is used for each instance. 
+
+- Unions are primarily used to interface with C unions.
+
+- It’s unsafe to access fields of a union, because Rust can’t guarantee what the type of data stored in the union is for a given instance. 
+
+
+## Unsafe Rust TAKEWAY
+
+**Using `unsafe` isn’t wrong or frowned upon.** When you have a use case for `unsafe`, use it, just make sure that you’re being safe with memory. 
+
+---
+
+# Advanced Traits in Rust
 
 
 
