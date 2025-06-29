@@ -8121,7 +8121,7 @@ let r2 = &mut num as *mut i32;	// mutable raw pointers are written as `*mut` fol
 
 ### Characteristics of Raw Pointers (as compared to references / smart pointers)
 
-- **<ins>Allowed to ignore Rust’s borrowing rules by having mutable and immutable pointers at the same time, or multiple mutable pointers to the same location in memory.</ins>**
+- **<ins>Allowed to ignore Rust’s borrowing rules by having mutable and immutable pointers to the same location in memory in the same scope, or multiple mutable pointers to the same location in memory in the same scope.</ins>**
 
 	- Bypass Rust’s borrowing rules (bc this is not allowed for regular immutable and mutable references). However, we have to be careful bc this may create a data race. 
 
