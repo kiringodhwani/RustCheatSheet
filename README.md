@@ -8496,7 +8496,7 @@ impl Iterator<u16> for Counter {
 
 - **Does it make sense to have multiple implementations of a trait for a single type?** e.g., multiple implementations of the `Iterator` trait for the `Counter` type substituting the generic for different concrete types 
 
-- **Does it make sense to have just one implementation of a trait for that type?** e.g., one implementation of the `Iterator` trait for the `Counter` type that uses one concrete type
+- **Does it make sense to have just one implementation of a trait for the type?** e.g., one implementation of the `Iterator` trait for the `Counter` type that uses one concrete type
 
 ### When to Use Associated Types (One Trait Implementation Per Type) - IMPORTANT!!!!
 
