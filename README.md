@@ -8442,7 +8442,7 @@ impl Iterator for Counter {
 
 ### Difference between Associated Types and Generics
 
-- Both allow us to define a type without specifying the concrete value
+Both allow us to define a type without specifying the concrete value
 
 <ins>Difference:</ins>
 
