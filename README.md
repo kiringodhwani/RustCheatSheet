@@ -8504,7 +8504,7 @@ impl Iterator<u16> for Counter {
 
 - Associated types are **best when a trait's implementation for a given type has only one logical associated type** (whether it's an input, an output, or an internal type) that is inherently tied to that specific implementation.
 
-- <ins>Example where Associated Types are Best:</ins> **In the case of the `Iterator` trait, it makes sense to use an associated type** because for any given implementation of the `Iterator` trait, we want the `next()` method to always return the same concrete type. **<ins>Consider the type `Vec<i32>`. When we implement `Iterator` for this type, its `next()` method should always yield an `i32`<ins>**. It **<ins>doesn't make sense for `Vec<i32>` to have multiple, distinct `Iterator` implementations where one yields i32s and another yields Strings</ins>**. Therefore, the `Item` type returned by `next()` is fixed for that particular iterator.
+- <ins>Example where Associated Types are Best:</ins> **In the case of the `Iterator` trait, it makes sense to use an associated type** because if a type implements the `Iterator` trait, then its `next()` method should always return the same concrete type. **<ins>Consider the type `Vec<i32>`. When we implement `Iterator` for this type, its `next()` method should always yield an `i32`<ins>**. It **<ins>doesn't make sense for `Vec<i32>` to have multiple, distinct `Iterator` implementations where one yields i32s and another yields Strings</ins>**. Therefore, the `Item` type returned by `next()` is fixed for that particular iterator.
 
 ### When to Use Generics (Multiple Trait Implementations Per Type) - IMPORTANT!!!!
 
