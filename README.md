@@ -4094,10 +4094,10 @@ for value in v1_iter {
 ```Rust
 pub trait Iterator {
     type Item;	// when implementing the iterator, you also have to define the `Item` type, which
-		// is the type returned from the next() method.
+		// is the type returned from the `next()` method.
 
     fn next(&mut self) -> Option<Self::Item>;	// we also need a mutable reference to `self` bc
-						// calling next() changes the internal state of the
+						// calling `next()` changes the internal state of the
 						// iterator used to track where it is in the sequence.
 
     // methods with default implementations elided
@@ -8412,7 +8412,7 @@ unsafe impl Foo for i32 {
 
 - **Think of associated types as "blanks" within a trait definition. When you implement a trait, you don't just provide the methods; you also "fill in the blanks" by specifying concrete types for these associated types.** This lets the trait's methods operate on types that are unique to each specific implementation.
 
-- <ins>For example:</ins> In the below, we’ve defined the **`Iterator` trait which has one associated type named `Item`.** We then **use `Item` in the next() method.** **`Item` is the thing we return.** 
+- <ins>For example:</ins> In the below, we’ve defined the **`Iterator` trait which has one associated type named `Item`.** We then **use `Item` in the `next()` method.** **`Item` is the thing we return.** 
 
 ```Rust
 pub trait Iterator {
