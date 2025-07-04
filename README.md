@@ -8425,7 +8425,7 @@ pub trait Iterator {
 
 - **If the `Iterator` trait is implemented on a vector of integers, then `Item` will be an integer.**
 
-- **If the `Iterator` trait is implemented on a String, then `Item will be a character**
+- **If the `Iterator` trait is implemented on a String, then `Item` will be a character**
 
 <ins>Here is an example where `Item` is an integer:</ins>
 ```Rust
