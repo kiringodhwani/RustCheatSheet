@@ -8548,7 +8548,7 @@ fn main() {
 
     let num = Number { value: 25 }; 
 
-    // Here, `as_float` is declared as f64, so Rust infers ConvertTo<f64>
+    // Here, `as_float` is declared as f64, so Rust infers `ConvertTo<f64>`
     let as_float: f64 = num.convert();
     println!("As float: {}", as_float); // Output: As float: 25
 }
