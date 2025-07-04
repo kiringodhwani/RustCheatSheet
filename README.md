@@ -8408,7 +8408,7 @@ unsafe impl Foo for i32 {
 
 ## Associated Types 
 
-- **Associated types** are **placeholder types defined within a trait**. **When you implement the trait, you specify the concrete type for these placeholders.** This **allows the trait's methods to refer to a type that's specific to each implementation.**
+- **Associated types** are **placeholder types defined within a trait**. **When you implement the trait, you specify the concrete type for each of these placeholders.** This **allows the trait's methods to refer to a type that's specific to each implementation.**
 
 - **Think of associated types as "blanks" within a trait definition. When you implement a trait, you don't just provide the methods; you also "fill in the blanks" by specifying concrete types for these associated types.** This lets the trait's methods operate on types that are unique to each specific implementation.
 
