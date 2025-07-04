@@ -8450,7 +8450,7 @@ Both allow us to define a type without specifying the concrete value
 
 ```Rust
 // `Iterator` implementation for `Counter` where `Item` is a u32.
-// KEY POINT: We can't have another implementation for `Counter` where `Item` is something different.
+// KEY POINT: We can't have another implementation of `Iterator` for `Counter` where `Item` is something different.
 //
 impl Iterator for Counter {
     type Item = u32;
