@@ -8406,6 +8406,158 @@ unsafe impl Foo for i32 {
 
 # Advanced Traits in Rust
 
+## Associated Types 
+
+- **Associated types** are **placeholder types defined within a trait**. **When you implement the trait, you specify the concrete type for these placeholders.** This **allows the trait's methods to refer to a type that's specific to each implementation.**
+
+- **Think of associated types as "blanks" within a trait definition. When you implement a trait, you don't just provide the methods; you also "fill in the blanks" by specifying concrete types for these associated types.** This lets the trait's methods operate on types that are unique to each specific implementation.
+
+- <ins>For example:</ins> In the below, we’ve defined the **Iterator trait which has one associated type named `Item`.** We then **use `Item` in the next() method.** **`Item` is the thing we return.** 
+
+```Rust
+pub trait Iterator {
+    type Item;	// associated type
+
+    fn next(&mut self) -> Option<Self::Item>;
+}
+```
+^^^^Then, **when we implement our `Iterator` trait, we have to specify a concrete type for `Item`.** This way, you can **define a trait which uses some type that’s unknown until we implement the trait.** <ins>In the above example</ins>, we have a **method called `next()`** which is going to **return the next item in an iteration**; however, we **don’t know what the type of that item is until the Iterator trait is implemented.** 
+    - **If the Iterator trait is implemented on a vector of integers, then `Item` will be an integer.**
+    - **If the Iterator trait is implemented on a String, then `Item will be a character**
+
+<ins>Here is an example where `Item` is an integer:</ins>
+```Rust
+struct Counter {}
+
+impl Iterator for Counter {
+    type Item = u32;    // specify a concrete type for the associated type
+
+    fn next(&mut self) -> Option<Self::Item> {
+        Some(0) // this is just an example
+    }
+}
+```
+
+### Difference between Associated Types and Generics
+
+- Both allow us to define a type without specifying the concrete value
+
+<ins>Difference:</ins>
+
+- **<ins>With associated types, a single type can only implement the trait once, and this implementation fixes the specific concrete type for each associated type.</ins>**
+
+```Rust
+// `Iterator` implementation for `Counter` where `Item` is a u32.
+// KEY POINT: We can't have another implementation for `Counter` where `Item` is something different.
+//
+impl Iterator for Counter {
+    type Item = u32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        Some(0) // this is just an example
+    }
+}
+```
+^^^^
+<ins>NOTE:</ins> **If we tried to have another implementation where `Item` is a different type… COMPILE TIME ERROR**, so we **can’t have two implementations of `Iterator` for `Counter` where `Item` is a different type.**
+￼
+- **<ins>With generics, a single type can have multiple implementations of the same trait, each specialized for a different generic type parameter (e.g., u32, u16, i32, etc.)</ins>**
+
+```Rust
+pub trait Iterator<T> {
+    fn next(&mut self) -> Option<T>;
+}
+
+struct Counter {}
+
+// In the 1st implementation of `Iterator` for `Counter`, we want our generic to be a concrete type of u32.
+//
+impl Iterator<u32> for Counter {
+    fn next(&mut self) -> Option<u32> {
+        Some(0)
+    }
+}
+
+// In the 2nd implementation of `Iterator` for `Counter`, we want our generic to be a concrete type of u16.
+//
+impl Iterator<u16> for Counter {
+    fn next(&mut self) -> Option<u16> {
+        Some(0)
+    }
+}
+```
+		
+^^^^
+<ins>TAKEAWAY:</ins> **Generics allow us to have multiple implementations of the `Iterator` trait on a single type** (`Counter` in this case) **substituting the generic for different concrete types.**
+
+<ins>So, when deciding between **generics** and **associated types**, the question is:</ins>
+
+- **Does it make sense to have multiple implementations of a trait for a single type?** e.g., multiple implementations of the `Iterator` trait for the `Counter` type substituting the generic for different concrete types 
+
+- **Does it make sense to have just one implementation of a trait for that type?** e.g., one implementation of the `Iterator` trait for the `Counter` type that uses one concrete type
+
+### When to Use Associated Types (One Trait Implementation Per Type) - IMPORTANT!!!!
+
+- **With associated types, a single type can only implement the trait once, and this implementation fixes the specific concrete type for each associated type.**(e.g., we implement the `Iterator` trait for the `Counter` type with an associated type of u32). 
+
+- Associated types are **best when a trait's implementation for a given type has only one logical associated type** (whether it's an input, an output, or an internal type) that is inherently tied to that specific implementation.
+
+- <ins>Example where Associated Types are Best:</ins> **In the case of the `Iterator` trait, it makes sense to use an associated type** because for any given implementation, we want the `next()` method to return the same concrete type. **<ins>Consider the type `Vec<i32>`. When we implement `Iterator` for this type, its `next()` method should always yield an `i32`<ins>**. It **<ins>doesn't make sense for `Vec<i32>` to have multiple, distinct `Iterator` implementations where one yields i32s and another yields Strings</ins>**. Therefore, the `Item` type returned by `next()` is fixed for that particular iterator.
+
+### When to Use Generics (Multiple Trait Implementations Per Type) - IMPORTANT!!!!
+
+- **With generics, a single type can have multiple implementations of the same trait, each specialized for a different generic type parameter** (e.g., we implement the `Iterator` trait for the `Counter` type once with our generic being u32 and another time with our generic being u16)
+
+- **Generics are best when a single type can logically have multiple distinct implementations of a trait, where each implementation is specialized by a type parameter** (which could be an input, an output, or another related type).
+
+- <ins>Example where Generics are Best:</ins> Consider a hypothetical **`ConvertTo` trait that defines how one type can be converted into another**. It **uses a generic type parameter (`T`) for the type it converts into, because a single source type might logically be convertible into many different destination types.** <ins>For example</ins>, a simple **`Number` struct might be convertible into both an i32 and a f64:**
+
+```Rust
+struct Number {
+    value: i32,
+}
+
+// Hypothetical trait: defines how `Self` can be converted INTO `T`
+trait ConvertTo<T> {
+    fn convert(self) -> T;
+}
+
+// Implements converting `Number` INTO `i32`
+impl ConvertTo<i32> for Number {
+    fn convert(self) -> i32 {
+        self.value
+    }
+}
+
+// Implements converting `Number` INTO `f64`
+impl ConvertTo<f64> for Number {
+    fn convert(self) -> f64 {
+        self.value as f64
+    }
+}
+
+fn main() {
+    let num = Number { value: 10 };
+
+    // Here, `as_int` is declared as i32, so Rust infers `ConvertTo<i32>`
+    let as_int: i32 = num.convert();
+    println!("As integer: {}", as_int); // Output: As integer: 10
+
+
+    let num = Number { value: 25 }; 
+
+    // Here, `as_float` is declared as f64, so Rust infers ConvertTo<f64>
+    let as_float: f64 = num.convert();
+    println!("As float: {}", as_float); // Output: As float: 25
+}
+```
+^^^^^^
+<ins>NOTE:</ins> If `ConvertTo` had used an associated type for its destination (e.g., `type Destination;`), we would only be able to provide one implementation of `ConvertTo` for Number (e.g., either converting to i32 or to f64, but not both). Using a generic `T` allows us to provide multiple, distinct `ConvertTo` implementations for the `Number` type, each specific to the type it's being converted into.
+
+## Default Generic Type Parameters and Operator Overloading
+
+
+
 
 
 
