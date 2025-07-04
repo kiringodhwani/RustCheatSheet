@@ -4085,7 +4085,7 @@ for value in v1_iter {
 
 ## How Iterators Work
 
-- All iterators in Rust implement the **Iterator trait** which is defined in Rust standard library. Looks something like the below... 
+- All iterators in Rust implement the **`Iterator` trait** which is defined in Rust standard library. Looks something like the below... 
 
 	- As you can see, **iterators are very simple** — there’s **only one method you have to implement which is the <ins>next()</ins> method**. All the other methods have default implementations. 
 
@@ -4150,7 +4150,7 @@ fn iterator_demonstration() {
 
 ## Additional Iterator Methods with Default Implementations
 
-The **Iterator trait** has **various methods which have default implementations provided by the standard library**. There are <ins>two broad categories of methods</ins>:
+The **`Iterator` trait** has **various methods which have default implementations provided by the standard library**. There are <ins>two broad categories of methods</ins>:
 
 1. **<ins>Adapters</ins>** — **Take in an iterator and return another iterator.**
 
@@ -8412,7 +8412,7 @@ unsafe impl Foo for i32 {
 
 - **Think of associated types as "blanks" within a trait definition. When you implement a trait, you don't just provide the methods; you also "fill in the blanks" by specifying concrete types for these associated types.** This lets the trait's methods operate on types that are unique to each specific implementation.
 
-- <ins>For example:</ins> In the below, we’ve defined the **Iterator trait which has one associated type named `Item`.** We then **use `Item` in the next() method.** **`Item` is the thing we return.** 
+- <ins>For example:</ins> In the below, we’ve defined the **`Iterator` trait which has one associated type named `Item`.** We then **use `Item` in the next() method.** **`Item` is the thing we return.** 
 
 ```Rust
 pub trait Iterator {
