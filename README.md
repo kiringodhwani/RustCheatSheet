@@ -8422,8 +8422,10 @@ pub trait Iterator {
 }
 ```
 ^^^^Then, **when we implement our `Iterator` trait, we have to specify a concrete type for `Item`.** This way, you can **define a trait which uses some type that’s unknown until we implement the trait.** <ins>In the above example</ins>, we have a **method called `next()`** which is going to **return the next item in an iteration**; however, we **don’t know what the type of that item is until the `Iterator` trait is implemented.** 
-    - **If the `Iterator` trait is implemented on a vector of integers, then `Item` will be an integer.**
-    - **If the `Iterator` trait is implemented on a String, then `Item will be a character**
+
+- **If the `Iterator` trait is implemented on a vector of integers, then `Item` will be an integer.**
+
+- **If the `Iterator` trait is implemented on a String, then `Item will be a character**
 
 <ins>Here is an example where `Item` is an integer:</ins>
 ```Rust
