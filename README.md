@@ -8986,9 +8986,7 @@ let s2: str = "How's it going?";
 
 <img width="658" height="104" alt="Image" src="https://github.com/user-attachments/assets/996d62e5-ebb7-46d3-b779-26c8298b4683" />
 
-^^^^ TO FIX this error, **instead of using **`str`** directly, we have to use the borrowed version of `str` — `&str`**
-
-- This **string slice structure (`&str`) stores two values:**
+^^^^ TO FIX this error, **instead of using **`str`** directly, we have to use the borrowed version of `str` — `&str`**. This **string slice structure (`&str`) stores two values:**
 
 1. **An address pointing to the location of the string in memory**
 
