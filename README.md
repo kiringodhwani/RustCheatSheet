@@ -9333,6 +9333,67 @@ macro_rules! vec {	// define the declarative macro by starting off with `macro_r
 
 ## Procedural Macros
 
+- **<ins>Procedural macros</ins> are like functions**: they **<ins>take code as input, operate on that code, and produce code as output.</ins>**
+
+- This is **in contrast with declarative macros**, which match against patterns and replace code with other code. 
+
+- <ins>There are 3 kinds of procedural macros:</ins> (they all work in a similar fashion)
+    1. Custom Derive
+    2. Attribute-like
+    3. Function-like
+
+- **Procedural macros must be defined in their own crate with a custom crate type.** The three kinds of procedural macros are all defined using a similar syntax: 
+
+```Rust
+use proc_macro;    // bring the `proc_macro` crate into scope, which defines `TokenStream`
+
+// Define the procedural macro by defining a function where the name of the function is the name of our
+// procedural macro, and the input is a `TokenStream`, which is the code we're operating on, and the output 
+// is a `TokenStream`, which is the code we're producing.
+//
+// Tokens are the smallest individual elements of a program. They can represent keywords, identifiers, 
+// operators, separators, or literals.
+//
+// The function must also have an attribute which specifies the kind of procedural macro that we're 
+// creating. 
+//
+#[some_attribute]
+pub fn some_name(input: TokenStream) -> TokenStream {
+    //...
+}
+```
+
+### Creating our own Custom Derive Macro
+
+The custom derive macro we create is called `hello_macro()` and it will implement a trait called `HelloMacro`, which will have an associated function with a default implementation that prints out “hello macro”.
+
+**<ins>main.rs</ins>** — code using our macro
+
+```Rust
+// Bring the macro into scope
+use hello_macro::HelloMacro;
+use hello_macro_derive::HelloMacro;
+
+// Define a struct called `Pancakes` and have a `derive` attribute specifying our macro. 
+// What this `derive` attribute does is implement our `HelloMacro` trait for the `Pancakes` struct.
+#[derive(HelloMacro)]
+struct Pancakes;
+
+fn main() {
+    // Bc the `derive` attribute above implements our `HelloMacro` trait for the `Pancakes` struct,
+    // we can now call `hello_macro()` from the `Pancakes` struct.
+    Pancakes::hello_macro();
+}
+```
+
+**<ins>Implementing `HelloMacro`</ins>** — the procedural macro
+
+1. Create a new library crate called “hello_macro”
+
+**`cargo new hello_macro --lib`**
+
+
+2. 
 
 
 
