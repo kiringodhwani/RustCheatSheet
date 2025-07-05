@@ -8650,8 +8650,102 @@ impl Add<Meters> for Millimeters {
 
 	2. **To allow customization for specific cases which most users won’t need** (the `Add` trait examples above are examples of this — most of the time we will always add two of the same type, but in certain situations, like the second example above, we may want to add different types).
 
+
 ## Calling Methods with the Same Name
 
+- **Rust allows you to have two traits with the same method and implement both those traits on one type.** You **can also implement a method on the type itself with the same name as the methods inside of the traits.** In this situation, you **<ins>need to tell Rust which method you’d like to call</ins>**. <ins>Example:</ins>
+
+```Rust
+struct Human;
+impl Human {
+
+    // `Human` struct implements a method called `fly()`
+    //
+    fn fly(&self) {
+        println!("*waving arms furiously*")
+    }
+}
+
+// `Pilot` trait has a method called `fly()`, and we implement the `Pilot` trait for `Human`
+trait Pilot {
+    fn fly(&self);
+}
+impl Pilot for Human {
+    fn fly(&self) {
+        println!("This is your captain speaking.")
+    }
+}
+
+// `Wizard` trait has a method called `fly()`, and we implement the `Wizard` trait for `Human`
+trait Wizard {
+    fn fly(&self);
+}
+impl Wizard for Human {
+    fn fly(&self) {
+        println!("Up!")
+    }
+}
+
+fn main() {
+    let person = Human;
+
+    // By default, the method that gets called is the one implemented on the struct
+    // itself, not the trait methods.
+    person.fly();    —> *waving arms furiously*
+
+    // If we want to call the `fly()` method defined on the Pilot trait...
+    Pilot::fly(&person);    —> This is your captain speaking.
+
+    // If we want to call the fly() method defined on the Wizard trait...
+    Wizard::fly(&person);    —> Up!
+}
+  ```
+
+- This gets **more complicated when we have associated functions instead of methods.** Imagine we had two different structs/types (`Tiger` and `Lion`) that both implement their own `fly()` associated function and implement the `Wizard` trait, which has its own `fly()` associated function. In this case, `Tiger::fly()` would call the associated function implemented on the `Tiger` structure. If we wanted to call the `fly()` associated function on the `Wizard` trait implemented for `Tiger`, we would try to do **`Wizard::fly()`**. **This is the problem**. Because **`fly()` is an associated function on the `Wizard` trait, it doesn’t take `self` as a parameter** so there is **no way for Rust to know if you are calling the implementation of `Wizard` for `Tiger` or for `Lion`**. <ins>Example:</ins>
+
+```Rust
+struct Human;
+impl Human {
+
+    // `Human` struct implements an associated function called `fly()`
+    //
+    fn fly() {
+        println!("*waving arms furiously*")
+    }
+}
+
+// `Pilot` trait has an associated function called `fly()`, and we implement the `Pilot` trait for `Human`
+trait Pilot {
+    fn fly();
+}
+impl Pilot for Human {
+    fn fly() {
+        println!("This is your captain speaking.")
+    }
+}
+
+// `Wizard` trait has a associated function called `fly()`, and we implement the `Wizard` trait for `Human`
+trait Wizard {
+    fn fly();
+}
+impl Wizard for Human {
+    fn fly() {
+        println!("Up!")
+    }
+}
+
+fn main() {
+    Human::fly();    // By default, this calls the associated function `fly()` implemented on the `Human` 
+                     // struct, not the ones implemented on the traits that `Human` implements. 
+
+    // If we want to call the `fly()` associated function defined on the `Pilot` trait...
+    <Human as Wizard>::fly();    // we have to use fully qualified syntax. This tells Rust that we want 
+                                 // to call the `fly()` associated function on the `Wizard` trait as
+				 // implemented for `Human`
+}
+```
+
+## Supertraits
 
 
 
