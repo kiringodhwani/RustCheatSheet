@@ -9201,7 +9201,7 @@ fn returns_closure(a: i32) -> impl Fn(i32) -> i32 {
 - As a result, **instead of using the `impl {TRAIT}` syntax, we <ins>must return a trait object…</ins>**
 
 ```Rust
-// As we have discussed, trait objects are dynamically sized types, so trait objects have to be behind
+// As we have discussed, trait objects are dynamically sized types, so trait objects
 // have to be behind some sort of pointer (in this case, we use `Box`).
 //
 // “Return any type that implements this trait”
