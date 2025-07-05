@@ -9041,8 +9041,33 @@ Here, we’re saying **“T may be sized or not”**. <ins>NOTE</ins>: **This sp
 
 - **To pass in a function as an argument to another function**, use a **<ins>function pointer</ins>**, which is **specified with `fn`**. 
 
+<img width="729" height="184" alt="Image" src="https://github.com/user-attachments/assets/2885b63c-0af5-4b59-82c7-3da2a0e271e2" />
 
+- <ins>Example:</ins>
 
+```Rust
+fn add_one(x: i32) -> i32 {
+	x + 1
+}
+
+// do_twice() takes in a parameter `f` which is a function pointer with the signature `fn(i32) -> i32`. This 
+// means that the function `f` points to accepts an integer and returns an integer. 
+//
+fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+
+	f(arg) + f(arg)     	// Function pointers are pointers that point to code, not data. 
+					// They can be called just like functions, so we call `f` here two times passing in the 
+					// `arg` parameter (which is an i32).
+}
+
+fn main() {
+	let answer = do_twice(add_one, 5);      	// We pass the add_one() function into do_twice() for the `f` 
+										// parameter (function pointer). In this case, then, when we call 
+										// `f(arg)` in do_twice(), we are calling `add_one(arg)`.
+
+	println!("The answer is: {}", answer);
+}
+  ```
 
 
 
