@@ -8747,6 +8747,34 @@ fn main() {
 
 ## Supertraits
 
+- You might have a **trait that’s dependent on functionality from another trait**. In this case, your **<ins>trait is dependent on the other trait being implemented</ins>**. The trait you rely on is called a **supertrait**. 
+
+```Rust
+use std::fmt;
+
+trait OutlinePrint: fmt::Display {
+    fn outline_print(&self) {
+        let output = self.to_string();    // The `outline_print()` method in the `OutlinePrint` trait requires that
+					  // `self` implements `to_string()`, which is defined in the `Display` trait.
+					  //
+					  // THUS, any type that implements the `OutlinePrint` trait must also
+					  // implement the `Display` trait.
+					  //
+					  // To encode this, specify `OutlinePrint: fmt::Display` above.
+					  //
+					  // Because we have specified that our `OutlinePrint` trait depends on the
+					  // `Display` trait, the `to_string()` method doesn't error here.
+					  //
+					  // If we try to implement `OutlinePrint` trait on a type that doesn't
+					  // implement the `Display` trait, then we get an ERROR (like the below)
+
+        let len = output.len();
+        // etc...
+    }
+}
+```
+
+
 
 
 
