@@ -8558,6 +8558,97 @@ fn main() {
 
 ## Default Generic Type Parameters and Operator Overloading
 
+- **Generic Type Parameters can specify a default concrete type.** This allows implementers to not have to specify a concrete type unless it’s different than the default. 
+
+- **A great use case for this is when customizing the behavior of an operator** (a.k.a., **<ins>Operator Overloading</ins>**)
+
+	- **Rust allows you to customize the semantics of certain operators that have associated traits in the standard library `ops` module.** One of the operators you **can overload** is the **`Add` operator**. 
+
+- <ins>Example:</ins> We can **overload the `Add` operator for our `Point` struct by implementing the `Add` trait for `Point`**… Here, **we <ins>use the default concrete type of the generic and don’t have to change it…</ins>**
+
+```Rust
+use std::ops::Add;
+
+#[derive(Debug, PartialEq)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl Add for Point {
+    type Output = Point;    // specify a concrete type for the associated type `Output` 
+
+    // add() takes in another point (`rhs`) and returns a new point where the `x` field is equal to
+    // the sum `self.x + rhs.x` and the `y` field is equal to the sum `self.y + rhs.y`.
+    //
+    // This is the default function contract of the add() method when you tab in vscode. 
+    //
+    fn add(self, rhs: Self) -> Self::Output {
+        Point {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
+fn main() {
+    assert_eq!(
+        // Add two points together with our new overloaded `Add` operator
+        Point { x: 1, y: 0 } + Point { x: 2, y: 3 },
+        Point { x: 3, y: 3 }
+    );
+}
+
+
+// This is the implementation of the `Add` trait in std::ops::Add.
+//
+// 'Add' trait has a generic called `Rhs`, which is the type passed into the add() method for the `rhs` 
+// parameter. The `Rhs` generic has a default concrete type which is `Self` (i.e., the type that's 
+// implementing the `Add` trait). This makes sense because when we want to add one type to another, typically 
+// they are going to be the same type (i.e., two ints, two points, etc.). 
+//
+// Because `Rhs` has a default concrete type, in the above, we didn't need to specify a concrete type 
+// when we implemented `Add` for `Point`. Otherwise, it would be `impl Add<Point> for Point {}` 
+//
+trait Add<Rhs=Self> {
+    type Output;
+
+    fn add(self, rhs: Rhs) -> Self::Output;
+}
+```
+
+- <ins>Example 2:</ins> In this example, we **change the default concrete type of the generic, so we have to specify this change…**
+
+```Rust
+use std::ops::Add;
+
+struct Millimeters(u32);
+struct Meters(u32);
+
+// Implement the `Add` trait for the `Millimeters` struct.
+//
+// If we didn't specify that the `Rhs` generic is `Meters`, then it would default to `Self`, which
+// in this case is `Millimeters`. In the `add()` method, the `rhs` parameter takes the type `Rhs`, and
+// because we want the type of `rhs` to be `Meters`, not `Millimeters`, we have to specify this in 
+// `impl Add<Meters> for Millimeters` to overwrite the default generic type parameter.
+//
+impl Add<Meters> for Millimeters {
+    type Output = Millimeters;    // we still want the return type of add() to be Millimeters
+
+    // This is the default function contract of the `add()` method when you tab in vscode after specifying
+    // the trait implementation above. Meters is automatically filled in here bc we specify it above.
+    // 
+    fn add(self, rhs: Meters) -> Self::Output {
+        Millimeters(self.0 + (rhs.0 * 1000))
+    }
+}
+```
+
+- In general, <ins>you can use default generic type parameters for two reasons:</ins>
+	1. **To extend a type without breaking existing code** (if you already have a type and you want to add a generic parameter without breaking existing code, then you have a default concrete type for the generic).
+	2. **To allow customization for specific cases which most users won’t need** (the `Add` trait examples above are examples — most of the time we will always add two of the same type, but in certain situations, like the second example above, we may want to add different types).
+
+## Calling Methods with the Same Name
 
 
 
