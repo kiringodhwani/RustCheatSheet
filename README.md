@@ -9413,6 +9413,31 @@ pub trait HelloMacro {
 
 <ins>NOTE:</ins> **Because the “hello_macro” crate and the “hello_macro_derive” crate are tightly coupled, we create the macro crate inside of the library crate.** Each crate still has to be published separately, and **code using the crates has to bring each crate into scope. THIS IS WHY there are two `use` statements in main.rs shown earlier.** 
 
+<img width="209" height="188" alt="Image" src="https://github.com/user-attachments/assets/0d9b3021-6880-4811-b902-18de0b769599" />
+
+4. Open **“cargo.toml”** file in the newly created “hello_macro_derive” crate. **Macro crates are a special type of crate**, so **to signify this**, we **add `proc-macro = true` in the “cargo.toml” file under the `[lib]` section**. We also **add the `syn` and `quote` crates as dependencies.**
+
+```Rust
+[package]
+name = "hello_macro_derive"
+version = "0.1.0"
+edition = "2018”
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = "1.0"
+quote = "1.0"
+```
+
+5. **Implement our macro in the lib.rs file of the “hello_macro_derive” crate.**
+
+```Rust
+
+```
+
+
 
 
 
