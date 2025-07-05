@@ -9273,10 +9273,10 @@ let v2: Vec<&str> = vec!["a", "b", "c", "d", "e"];
 
 ```Rust
 #[macro_export]    // this annotation means that whenever the crate in which this macro is defined in is
-		  // brought into scope, this macro should be made available.
+		   // brought into scope, this macro should be made available.
 
 macro_rules! vec {	// define the declarative macro by starting off with `macro_rules!` followed by the
-			// name of the macro, in this case `vec` (the exclamation in `vec!` is not included in
+			// name of the macro, in this case `vec` (the exclamation point in `vec!` is not included in
 			// the name). In the curly brackets, we put the body of the macro.
 
     // The body of the macro is similar to a `match` expression. In this case, a match expression with one 
