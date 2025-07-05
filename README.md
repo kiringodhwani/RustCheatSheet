@@ -9031,7 +9031,7 @@ Here, we’re saying **“T may be sized or not”**. <ins>NOTE</ins>: **This sp
 
 ---
 
-# Advanced functions and Closures
+# Advanced Functions and Closures
 
 
 
