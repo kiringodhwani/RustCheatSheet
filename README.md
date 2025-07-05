@@ -8898,6 +8898,79 @@ fn returns_long_type() -> Thunk {
 
 ## Never Type
 
+- The **<ins>Never type</ins>** is a special type **denoted with an `!`**. 
+
+- <ins>Example:</ins> **When used as the return type for a function, the <ins>Never type</ins> means that the function will never return.**
+
+```Rust
+fn bar() -> ! {
+    // 
+}
+```
+
+<br><ins>Why the Never type is useful: </ins>
+
+```Rust
+// When we built our guessing game, we had code which parsed user input into an integer. The code was 
+// something like the below... `guess` contains the string of user input
+//
+while game_in_progress {
+
+    // Notice that `guess` is type annotated as u32. However, the `Err` arm doesn't return a u32; instead, it 
+    // uses `continue`. This works because `continue` has a Never type.
+    //
+    // Rust will look at both arms of the `match` expression, the first arm returns a u32 and the second arm 
+    // returns a  Never type, so it can never return. Thus, Rust concludes that the return type of the `match`
+    // expression is a u32. 
+    //
+    // We are allowed to write this code because if we get into the `Err` arm, `continue` will not return 
+    // anything; instead, it will move control back to the top of the loop, meaning that `guess` will never 
+    // be assigned (to something that is not u32). Thus, the only type `guess` will be assigned is u32 from 
+    // the first arm. 
+    //
+    let guess: u32 = match guess.trim().parse() {
+        Ok(num) => num,
+        Err(_) => continue,
+    };
+}
+```
+
+**The <ins>Never type</ins> is also useful with the `panic!` macro.**
+
+```Rust
+impl<T> Option<T> {
+    pub fn unwrap(self) -> T {
+        match self {
+
+            // If `self` is a `Some` variant, return the value contained in `self` 
+            Some(val) => val, 
+
+            // If `self` is a `None` variant, `panic!`
+            // `panic!` returns a never type, so if we get in the `None` arm, then we won't be returning from 
+            // `unwrap()`, so the return value of `unwrap()` is still `T` bc the first arm returns type `T`.
+            //
+            None => panic!(
+                "called `Option::unwrap()` on a `None` value"
+            ),
+        }
+    }
+}
+```
+
+<br>**A loop has the <ins>Never type</ins>**
+
+```Rust
+print!("forever ");
+
+// This loop never ends, so the value of the expression is the Never type.
+// However, it wouldn't have the Never type if we added `break`
+loop {
+    print!("and ever ");
+}
+```
+
+## Dynamically Sized Types and the Size Trait
+
 
 
 
