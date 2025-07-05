@@ -8774,6 +8774,9 @@ trait OutlinePrint: fmt::Display {
 }
 ```
 
+<img width="462" height="63" alt="Image" src="https://github.com/user-attachments/assets/53ae5e22-4f7f-4c3b-af55-0e3ac3b0cc9d" />
+
+## Newtype Pattern
 
 
 
