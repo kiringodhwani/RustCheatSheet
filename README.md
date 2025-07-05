@@ -9219,9 +9219,119 @@ fn returns_closure(a: i32) -> Box<dyn Fn(i32) -> i32> {
 
 ---
 
-# Declarative Macros in Rust
+# Macros in Rust
 
+- **Macros** allow you to write code which writes other code, known as meta programming.
 
+- You can **think of macros like a function, where the input is code and the output is also code that is transformed in some way.**
+
+- <ins>Examples of macros in Rust:</ins>
+
+    - **`println!`** macro
+
+    - **`vec!`** macro
+
+^^^**Both of these macros expand to produce more code than the code you’ve written manually.**
+
+- As a result, **writing macros allows you to reduce the amount of code you have to write and maintain**, which is similar to the role of functions. 
+
+## Macros vs. Functions
+- **Functions** must declare the number of parameters they can accept
+- **Macros** **can accept a variable number of parameters**
+
+- **Functions** are called at runtime
+- **Macros** are **expanded before your program finishes compiling**
+
+- **Macros** are a lot more powerful than functions; however, the downside is that **using macros introduces more complexity because you’re writing code that writes other code. As a result, macros are harder to read, understand, and maintain.**
+
+## Declarative Macros
+
+- **<ins>Declarative macros</ins>** are the most widely used form of macros in Rust.
+
+- **Allow you to write something similar to a match expression** — they **<ins>match against patterns and replace code with other code.</ins>**
+
+- <ins>Example:</ins> the **`vec!` macro is a declarative macro…**
+
+    - **When using `vec!`** (the vec macro), we **specify `vec!` followed by square brackets `[]` containing the values we want in our vector.**
+
+        - we **can pass in different types** when calling the `vec!` macro (e.g., ints, string slices).
+
+        - we **can pass in a variable number of arguments** when calling the `vec!` macro (e.g., 3, 5)
+
+```Rust
+// Pass in 3 arguments that are integers.
+let v1: Vec<u32> = vec![1, 2, 3];   
+
+// Pass in 5 arguments that are string slices.
+let v2: Vec<&str> = vec!["a", "b", "c", "d", "e"];
+```
+^^^**<ins>main.rs</ins>** — the entry point for our binary crate.
+
+**<ins>How the `vec!` macro is implemented…</ins>** this is a simplified version of the `vec!` macro from the standard library.
+
+**<ins>lib.rs</ins>** — the entry point for our library crate
+
+```Rust
+#[macro_export]    // this annotation means that whenever the crate in which this macro is defined in is
+		  // brought into scope, this macro should be made available.
+
+macro_rules! vec {	// define the declarative macro by starting off with `macro_rules!` followed by the
+			// name of the macro, in this case `vec` (the exclamation in `vec!` is not included in
+			// the name). In the curly brackets, we put the body of the macro.
+
+    // The body of the macro is similar to a `match` expression. In this case, a match expression with one 
+    // arm.
+    ( $( $x:expr ),* ) => {	// `( $( $x:expr ),* )` is the pattern to match on and in the brackets is the
+				// code block associated with that pattern. If the inputs to the macro match
+				// this pattern, then the code in the brackets will be emitted, otherwise an
+				// error will be thrown bc we only have one arm (NOTE that macros could have
+				// multiple arms).
+				//
+				// The pattern syntax used in macros is different than the pattern syntax used
+				// in `match` expressions bc we're matching against actual code versus values.
+				//
+				// - The outer two parenthesis `()` encompass the entire pattern.
+				// - Next, `$( PATTERN )` captures any values that match the pattern
+				//   inside,  for use in the replacement code (i.e., the code block in the
+				//    brackets)
+				// - The interior pattern inside `$()` is `$x:expr`, which matches any Rust
+				//    expression and assigns it to the variable `$x`.
+				// - After `$( PATTERN )` is a comma `,` which means that a literal comma
+				//    could appear after the code which matches `$x:expr`.
+				// - The `*` means that the pattern can match 0 or more times.
+				//
+				// Example: Imagine we called the `vec!` macro with `[1, 2, 3]` as the input. The
+				// pattern will match 3 times, once for every expression in the code we pass
+				// in: it will first match `1` which is an expression that is assigned to `$x`, then
+				// `2` which is assigned to `$x`, and then `3` which is assigned to `$x`….
+		
+        // The following code is then generated….
+        {
+            let mut temp_vec = Vec::new();    // First, a new vector is created.
+
+	    // The code in `$( temp_vec.push($x); )*` says that we generate the line of code 
+            // `temp_vec.push($x);` for every match that we get in the `$( PATTERN )`.
+            //
+            // The first match we get is a match against `1`, so `1` is assigned to `$x`  and then 
+            // `temp_vec.push($x);` is emitted with `$x` being replaced with `1`.
+            //
+            // This is then repeated with `temp_vec.push($x);` being generated two more times for `$x` 
+            // being equal to `2` and `3`. 
+            //
+            // So we can essentially replace `$( temp_vec.push($x); )*` with `temp_vec.push(1)` then 
+            // `temp_vec.push(2)` and then `temp_vec.push(3)`.
+            //
+            $(
+                temp_vec.push($x);
+            )*
+
+            temp_vec
+        }
+    };
+}
+```
+
+## Procedural Macros
 
 
 
