@@ -8835,9 +8835,9 @@ struct ID(u32);
 ```
 
 
-- The **newtype pattern is also useful to abstract away implementation details**. In general, the newtype pattern is a **lightweight way to achieve encapsulation**. 
+The **newtype pattern is also useful to abstract away implementation details**. In general, the newtype pattern is a **lightweight way to achieve encapsulation**. 
 
-    - <ins>Example:</ins> we **create a `People` type which wraps a hashmap of integers pointing to strings**. **Code using the `People` type will only be exposed to the public API of the `People` type and have no knowledge of the internal data structures being used.**
+- <ins>Example:</ins> we **create a `People` type which wraps a hashmap of integers pointing to strings**. **Code using the `People` type will only be exposed to the public API of the `People` type and have no knowledge of the internal data structures being used.**
 
 ---
 
