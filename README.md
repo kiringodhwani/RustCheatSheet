@@ -8861,7 +8861,7 @@ println!("x + y = {}", x + y);    // `Kilometers` is not a new type, it is a syn
 				  // are technically the same type.
 ```
 
-**<ins>The main use case of type aliases is to reduce repetition.</ins>**
+<br>**<ins>The main use case of type aliases is to reduce repetition.</ins>**
 
 - <ins>Example:</ins> Here **we have a really long type that we don’t want to keep having to write out over and over again…**
 
