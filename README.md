@@ -8992,7 +8992,7 @@ let s2: str = "How's it going?";
 
 2. **The length of the string**
 
-^^^**BOTH** **the address value and the length of the string have a type of usize, meaning that we know their size at compile time**, which is why the error is fixed by using `&str`. 
+^^^**BOTH** **the address value and the length of the string have a type of `usize`, meaning that we know their size at compile time**, which is why the error is fixed by using `&str`. 
 
 - In general, the **above example is how dynamically sized types are used in Rust. They have an extra bit of metadata which stores the size of the dynamic information.**
 
