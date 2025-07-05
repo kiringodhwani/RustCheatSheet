@@ -9000,7 +9000,7 @@ let s2: str = "How's it going?";
 
 - In the above example, the `str` type is behind a reference (`&str`), but we can also put it behind a `Box` smart pointer or an `Rc` smart pointer. 
 
-<br>**<ins>Trait objects are also dynamically sized types</ins>** — trait objects **have to be behind some sort of pointer (e.g., `Box`)**. 
+<br>**<ins>Trait objects are also dynamically sized types</ins>** — trait objects **have to be behind some sort of pointer (e.g., `Box`)**.<br>
 
 ### `Sized` Trait
 
