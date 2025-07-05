@@ -9154,6 +9154,72 @@ let list_of_statuses: Vec<Status> =
 
 ## Returning Closures from Functions
 
+- **<ins>Closures are represented using traits</ins>**, so we **<ins>can’t return a concrete type from a function that returns a closure.</ins>**
+
+- <ins>Example:</ins> To return a closure, we **can use the `impl {TRAIT}` syntax**…
+
+```Rust
+// `returns_closure()` has a return type of `impl Fn(i32) -> i32`
+// This means that `returns_closure()` returns something that implements the `Fn` trait taking in an integer and 
+// returning an integer.
+//
+fn returns_closure() -> impl Fn(i32) -> i32 {
+
+    |x| x + 1   // IMPORTANT: `returns_closure()` always returns the same closure.
+
+}
+```
+
+^^^^**<ins>NOTE: This syntax will not work in all situations:</ins>**
+
+- <ins>For example</ins>, suppose `returns_closure()` takes in an argument `a` which is an integer, and we want to return a closure based on the value of `a`…
+
+```Rust
+fn returns_closure(a: i32) -> impl Fn(i32) -> i32 {
+
+    // If `a > 0`, then return a closure that takes in an argument `b` (i32) and returns `a + b`. 
+    if a > 0 {
+        move |b| a + b
+
+    // If `a <= 0`, then return a closure that takes in an argument `b` (i32) and returns `a - b`.
+    } else {
+        move |b| a - b
+    }
+}
+```
+
+^^^^<ins>**THIS code ERRORS…**</ins> **“No two closures, even if identical, have the same type.** **<ins>Consider boxing your closure and/or using it as a trait object.</ins>**”
+
+<img width="743" height="286" alt="Image" src="https://github.com/user-attachments/assets/febdc39a-4674-41d3-aa24-397c3c4ec580" />
+
+^^^^ As this error states, **each closure is a unique type**, **even if identical to another closure.**
+
+- In the above example, **our two closures returned in `returns_closure()`** (`move |b| a + b` and `move |b| a - b`) **are different types**, but the **`impl {TRAIT}` syntax only works if we’re returning ONE TYPE.**
+
+- In our example, **we’re returning one of two types** **(the type of `move |b| a + b` or the type of `move |b| a - b`)** **depending on the value of `a`.**
+
+- As a result, **instead of using the `impl {TRAIT}` syntax, we <ins>must return a trait object…</ins>**
+
+```Rust
+fn returns_closure(a: i32) -> Box<dyn Fn(i32) -> i32> {    // As we have discussed, trait objects are dynamically
+							   // sized types, so trait objects have to be behind
+							   // some sort of pointer (in this case, we use `Box`).
+							  //
+							  // “Return any type that implements this trait”
+							  //
+							  // Trait = `Fn` trait taking in an integer and returning an
+							  //	     integer.
+    if a > 0 {
+        Box::new(move |b| a + b)
+    } else {
+        Box::new(move |b| a - b)
+    }
+}
+```
+
+---
+
+# Declarative Macros in Rust
 
 
 
