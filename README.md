@@ -8792,7 +8792,7 @@ trait OutlinePrint: fmt::Display {
 use std::fmt;
 
 // To get around the Orphan Rule, we create a new tuple struct called `Wrapper` which
-// stores a `Vector` (this is the newtype).
+// stores a `Vector` (this wrapper is the newtype).
 //
 struct Wrapper(Vec<String>);
 
