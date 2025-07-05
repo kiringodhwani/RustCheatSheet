@@ -8738,7 +8738,7 @@ fn main() {
     Human::fly();    // By default, this calls the associated function `fly()` implemented on the `Human` 
                      // struct, not the ones implemented on the traits that `Human` implements. 
 
-    // If we want to call the `fly()` associated function defined on the `Pilot` trait...
+    // If we want to call the `fly()` associated function defined on the `Wizard` trait...
     <Human as Wizard>::fly();    // we have to use fully qualified syntax. This tells Rust that we want 
                                  // to call the `fly()` associated function on the `Wizard` trait as
 				 // implemented for `Human`
