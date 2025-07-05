@@ -8861,9 +8861,9 @@ println!("x + y = {}", x + y);    // `Kilometers` is not a new type, it is a syn
 				  // are technically the same type.
 ```
 
-- **<ins>The main use case of type aliases is to reduce repetition.</ins>**
+**<ins>The main use case of type aliases is to reduce repetition.</ins>**
 
-	- <ins>Example:</ins> Here **we have a really long type that we don’t want to keep having to write out over and over again…**
+- <ins>Example:</ins> Here **we have a really long type that we don’t want to keep having to write out over and over again…**
 
 ```Rust
 let f: Box<dyn Fn() + Send + 'static> = Box::new(|| println!("hi"));
@@ -8894,7 +8894,7 @@ fn returns_long_type() -> Thunk {
 }
 ```
 
-- **Type aliases can also convey meaning**. In the above, “Thunk” is a word for code that will be evaluated at some later point in time. This is an appropriate name for a closure that gets stored.
+<br>**Type aliases can also convey meaning**. In the above, “Thunk” is a word for code that will be evaluated at some later point in time. This is an appropriate name for a closure that gets stored.
 
 ## Never Type
 
