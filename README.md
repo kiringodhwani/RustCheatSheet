@@ -8636,7 +8636,7 @@ impl Add<Meters> for Millimeters {
     type Output = Millimeters;    // we still want the return type of add() to be Millimeters
 
     // This is the default function contract of the `add()` method when you tab in vscode after specifying
-    // the trait implementation above. Meters is automatically filled in here bc we specify it above.
+    // the trait implementation above. `Meters` is automatically filled in here bc we specify it above.
     // 
     fn add(self, rhs: Meters) -> Self::Output {
         Millimeters(self.0 + (rhs.0 * 1000))
