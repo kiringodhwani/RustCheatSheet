@@ -8970,9 +8970,19 @@ loop {
 }
 ```
 
-## Dynamically Sized Types and the Size Trait
+## Dynamically Sized Types and the `Sized` Trait
 
+- **<ins>Dynamically Sized Types</ins> (DSTs, unsigned types)** are **types whose size we can only know at runtime/**
 
+- <ins>Example of a dynamically sized type:<ins> The **`str`** type
+
+```Rust
+// Because Rust can't determine the size of these `str` types at compile time, if we
+// try to write this code, we get a bunch of ERRORS (one is screenshotted below). 
+//
+let s1: str = "Hello there!";
+let s2: str = "How's it going?";
+```
 
 
 
