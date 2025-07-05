@@ -9033,7 +9033,13 @@ Here, we’re saying **“T may be sized or not”**. <ins>NOTE</ins>: **This sp
 
 # Advanced Functions and Closures
 
+## Function Pointers
 
+- Not only can you pass closures to functions, but **you can also pass functions to functions.**
+
+- This is **useful when you want to pass in a function you’ve already defined instead of creating a new closure.** 
+
+- **To pass in a function as an argument to another function**, use a **<ins>function pointer</ins>**, which is **specified with `fn`**. 
 
 
 
