@@ -8801,7 +8801,7 @@ struct Wrapper(Vec<String>);
 impl fmt::Display for Wrapper {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "[{}]", self.0.join(", "))    // Inside the trait implementation, we can access the `Vector`
-						// (i.e., the wrapped value in the newtype) by calling self.0 since `Wrapper`
+						// (i.e., the wrapped value in the newtype) by calling `self.0` since `Wrapper`
 						//  is a tuple struct.
     }
 }
