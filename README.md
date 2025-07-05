@@ -9201,14 +9201,14 @@ fn returns_closure(a: i32) -> impl Fn(i32) -> i32 {
 - As a result, **instead of using the `impl {TRAIT}` syntax, we <ins>must return a trait object…</ins>**
 
 ```Rust
-fn returns_closure(a: i32) -> Box<dyn Fn(i32) -> i32> {    // As we have discussed, trait objects are dynamically
-							   // sized types, so trait objects have to be behind
-							   // some sort of pointer (in this case, we use `Box`).
-							  //
-							  // “Return any type that implements this trait”
-							  //
-							  // Trait = `Fn` trait taking in an integer and returning an
-							  //	     integer.
+// As we have discussed, trait objects are dynamically sized types, so trait objects have to be behind
+// have to be behind some sort of pointer (in this case, we use `Box`).
+//
+// “Return any type that implements this trait”
+//
+// Trait = `Fn` trait taking in an integer and returning an integer.
+//
+fn returns_closure(a: i32) -> Box<dyn Fn(i32) -> i32> {
     if a > 0 {
         Box::new(move |b| a + b)
     } else {
