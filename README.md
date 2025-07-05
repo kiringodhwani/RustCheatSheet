@@ -9279,7 +9279,7 @@ macro_rules! vec {	// define the declarative macro by starting off with `macro_r
 			// name of the macro, in this case `vec` (the exclamation point in `vec!` is not included in
 			// the name). In the curly brackets, we put the body of the macro.
 
-    // The body of the macro is similar to a `match` expression. In this case, a match expression with one 
+    // The body of the macro is similar to a `match` expression. In this case, a `match` expression with one 
     // arm.
     ( $( $x:expr ),* ) => {	// `( $( $x:expr ),* )` is the pattern to match on and in the brackets is the
 				// code block associated with that pattern. If the inputs to the macro match
