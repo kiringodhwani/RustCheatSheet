@@ -8986,13 +8986,13 @@ let s2: str = "How's it going?";
 
 <img width="658" height="104" alt="Image" src="https://github.com/user-attachments/assets/996d62e5-ebb7-46d3-b779-26c8298b4683" />
 
-^^^^ TO FIX this error, **instead of using **`str`** directly, we have to use borrowed version of `str` — `&str`**
+^^^^ TO FIX this error, **instead of using **`str`** directly, we have to use the borrowed version of `str` — `&str`**
 
-- This s**tring slice structure (`&str`) stores two values:**
+- This **string slice structure (`&str`) stores two values:**
 
-	1. **An address pointing to the location of the string in memory** 
+1. **An address pointing to the location of the string in memory**
 
-        2. **The length of the string**
+2. **The length of the string**
 
 ^^^**BOTH** **the address value and the length of the string have a type of usize, meaning that we know their size at compile time**, which is why the error is fixed by using `&str`. 
 
