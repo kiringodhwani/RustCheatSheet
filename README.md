@@ -9047,7 +9047,7 @@ Here, we’re saying **“T may be sized or not”**. <ins>NOTE</ins>: **This sp
 
 ```Rust
 fn add_one(x: i32) -> i32 {
-	x + 1
+    x + 1
 }
 
 // do_twice() takes in a parameter `f` which is a function pointer with the signature `fn(i32) -> i32`. This 
@@ -9055,19 +9055,105 @@ fn add_one(x: i32) -> i32 {
 //
 fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
 
-	f(arg) + f(arg)     	// Function pointers are pointers that point to code, not data. 
-					// They can be called just like functions, so we call `f` here two times passing in the 
-					// `arg` parameter (which is an i32).
+    f(arg) + f(arg)    // Function pointers are pointers that point to code, not data. 
+                       // They can be called just like functions, so we call `f` here two times passing in the 
+                       // `arg` parameter (which is an i32).
 }
 
 fn main() {
-	let answer = do_twice(add_one, 5);      	// We pass the add_one() function into do_twice() for the `f` 
-										// parameter (function pointer). In this case, then, when we call 
-										// `f(arg)` in do_twice(), we are calling `add_one(arg)`.
+    let answer = do_twice(add_one, 5);    // We pass the `add_one()` function into `do_twice()` for the `f`
+					  // parameter (function pointer). In this case, then, when we call
+					  // `f(arg)` in do_twice(), we are calling `add_one(arg)`.
 
-	println!("The answer is: {}", answer);
+    println!("The answer is: {}", answer);
 }
-  ```
+```
+
+- One **case where you may only want to accept function pointers** **(instead of function pointers and closures)** is if you’re **interfacing with external code that does not support closures.** For example, C functions can accept functions as arguments, but the C programming does not support closures. 
+
+- <ins>Example 2:</ins> **Closure OR Function Pointer in `.map()`**
+
+```Rust
+let list_of_numbers = vec![1, 2, 3];
+
+// Convert vector of ints into vector of strings by creating an iterator over the vector, using `map` to call 
+// `to_string()` on each element in the iterator, and then using `collect()` to transform the iterator into a
+// collection (vector of strings). 
+// 
+let list_of_strings: Vec<String> = 
+    list_of_numbers 
+        .iter()
+        .map(|i| i.to_string())    // `map()` takes in a closure OR a function pointer that's called
+				   // on each element in the iterator. HERE, we use a closure !!!
+        .collect();
+
+println!("{:?}", list_of_strings);
+```
+
+^^^^^^
+<ins>NOW, **the below uses a function pointer INSTEAD of a closure**…</ins>
+
+```Rust
+let list_of_numbers = vec![1, 2, 3];
+
+let list_of_strings: Vec<String> = 
+    list_of_numbers 
+        .iter()
+        .map(ToString::to_string)    // Pass in a function pointer INSTEAD of a closure
+        .collect();
+
+println!("{:?}", list_of_strings);
+```
+
+^^^^^
+<ins>We can also **define our own function and pass that function in as a function pointer** in `map`…</ins>
+
+```Rust
+fn kirins_function(num: &i32) -> String {
+    num.to_string()
+}
+
+fn main() {
+    let list_of_numbers = vec![1, 2, 3];
+
+    let list_of_strings: Vec<String> = 
+        list_of_numbers 
+            .iter()
+            .map(kirins_function)    // Pass in a function pointer that points to the
+				     // function we created
+            .collect();
+
+    println!("{:?}", list_of_strings);
+}
+```
+
+<br><ins>Example 3:</ins> Useful pattern that exploits an implementation detail of tuple structs and tuple struct enum variants. 
+
+```Rust
+enum Status {
+    Value(u32),    // Tuple structs use parenthesis () to initialize values contained inside the tuple struct,
+		   // this looks like a function call. In fact, these initializers are implemented as functions
+		   // that take in arguments and return an instance of the tuple struct.
+		   //
+		   // This means that we can use the initializers as function pointers, see below...
+    Stop
+}
+
+// `(0u32..20)` represents a range of numbers. Specifically, `(0u32..20)` creates an iterator that yields numbers 
+// from 0 up to (but not including) 20, as u32 type.
+//
+// The below code creates a Vector of `Status` enums by calling `map` on the range passing in the `Value` 
+// variant to `map`. `map()` will treat `Value` like a function pointer, where the argument is a u32 and the return 
+// value is a Value variant. As a result, `map()` will call `Status::Value` on each integer in the range `(0u32..20)`
+// and then use `collect()` to convert the iterator returned from `map()` into a collection (Vector of `Status` 
+// enums).
+//
+let list_of_statuses: Vec<Status> =
+    (0u32..20).map(Status::Value).collect();
+```
+
+## Returning Closures from Functions
+
 
 
 
