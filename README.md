@@ -8648,7 +8648,7 @@ impl Add<Meters> for Millimeters {
 
 	1. **To extend a type without breaking existing code** (if you already have a type and you want to add a generic parameter without breaking existing code, then you have a default concrete type for the generic).
 
-	2. **To allow customization for specific cases which most users won’t need** (the `Add` trait examples above are examples — most of the time we will always add two of the same type, but in certain situations, like the second example above, we may want to add different types).
+	2. **To allow customization for specific cases which most users won’t need** (the `Add` trait examples above are examples of this — most of the time we will always add two of the same type, but in certain situations, like the second example above, we may want to add different types).
 
 ## Calling Methods with the Same Name
 
