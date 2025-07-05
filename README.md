@@ -8947,7 +8947,7 @@ impl<T> Option<T> {
 
             // If `self` is a `None` variant, `panic!`
             // `panic!` returns a never type, so if we get in the `None` arm, then we won't be returning from 
-            // `unwrap()`; instead we will exit the program. so the return value of `unwrap()` is still `T`
+            // `unwrap()`; instead we will exit the program. So, the return value of `unwrap()` is still `T`
 	    // bc the first arm returns type `T` and the second arm will never return.
             //
             None => panic!(
