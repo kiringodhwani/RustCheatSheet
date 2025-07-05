@@ -9000,9 +9000,9 @@ let s2: str = "How's it going?";
 
 - In the above example, the `str` type is behind a reference (`&str`), but we can also put it behind a `Box` smart pointer or an `Rc` smart pointer. 
 
-<br>**<ins>Trait objects are also dynamically sized types</ins>** — trait objects **have to be behind some sort of pointer (e.g., `Box`)**.
+**<ins>Trait objects are also dynamically sized types</ins>** — trait objects **have to be behind some sort of pointer (e.g., `Box`)**.
 
-<br>**<ins>`Sized` Trait</ins>**
+### >**<ins>`Sized` Trait</ins>**
 
 **Rust has a special trait called the `Sized` trait to determine whether a type’s size can be known at compile time or not.**
 
