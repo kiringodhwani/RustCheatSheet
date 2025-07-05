@@ -9002,7 +9002,7 @@ let s2: str = "How's it going?";
 
 **<ins>Trait objects are also dynamically sized types</ins>** — trait objects **have to be behind some sort of pointer (e.g., `Box`)**.
 
-### >**<ins>`Sized` Trait</ins>**
+### `Sized` Trait
 
 **Rust has a special trait called the `Sized` trait to determine whether a type’s size can be known at compile time or not.**
 
