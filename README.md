@@ -8996,7 +8996,7 @@ let s2: str = "How's it going?";
 
 - In general, the **above example is how dynamically sized types are used in Rust. They have an extra bit of metadata which stores the size of the dynamic information.**
 
-**<ins>The golden rule for dynamically sized types is that we must always put them behind some sort of pointer.</ins>**
+<br>**<ins>The golden rule for dynamically sized types is that we must always put them behind some sort of pointer.</ins>**
 
 - In the above example, the `str` type is behind a reference (`&str`), but we can also put it behind a `Box` smart pointer or an `Rc` smart pointer. 
 
