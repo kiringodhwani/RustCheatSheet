@@ -8972,7 +8972,7 @@ loop {
 
 ## Dynamically Sized Types and the `Sized` Trait
 
-- **<ins>Dynamically Sized Types</ins> (DSTs, unsigned types)** are **types whose size we can only know at runtime/**
+- **<ins>Dynamically Sized Types</ins> (DSTs, unsigned types)** are **types whose size we can only know at runtime.**
 
 - <ins>Example of a dynamically sized type:<ins> The **`str`** type
 
