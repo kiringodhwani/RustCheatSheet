@@ -8984,6 +8984,61 @@ let s1: str = "Hello there!";
 let s2: str = "How's it going?";
 ```
 
+<img width="658" height="104" alt="Image" src="https://github.com/user-attachments/assets/996d62e5-ebb7-46d3-b779-26c8298b4683" />
+
+^^^^ TO FIX this error, **instead of using **`str`** directly, we have to use borrowed version of `str` — `&str`**
+
+- This s**tring slice structure (`&str`) stores two values:**
+
+	1. **An address pointing to the location of the string in memory** 
+
+        2. **The length of the string**
+
+^^^**BOTH** **the address value and the length of the string have a type of usize, meaning that we know their size at compile time**, which is why the error is fixed by using `&str`. 
+
+- In general, the **above example is how dynamically sized types are used in Rust. They have an extra bit of metadata which stores the size of the dynamic information.**
+
+**<ins>The golden rule for dynamically sized types is that we must always put them behind some sort of pointer.</ins>**
+
+- In the above example, the `str` type is behind a reference (`&str`), but we can also put it behind a `Box` smart pointer or an `Rc` smart pointer. 
+
+<br>**<ins>Trait objects are also dynamically sized types</ins>** — trait objects **have to be behind some sort of pointer (e.g., `Box`)**. 
+
+### `Sized` Trait
+
+**Rust has a special trait called the `Sized` trait to determine whether a type’s size can be known at compile time or not.**
+
+- The `Sized` trait is **automatically implemented for every type whose size is known at compile time.**
+
+- **Rust implicitly adds the `Sized` trait bound to every generic function**… 
+
+```Rust
+// This function takes a generic, and Rust will automatically add the `Sized` trait bound like so...
+//
+fn generic<T: Sized>(t: T) {
+    //
+}
+```
+
+^^^^So, **by default, generic functions will only work on types whose size is known at compile time.** To **relax this restriction**, you can use a **special syntax…**
+
+```Rust
+fn generic<T: ?Sized>(t: &T) {
+    //
+}
+```
+
+^^^^
+Here, we’re saying **“T may be sized or not”**. <ins>NOTE</ins>: **This special syntax (`?`) is ONLY available for the `Sized` trait**. **After adding the `?`, type `T` can now potentially be a dynamically sized type, so we have to put it behind some sort of pointer (we chose a reference).**
+
+---
+
+# Advanced functions and Closures
+
+
+
+
+
 
 
 
