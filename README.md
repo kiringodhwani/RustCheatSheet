@@ -8894,7 +8894,7 @@ fn returns_long_type() -> Thunk {
 }
 ```
 
-<br>**Type aliases can also convey meaning**. In the above, “Thunk” is a word for code that will be evaluated at some later point in time. This is an appropriate name for a closure that gets stored.
+^^^^**Type aliases can also convey meaning**. In the above, “Thunk” is a word for code that will be evaluated at some later point in time. This is an appropriate name for a closure that gets stored.
 
 ## Never Type
 
