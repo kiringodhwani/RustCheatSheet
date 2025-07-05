@@ -8778,6 +8778,72 @@ trait OutlinePrint: fmt::Display {
 
 ## Newtype Pattern
 
+- **<ins>Orphan Rule:</ins>** We **can implement a trait on a given type if either the trait or the type is defined within our crate.**
+
+- If you want **to implement a trait on a type where both the trait and the type are defined outside of our crate, then we can <ins>use the Newtype Pattern</ins>…**
+
+	- We **do this by creating a tuple struct with one field, this field is going to be the type we are wrapping.**
+
+	- **This thin wrapper around our type is local to our crate, so we can implement any trait we’d like for it.**
+
+- <ins>Example:</ins> We want to **implement the `Display` trait on a `Vector` type**, but the **`Display` trait and the `Vector` type are both defined outside of our crate (breaks Orphan Rule)**
+
+```Rust
+use std::fmt;
+
+// To get around the Orphan Rule, we create a new tuple struct called `Wrapper` which
+// stores a `Vector` (this is the newtype).
+//
+struct Wrapper(Vec<String>);
+
+// `Wrapper` is defined within our crate, so we can implement the `Display` trait for `Wrapper`.
+//
+impl fmt::Display for Wrapper {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "[{}]", self.0.join(", "))    // Inside the trait implementation, we can access the `Vector`
+						// (i.e., the wrapped value in the newtype) by calling self.0 since `Wrapper`
+						//  is a tuple struct.
+    }
+}
+
+fn main() {
+    let w = Wrapper(
+        vec![String::from("hello"), String::from("World")]
+    );
+    println!("w = {}", w);
+}
+```
+
+^^^<ins>NOTE:</ins> The **downside** of this pattern is that **`Wrapper` is a newtype, so we can't call methods defined on the `Vector` type directly on `Wrapper`.**
+
+- However, **if we did want our newtype to implement every method on the type it's holding, then we can implement the `Deref` trait such that dereferencing `Wrapper` would return the inner value.**
+
+- However, **if we only want our newtype to have a subset of methods defined on the inner type, then we would have to implement each of those methods manually.**
+
+<br>We can also **use the newtype pattern to increase type safety…**
+
+- Imagine you had two functions, one function takes an age (u32) as a parameter, and the other function takes in an employee id (u32) as a parameter. So, **both take u32**. 
+
+- If you want to **prevent the user from passing in the employee id instead of the age (or vice versa) to a function**, then you can **create a newtype which wraps a u32...**
+
+```Rust
+// Create tuple structs for `Age` and `ID`
+struct Age(u32);
+struct ID(u32);
+
+// Now, instead of passing raw integers to functions that use `Age` or `ID`, we pass one of these structs.
+```
+
+
+- The **newtype pattern is also useful to abstract away implementation details**. In general, the newtype pattern is a **lightweight way to achieve encapsulation**. 
+
+    - <ins>Example:</ins> we **create a `People` type which wraps a hashmap of integers pointing to strings**. **Code using the `People` type will only be exposed to the public API of the `People` type and have no knowledge of the internal data structures being used.**
+
+---
+
+# Advanced Types in Rust
+
+## Type Aliases 
 
 
 
