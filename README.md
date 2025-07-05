@@ -9391,9 +9391,30 @@ fn main() {
 1. Create a new library crate called “hello_macro”
 
 **`cargo new hello_macro --lib`**
+<img width="211" height="167" alt="Image" src="https://github.com/user-attachments/assets/e849c3c5-4dc3-46c4-9ae6-9681736ef20b" />
+
+2. Define the `HelloMacro` trait in **lib.rs**
+
+```Rust
+pub trait HelloMacro {
+    fn hello_macro();    // our macro has one associated function named `hello_macro()`
+}
+// We want to have a default implementation for `hello_macro()` that prints “hello macro” followed by the type 
+// on which the trait is implemented on. However, Rust doesn’t have reflective capabilities, so we can’t look up 
+// the name of the type at runtime here in a default implementation. Thus, we have to use our procedural 
+// macro to generate the default implementation. 
+```
+
+3. Now that we have our trait defined, we need to define our procedural macro. As explained, **procedural macros have to be defined in their own crate. SO, we create a new library crate inside of the “hello_macro” crate…**
+
+**`cargo new hello_macro_derive --lib`**
+
+<ins>NOTE:</ins> There is a **naming convention when structuring crates and macro crates.** If you have a **custom derive macro**, then you’ll **name the crate whatever the crate’s name is (e.g., “hello_macro”) and append “_derive”. So, in this case, we get “hello_macro_derive”.**
+
+<ins>NOTE:</ins> **Because the “hello_macro” crate and the “hello_macro_derive” crate are tightly coupled, we create the macro crate inside of the library crate.** Each crate still has to be published separately, and **code using the crates has to bring each crate into scope. THIS IS WHY there are two `use` statements in main.rs shown earlier.** 
 
 
-2. 
+
 
 
 
