@@ -8942,7 +8942,7 @@ impl<T> Option<T> {
     pub fn unwrap(self) -> T {
         match self {
 
-            // If `self` is a `Some` variant, return the value contained in `self` 
+            // If `self` is a `Some` variant, return the value contained in `Some` 
             Some(val) => val, 
 
             // If `self` is a `None` variant, `panic!`
