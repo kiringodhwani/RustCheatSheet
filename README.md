@@ -8908,7 +8908,7 @@ fn bar() -> ! {
 }
 ```
 
-<br><ins>Why the Never type is useful: </ins>
+<br>- <ins>Why the Never type is useful: </ins>
 
 ```Rust
 // When we built our guessing game, we had code which parsed user input into an integer. The code was 
@@ -8935,7 +8935,7 @@ while game_in_progress {
 }
 ```
 
-**The <ins>Never type</ins> is also useful with the `panic!` macro.**
+<br>- **The <ins>Never type</ins> is also useful with the `panic!` macro.**
 
 ```Rust
 impl<T> Option<T> {
@@ -8957,7 +8957,7 @@ impl<T> Option<T> {
 }
 ```
 
-<br>**A loop has the <ins>Never type</ins>**
+<br>- **A loop has the <ins>Never type</ins>**
 
 ```Rust
 print!("forever ");
