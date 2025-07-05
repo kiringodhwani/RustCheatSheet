@@ -8844,8 +8844,59 @@ struct ID(u32);
 
 ## Type Aliases 
 
+- Rust allows you to create **<ins>type aliases</ins>** to **give existing types new names.**
 
+- <ins>Example:</ins>
 
+```Rust		
+// Create the type alias `Kilometers` for i32
+//
+type Kilometers = i32;
+
+let x: i32 = 5;
+let y: Kilometers = 5;
+
+println!("x + y = {}", x + y);    // `Kilometers` is not a new type, it is a synonym for an i32, so it is treated just
+				  // like an i32. Here, for example, we can add an i32 and a `Kilometer` type bc they
+				  // are technically the same type.
+```
+
+- **<ins>The main use case of type aliases is to reduce repetition.</ins>**
+
+	- <ins>Example:</ins> Here **we have a really long type that we don’t want to keep having to write out over and over again…**
+
+```Rust
+let f: Box<dyn Fn() + Send + 'static> = Box::new(|| println!("hi"));
+
+fn takes_long_type(f: Box<dyn Fn() + Send + 'static>) {
+    //
+}
+
+fn returns_long_type() -> Box<dyn Fn() + Send + 'static> {
+    //
+ }
+```
+
+^^^^<ins>We can make this code much more concise and reasable with type aliases:</ins>
+
+```Rust
+
+type Thunk = Box<dyn Fn() + Send + 'static>;
+
+let f: Thunk = Box::new(|| println!("hi"));
+
+fn takes_long_type(f: Thunk) {
+    //
+}
+
+fn returns_long_type() -> Thunk {
+    //
+}
+```
+
+- **Type aliases can also convey meaning**. In the above, “Thunk” is a word for code that will be evaluated at some later point in time. This is an appropriate name for a closure that gets stored.
+
+## Never Type
 
 
 
