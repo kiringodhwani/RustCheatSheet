@@ -1756,9 +1756,9 @@ panic!("crash and burn");
 
 - Run with `RUST_BACKTRACE=1` environment variable to display a backtrace… `RUST_BACKTRACE=1 cargo run`
 
-## Result Enum
+## `Result` Enum
 
-- **For errors that are recoverable, we have the Result enum**… similar to the Option enum.
+- **For errors that are recoverable, we have the `Result` enum**… similar to the Option enum.
 
 - Very common so brought into scope by default.
 
@@ -1848,7 +1848,7 @@ let f = File::open("hello.txt").unwrap_or_else(|error| {
 });
 ```
 
-### Useful Functions on the Result Enum
+### Useful Functions on the `Result` Enum
 
 1. **unwrap()**: in the below example, unwrap() does the same thing as our match expression…
 	- **In the success case (Ok)** , it **takes the thing stored in Ok(T)** (Ok(file) in this case) and **returns it**.
@@ -1875,7 +1875,7 @@ let f = File::open("hello.txt").unwrap();
 let f = File::open("hello.txt").expect("Failed to open hello.txt");
 ```
 
-## Error Propagation with the Result Enum
+## Error Propagation with the `Result` Enum
 
 - **When you have a function that calls something that may fail, then you want to return that error back to the caller instead of handling it within the function.**
 
@@ -1917,7 +1917,7 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
 - By doing the error propagation in the above, the code calling the read_username_from_file() function is able to determine how best to handle the different errors.
 
-## The `?` Operator with the Result Enum
+## The `?` Operator with the `Result` Enum
 
 - `?` does something very similar to the unwrap() or expect() methods.
 
