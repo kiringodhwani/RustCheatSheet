@@ -956,7 +956,7 @@ enum Message {
 }
 ```
 
-### Enum Methods
+## Enum Methods
 - Just like structs, we **can define methods and associated functions on our enum type**. Just like structs, we use **implementation blocks** again.
 ```Rust
 enum Message {
