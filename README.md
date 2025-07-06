@@ -4695,7 +4695,7 @@ license = "MIT"
 
 **When you want to upload a new version of your library to crates.io, simply change the version number in cargo.toml using the semantic versioning rules, and run `cargo publish` again**.
 
-### Removing Versions from crates.io 
+## Removing Versions from crates.io 
 You can’t delete or modify your code once it’s up on crates.io, but **you can stop specific versions from continuing to be downloaded**. You can do this using the **`cargo yank`** command. For example, **if we didn’t want version “0.1.0” to be downloaded anymore**, then we would type in **`cargo yank --vers 0.1.0`**.
 
 - What this does it for **anyone with this version in their `Cargo.lock`**, they **can continue to keep downloading this version**; however, **those downloading our library for the first time won’t be allowed to download this specific version.**
