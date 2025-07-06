@@ -5324,7 +5324,7 @@ fn main() {
 
 We **could solve this by changing the definition of the `Cons` variant to hold references instead of owned value, but that would require the use of lifetimes.** By **using lifetime parameters**, we would be **specifying that every element in `List` has to live at least as long as the `List` itself.** **Otherwise**, we would have **dangling references** where the `List` points to elements that don’t exist. In other words, if the data that a `Cons` variant points to goes out of scope and is dropped before the `Cons` variant itself, then the `Cons` variant would be left with a hanging reference to invalid memory.
 
-#### Solution: Use a Reference Counting smart pointer
+**<ins>Solution: Use a Reference Counting smart pointer</ins>**
 
 <ins>NOTE:</ins> **to get the reference counts** in the below, we use **`Rc::strong_count()`** instead of `Rc::weak_count()`. There is no plain count only these two options… (we explain them in detail in a later section)
 
