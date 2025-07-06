@@ -3195,8 +3195,8 @@ mod tests {
 <br>If we change the value in new() to -2, then the **test fails because the panic message we got does not contain “Guess value must be less than or equal to 100”**...
 <img width="702" alt="Image" src="https://github.com/user-attachments/assets/c499ade7-da2c-4281-beeb-0aa562d3043b" />
 
-## Tests that Return a Result Type — 
-- **Tests that return a Result type allow you to use the ? operator**, which can be **convenient if you have multiple operations within the test that could return an error type and <ins>you want the test to fail if any of those return an error type.</ins>**
+## Tests that Return a `Result` Type
+- **Tests that return a `Result` type allow you to use the ? operator**, which can be **convenient if you have multiple operations within the test that could return an error type and <ins>you want the test to fail if any of those return an error type.</ins>**
 ```Rust
 #[cfg(test)]
 mod tests {
