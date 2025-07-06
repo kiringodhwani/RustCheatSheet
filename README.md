@@ -4505,9 +4505,9 @@ opt-level = 3
 
 ^^^NOTE: to get a full list of settings beyond just `opt-level`, see cargo’s documentation
 
-# Uploading Code to crates.io
+## Uploading Code to crates.io
 
-## Preparing Your Code for Public Consumption
+### Preparing Your Code for Public Consumption
 
 1. **Writing Useful Documentation Comments** — comments are useful when documenting your public API so that others know how to use your code.
 
