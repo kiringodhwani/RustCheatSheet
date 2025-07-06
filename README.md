@@ -183,7 +183,7 @@
     - [Creating Multiple Producers](#creating-multiple-producers)
   - [Sharing State](#sharing-state)
     - [The API of `Mutex`](#the-api-of-mutex)
-    - [Using a Mutex in Rust](#using-a-mutex-in-rust)
+    - [Using a `Mutex` in Rust](#using-a-mutex-in-rust)
     - [`Mutex` Interior Mutability with `Arc`](#mutex-interior-mutability-with-arc)
 - [Object Oriented Programming in Rust](#object-oriented-programming-in-rust)
   - [1. **<ins>Objects</ins>**](#1-objects)
