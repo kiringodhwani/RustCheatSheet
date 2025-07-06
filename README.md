@@ -576,7 +576,7 @@ Looking at the above code, the following happens in order…
 
 2. The function b() is executed (it is called in a). This creates a new stack frame that is added to the top of the stack. b() creates its own variable `x`, which is of type `String`. As a `String`, `x` can be dynamic in size, so can’t store it directly in the stack frame; instead, we ask the heap to allocate memory for `x`. The heap does this and passes back a pointer which is what we store in the stack frame. 
 
-## Ownership Rules - 3 Rules in Rust
+## Ownership Rules -- 3 Rules in Rust
 1. **Each value in Rust has a variable that’s called its owner.**
 
 2. **There can only be one owner at a time for a specific value (i.e., a value can’t have two owners at the same time).**
