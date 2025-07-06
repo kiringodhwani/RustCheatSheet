@@ -4505,9 +4505,7 @@ opt-level = 3
 
 ^^^NOTE: to get a full list of settings beyond just `opt-level`, see cargo’s documentation
 
-## Uploading Code to crates.io
-
-### Preparing Your Code for Public Consumption
+## Preparing Your Code for Public Consumption
 
 1. **Writing Useful Documentation Comments** — comments are useful when documenting your public API so that others know how to use your code.
 
@@ -4561,7 +4559,7 @@ pub fn add_one(x: i32) -> i32 {
 
 3. **Safety** — if the function is “unsafe” to call, there should be a section explaining why the function is unsafe and covering the invariants that the function expects callers to uphold.
 
-### `//!` Comments
+## `//!` Comments
 
 This style of comment **documents the item containing the comment** instead of documenting the item following the comment. 
 
