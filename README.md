@@ -9438,7 +9438,7 @@ extern crate proc_macro;    // `proc_macro` is a crate that comes with Rust, so 
 			    // dependencies section. However, to import, we have to write `extern crate`.
 			    // The `proc_macro` crate allows us to read and manipulate Rust code.
 
-use proc_macro::TokenStream;	// the type of the code we're operating on and the code we're producing
+use proc_macro::TokenStream;	// `TokenStream` is the type of the code we're operating on and the code we're producing
 use syn;	// allows us to take a string of Rust code and turn it into a syntax tree data structure, which
 		// we can operate on.
 
