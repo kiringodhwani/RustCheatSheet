@@ -1875,7 +1875,7 @@ let f = File::open("hello.txt").unwrap();
 let f = File::open("hello.txt").expect("Failed to open hello.txt");
 ```
 
-### Error Propagation
+## Error Propagation
 
 - **When you have a function that calls something that may fail, then you want to return that error back to the caller instead of handling it within the function.**
 
@@ -1917,7 +1917,7 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
 - By doing the error propagation in the above, the code calling the read_username_from_file() function is able to determine how best to handle the different errors.
 
-### The `?` Operator
+## The `?` Operator
 
 - `?` does something very similar to the unwrap() or expect() methods.
 
