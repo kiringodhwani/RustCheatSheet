@@ -9576,7 +9576,7 @@ let sql = sql!(SELECT * FROM POSTS WHERE id=1);
 // difference being that we annotate the function with `#[proc_macro]` instead of  `#[proc_macro_derive]`
 #[proc_macro]
 pub fn sql(input: TokenStream) -> TokenStream {
-	//...
+    //...
 }
 ```
 
