@@ -203,7 +203,7 @@
   - [Places where Patterns can be Used](#places-where-patterns-can-be-used)
     - [1. Inside the Arms of `match` expressions —](#1-inside-the-arms-of-match-expressions--)
     - [2. Conditional `if let` Expressions —](#2-conditional-if-let-expressions--)
-    - [3. `While let` Syntax —](#3-while-let-syntax--)
+    - [3. `while let` Syntax —](#3-while-let-syntax--)
     - [4. `for` Loops —](#4-for-loops--)
     - [5. `let` Statements —](#5-let-statements--)
     - [6. Function Parameters —](#6-function-parameters--)
@@ -7628,7 +7628,7 @@ if let Some(status) = authorization_status {
 }
 ```
 
-### 3. `While let` Syntax — 
+### 3. `while let` Syntax — 
 
 - `while let` syntax allows you to **run a loop as long as the pattern specified continues to match.**
 
