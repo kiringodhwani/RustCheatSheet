@@ -165,6 +165,7 @@
     - [`RefCell` Smart Pointer](#refcell-smart-pointer)
     - [USE CASE for the Interior Mutability Pattern](#use-case-for-the-interior-mutability-pattern)
     - [Combining `Rc` with `RefCell` to Get Multiple Owners of Mutable Data](#combining-rc-with-refcell-to-get-multiple-owners-of-mutable-data)
+    - [Panicking when breaking borrow rules with `borrow_mut()`](#panicking-when-breaking-borrow-rules-with-`borrow_mut()`)
   - [Reference Cycles and Memory Leaks](#reference-cycles-and-memory-leaks)
     - [`Weak` Smart Pointer](#weak-smart-pointer)
     - [Rc smart pointer: `strong_count()` and `weak_count()` methods](#rc-smart-pointer-strong_count-and-weak_count-methods)
