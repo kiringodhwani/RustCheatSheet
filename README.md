@@ -1493,7 +1493,7 @@ pub fn eat_at_restaurant() {
 }
 ```
 
-## Use keyword
+## `Use` keyword
 
 - When there are a lot of nested modules, specifying full paths to functions is not pretty. The use keyword allows you to bring a path into scope.
 
@@ -1584,7 +1584,7 @@ use std::io::Write;
 ```
 —>    `use std::io::{self, Write};`
 
-### Glob Operator (*)
+### Glob Operator (`*`)
 - Say we wanted to bring all of the public items underneath io into scope…
 
 ```Rust
