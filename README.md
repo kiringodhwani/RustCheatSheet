@@ -54,7 +54,9 @@
     - [Paths and Module Privacy Rules](#paths-and-module-privacy-rules)
   - [Privacy Rules with Structs and Enums](#privacy-rules-with-structs-and-enums)
   - [Use keyword](#use-keyword)
-  - [Re-Exporting](#re-exporting)
+    - [Re-Exporting](#re-exporting)
+    - [External Dependencies](#external-dependencies)
+    - [Nested Paths](#nested-paths)
     - [Glob Operator (*)](#glob-operator)
   - [Modules in Separate Files](#modules-in-separate-files)
   - [SUMMARY:](#summary)
@@ -1550,6 +1552,8 @@ mod front_of_house {
 pub use crate::front_of_house::hosting;
 ```
 
+## External Dependencies 
+
 - **The use keyword allows us to bring items into scope within our program, and it also allows us to bring in items from external dependencies into scope.** <ins>Example:</ins>
 
 <img width="357" alt="Image" src="https://github.com/user-attachments/assets/a6205b98-6215-4e33-9f3b-af3a020b60cd" />
@@ -1564,7 +1568,9 @@ pub fn eat_at_restaurant() {
 }
 ```
 
-- <ins>Example 2:</ins> Nested Paths
+## Nested Paths
+
+- <ins>Example:</ins>
 ```Rust
 use rand::Rng;
 use rand::ErrorKind::Transient;
@@ -1578,7 +1584,7 @@ use std::io::Write;
 ```
 —>    `use std::io::{self, Write};`
 
-### Glob Operator (*)
+## Glob Operator (*)
 - Say we wanted to bring all of the public items underneath io into scope…
 
 ```Rust
