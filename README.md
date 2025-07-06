@@ -434,7 +434,7 @@ fn calculate_length(s: &String) -> usize {
 }
 ```
 
-## Rules of References
+## Rules of References, Reference Rules
 
 1. **At any given time, you can either have one mutable reference OR any number of immutable references.** SO, you can’t have a mutable reference to a variable if an immutable reference already exists for it.
 
