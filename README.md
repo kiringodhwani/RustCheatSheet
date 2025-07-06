@@ -226,7 +226,7 @@
   - [Accessing or Modifying Mutable Static Variables](#accessing-or-modifying-mutable-static-variables)
   - [Implementing an Unsafe Trait](#implementing-an-unsafe-trait)
   - [Accessing Fields of a Union](#accessing-fields-of-a-union)
-  - [Unsafe Rust TAKEWAY](#unsafe-rust-takeaway)
+  - [Unsafe Rust TAKEWAY](#unsafe-rust-takeway)
 - [Advanced Traits in Rust](#advanced-traits-in-rust)
   - [Associated Types](#associated-types)
     - [Difference between Associated Types and Generics](#difference-between-associated-types-and-generics)
