@@ -9523,6 +9523,63 @@ fn main() {
 }
 ```
 **`cargo run` —>** 
+<img width="647" height="92" alt="Image" src="https://github.com/user-attachments/assets/d1f7b93b-ef62-4e4e-af89-819327119667" />
+
+^^^^The associated function works as we want: it prints the message with the name of the type that the trait is implemented on.
+
+### Attribute-like Macros
+
+- Similar to custom derive macros, except instead of generating code for the derive attribute, we can create a custom attribute. 
+
+- **Custom derive macros only work on structs and enums, whereas attribute-like macros work on other types such as functions.**
+
+- <ins>Example:</ins>
+
+```Rust
+// Imagine you are building a new web framework and you want to create a new attribute
+// called `route()` which takes in an HTTP method and a route. This macro will generate code
+// which will map a specific HTTP request to a given function. In this case, we're mapping
+// a GET request on the root path to the index function. 
+#[route(Get, "/")]
+fn index() {
+    //...
+}
+
+// We define our attribute-like macro by specifying a function annotated with `#[proc_macro_attribute]`.
+// Our function would take in two arguments. The first argument, `attr` contains the contents of the
+// attribute, which in this case is the HTTP method and the path. The second argument is going to contain
+// the contents of the item the attribute is attached to, in this case the `index()` function. 
+//
+// Other than this, attribute-like macros work just like custom derive macros.
+//
+#[proc_macro_attribute]
+pub fn route(
+    attr: TokenStream, // GET, "/"
+    item: TokenStream  // fn index() {}
+) -> TokenStream {
+    //...
+}
+```
+
+### Function-like Macros:
+
+- **Look like function calls however they are more flexible.**
+
+- They **can take a variable number of arguments, and they operate on Rust code.**
+
+- <ins>Example:</ins> We **want to generate a function-like macro called `sql` that takes a SQL statement as an argument, validates that the SQL statement has the correct syntax, and then generates code that will allow you to execute the SQL statement.**
+
+```Rust
+let sql = sql!(SELECT * FROM POSTS WHERE id=1);
+
+// The definition for a function-like macro is extremely similar to our custom derive macro, with the only 
+// difference being that we annotate the function with `#[proc_macro]` instead of  `#[proc_macro_derive]`
+#[proc_macro]
+pub fn sql(input: TokenStream) -> TokenStream {
+	//...
+}
+```
+
 
 
 
