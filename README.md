@@ -1538,7 +1538,7 @@ fn function1() -> fmt::Result {}
 fn function2() -> io::Result<()> {}
 ```
 
-## Re-Exporting
+### Re-Exporting
 - Suppose that we want something that’s external to this file to also have access to the add_to_waitlist() function in the below. Currently, it would not have access. If we want external code to be able to call the add_to_waitlist() function directly, then we **need to re-export the hosting module**. To do so, we add pub in front of the use statement…
 ```Rust
 mod front_of_house {
@@ -1552,7 +1552,7 @@ mod front_of_house {
 pub use crate::front_of_house::hosting;
 ```
 
-## External Dependencies 
+### External Dependencies 
 
 - **The use keyword allows us to bring items into scope within our program, and it also allows us to bring in items from external dependencies into scope.** <ins>Example:</ins>
 
@@ -1568,7 +1568,7 @@ pub fn eat_at_restaurant() {
 }
 ```
 
-## Nested Paths
+### Nested Paths
 
 - <ins>Example:</ins>
 ```Rust
@@ -1584,7 +1584,7 @@ use std::io::Write;
 ```
 —>    `use std::io::{self, Write};`
 
-## Glob Operator (*)
+### Glob Operator (*)
 - Say we wanted to bring all of the public items underneath io into scope…
 
 ```Rust
