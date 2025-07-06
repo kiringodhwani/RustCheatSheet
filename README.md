@@ -7372,7 +7372,7 @@ if let Some(status) = authorization_status {
 }
 ```
 
-### 3. `While let` Syntax — 
+### 3. `While let` Syntax
 
 - `while let` syntax allows you to **run a loop as long as the pattern specified continues to match.**
 
