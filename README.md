@@ -46,7 +46,7 @@
   - [Enum Methods](#enum-methods)
   - [Option Enum](#option-enum)
   - [Match Expression](#match-expression)
-    - [If let syntax](#if-let-syntax)
+    - [`if let` syntax](#if-let-syntax)
 - [Rust's Module System](#rusts-module-system)
   - [Crates](#crates)
     - [Rules around Crates:](#rules-around-crates)
@@ -1293,7 +1293,7 @@ fn plus_one(x: Option<i32>) -> Option<i32> {
 }
 ```
 
-### If let syntax
+### `if let` syntax
 
 - Rare, but you can use the `if let` syntax when you are matching a value and you **only care about one condition / variant**...
 ```Rust
