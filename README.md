@@ -57,7 +57,7 @@
     - [Re-Exporting](#re-exporting)
     - [External Dependencies](#external-dependencies)
     - [Nested Paths](#nested-paths)
-    - [Glob Operator (`*`)](#glob-operator)
+    - [Glob Operator (`*`)](#glob-operator-*)
   - [Modules in Separate Files](#modules-in-separate-files)
   - [SUMMARY:](#summary)
 - [Common Collections in Rust](#common-collections-in-rust)
