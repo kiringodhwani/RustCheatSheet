@@ -9434,9 +9434,95 @@ quote = "1.0"
 5. **Implement our macro in the lib.rs file of the “hello_macro_derive” crate.**
 
 ```Rust
+extern crate proc_macro;    // `proc_macro` is a crate that comes with Rust, so don't have to declare it in
+			    // dependencies section. However, to import, we have to write `extern crate`.
+			    // The `proc_macro` crate allows us to read and manipulate Rust code.
 
+use proc_macro::TokenStream;	// the type of the code we're operating on and the code we're producing
+use syn;	// allows us to take a string of Rust code and turn it into a syntax tree data structure, which
+		// we can operate on.
+
+use quote::quote;    // can take the syntax tree data structure and turn it back into Rust code.
+
+// Define our custom derive macro called `HelloMacro`
+#[proc_macro_derive(HelloMacro)]    // annotated with `proc_macro_derive` to indicate that this
+				    // a custom derive macro with the name `HelloMacro`
+
+pub fn hello_macro_derive(input: TokenStream) -> TokenStream {
+	
+    // Use the `syn` crate to parse the `input` `TokenStream` (the Rust code we're operating on) into a  
+    // syntax tree that we can manipulate.
+    // Use `unwrap()` so that the function panics if parsing fails. Appropriate bc not returning a `Result` type and  
+    // this function is called at compile time not runtime.
+    //
+    let ast = syn::parse(input).unwrap();
+
+    // Pass the syntax tree into `impl_hello_macro()` to build the trait implementation
+    impl_hello_macro(&ast)
+}
+
+fn impl_hello_macro(ast: &syn::DeriveInput) -> TokenStream {
+    let name = &ast.ident;    // Extract out the name of the type we're working on
+
+    // Use the `quote!` macro to output some Rust code. In this case, we implement the `HelloMacro` trait  
+    // on our type. The `quote!` macro has templating abilities so this pound `#name` will be replaced by the 
+    // `name` variable containing our type. Then, we provide a custom implementation of the `hello_macro` 
+    // associated function, which, in this case, prints a message containing the name of the type we're 
+    // working on.
+    //
+    let gen = quote! {
+        impl HelloMacro for #name {
+            fn hello_macro() {
+                println!(
+                    "Hello, Macro! My name is {}!",
+                    stringify!(#name)    // `stringify!` macro takes an expression and turns in into a
+					 // string without evaluating the expression like the `format!`
+					 // macro would.
+                );
+            }
+        }
+    };
+    gen.into()    // Take the output of the `quote!` macro which is saved in a variable called `gen`, and turn
+		  // it  into a `TokenStream` using the `.into()` method.
+}
 ```
 
+5. **Build the “hello_macro_derive” crate — `cargo build`** in this directory
+
+6. **Build the “hello_macro” crate — `cargo build`** in this directory
+
+7. **Go back to the project with main.rs that uses our macro. Add the “hello_macro” crate and “hello_macro_derive” crate as dependencies in cargo.toml**…
+
+```Rust
+[package]
+name = "procedural_macros"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+hello_macro = { path = "../hello_macro" }
+hello_macro_derive = { path = "../hello_macro/hello_macro_derive" }
+```
+
+8. **We can now run main.rs …**
+
+```Rust
+// Bring the macro into scope
+use hello_macro::HelloMacro;
+use hello_macro_derive::HelloMacro;
+
+// Define a struct called `Pancakes` and have a `derive` attribute specifying our macro. 
+// What this `derive` attribute does is implement our `HelloMacro` trait for the `Pancakes` struct.
+#[derive(HelloMacro)]
+struct Pancakes;
+
+fn main() {
+    // Bc the `derive` attribute above implements our `HelloMacro` trait for the `Pancakes` struct,
+    // we can now call `hello_macro()` from the `Pancakes` struct.
+    Pancakes::hello_macro();
+}
+```
+**`cargo run` —>** 
 
 
 
