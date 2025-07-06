@@ -7336,7 +7336,7 @@ match language {
 }
 ```
 
-### 2. Conditional `if let` Expressions — 
+### 2. Conditional `if let` Expressions
 
 - You can **use `if let` expressions if you want to match on some variable but you <ins>only care about one case.</ins>**
 
