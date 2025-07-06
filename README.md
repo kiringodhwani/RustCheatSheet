@@ -27,7 +27,7 @@
     - [The Heap](#the-heap)
     - [Stack vs. Heap](#stack-vs-heap)
     - [Example](#example)
-  - [Ownership Rules - 3 Rules in Rust](#ownership-rules--3-rules-in-rust)
+  - [Ownership Rules - 3 Rules in Rust](#ownership-rules---3-rules-in-rust)
   - [Copy, Move, Clone](#copy-move-clone)
 - [References and Borrowing](#references-and-borrowing)
   - [Borrowing](#borrowing)
