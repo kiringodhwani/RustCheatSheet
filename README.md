@@ -7293,7 +7293,7 @@ fn main() {
 
 ## Places where Patterns can be Used
 
-### 1. Inside the Arms of `match` expressions -- 
+### 1. Inside the Arms of `match` expressions — 
 
 - **`match` arms consist of a pattern mapping to an expression:**
 
@@ -7336,7 +7336,7 @@ match language {
 }
 ```
 
-### 2. Conditional `if let` Expressions -- 
+### 2. Conditional `if let` Expressions — 
 
 - You can **use `if let` expressions if you want to match on some variable but you <ins>only care about one case.</ins>**
 
@@ -7372,7 +7372,7 @@ if let Some(status) = authorization_status {
 }
 ```
 
-### 3. `While let` Syntax -- 
+### 3. `While let` Syntax — 
 
 - `while let` syntax allows you to **run a loop as long as the pattern specified continues to match.**
 
