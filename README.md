@@ -6764,7 +6764,7 @@ fn main() {
 
 ^^^THIS is a **very helpful error message** that even tells us which types implement `Draw` and are thus eligible to be added to the `components` vector.
 
-### Static vs Dynamic Dispatch
+## Static vs. Dynamic Dispatch
 
 **Monomorphization** (<ins>see earlier explanation/example of this using command-f</ins>) 
 
@@ -6782,7 +6782,7 @@ fn main() {
 
 - INSTEAD, the **compiler will add code to figure out the correct method to call at runtime, which means there is a runtime performance cost**. The **upside is you get to write flexible code that can accept any object that implements a certain trait.**
 
-### Object Safety for Trait Objects
+## Object Safety for Trait Objects
 
 - **ONLY traits that are <ins>object safe</ins> can be used to create trait objects.**
 
