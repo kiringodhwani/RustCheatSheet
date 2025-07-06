@@ -6336,7 +6336,7 @@ fn main() {
 
 ^^^^This is a **pain point** that may lead people away from using Mutexes, but **Rust’s type system and ownership rules guarantee that you can’t get locking and unlocking wrong!!!!**
 
-### Using a Mutex in Rust:
+### Using a `Mutex` in Rust:
 
 ```Rust
 use std::sync::Mutex;	// import `Mutex` from the standard library
@@ -6394,6 +6394,7 @@ fn main() {
 
 }
 ```
+### `Mutex` Interior Mutability with `Arc`
 
 - **<ins>`Mutex` uses interior mutability</ins>** — i**n the same way that a `RefCell` smart pointer allows you to mutate a value that’s inside a `Rc` smart pointer (`Rc<RefCell<T>>`), the `Mutex` smart pointer allows you to mutate a value that's inside an `Arc` smart pointer (`Arc<Mutex<T>>`)**.
 
