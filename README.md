@@ -7446,7 +7446,7 @@ let (x, y, z) = (1, 2, 3);
 let (x, y, _) = (1, 2, 3);    //  bind 1 to `x`, bind 2 to `y`, and ignore the third value `3`
 ```
 
-### 6. Function Parameters -- 
+### 6. Function Parameters - 
 
 - <ins>Example:</ins>
 ```Rust
