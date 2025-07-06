@@ -1,5 +1,4 @@
 # Table of Contents
----
 - [Cargo](#cargo)
 - [Guessing Game](#guessing-game)
 - [Variables](#variables)
