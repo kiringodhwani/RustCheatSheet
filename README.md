@@ -9475,7 +9475,7 @@ fn impl_hello_macro(ast: &syn::DeriveInput) -> TokenStream {
             fn hello_macro() {
                 println!(
                     "Hello, Macro! My name is {}!",
-                    stringify!(#name)    // `stringify!` macro takes an expression and turns in into a
+                    stringify!(#name)    // `stringify!` macro takes an expression and turns it into a
 					 // string without evaluating the expression like the `format!`
 					 // macro would.
                 );
