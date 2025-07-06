@@ -44,8 +44,6 @@
   - [Methods](#methods)
   - [Associated Functions](#associated-functions)
 - [Enums](#enums)
-  - [Example 1: IPAddressKind](#example-1-ipaddresskind)
-  - [Example 2: Message Enum](#example-2-message-enum)
   - [Enum Methods](#enum-methods)
 - [Option Enum](#option-enum)
   - [Example 1: Creating Option Values](#example-1-creating-option-values)
