@@ -113,8 +113,8 @@
     - [`assert_ne!` Macro](#assert_ne-macro)
   - [Custom Failure Messages](#custom-failure-messages)
   - [Asserting that a Function Fails](#asserting-that-a-function-fails)
-  - [Tests that Return a Result Type](#tests-that-return-a-result-type)
-    - [Why Tests that Return Result Are Useful...](#why-tests-that-return-result-are-useful)
+  - [Tests that Return a `Result` Type](#tests-that-return-a-result-type)
+    - [Why Tests that Return `Result` Are Useful...](#why-tests-that-return-result-are-useful)
     - [How the `?` Operator is Useful Here](#how-the--operator-is-useful-here)
     - [Examples](#examples)
   - [Controlling How Tests Run](#controlling-how-tests-run)
@@ -3469,7 +3469,7 @@ mod tests {
 }
 ```
 
-### Why Tests that Return Result Are Useful...
+### Why Tests that Return `Result` Are Useful...
 
 **Normally, a Rust test function has a `()` return type, and it passes if it runs to completion without panicking.** If it panics (e.g., via assert!, panic!, or an uncaught unwrap/expect), it fails.
 
