@@ -9409,11 +9409,11 @@ pub trait HelloMacro {
 
 **`cargo new hello_macro_derive --lib`**
 
+<img width="209" height="188" alt="Image" src="https://github.com/user-attachments/assets/0d9b3021-6880-4811-b902-18de0b769599" />
+
 <ins>NOTE:</ins> There is a **naming convention when structuring crates and macro crates.** If you have a **custom derive macro**, then you’ll **name the crate whatever the crate’s name is (e.g., “hello_macro”) and append “_derive”. So, in this case, we get “hello_macro_derive”.**
 
 <ins>NOTE:</ins> **Because the “hello_macro” crate and the “hello_macro_derive” crate are tightly coupled, we create the macro crate inside of the library crate.** Each crate still has to be published separately, and **code using the crates has to bring each crate into scope. THIS IS WHY there are two `use` statements in main.rs shown earlier.** 
-
-<img width="209" height="188" alt="Image" src="https://github.com/user-attachments/assets/0d9b3021-6880-4811-b902-18de0b769599" />
 
 4. Open **“cargo.toml”** file in the newly created “hello_macro_derive” crate. **Macro crates are a special type of crate**, so **to signify this**, we **add `proc-macro = true` in the “cargo.toml” file under the `[lib]` section**. We also **add the `syn` and `quote` crates as dependencies.**
 
