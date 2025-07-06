@@ -4876,7 +4876,7 @@ You can **use the binaries installed with `cargo install` to extend cargo with c
 
 - Many libraries implement their own smart pointers, so we won’t be covering every single smart pointer out there; instead, we’ll be covering the most common smart pointers used within the Rust standard library.
 
-## Smart Pointer Summary
+## Smart Pointer Summary (IMPORTANT!!!)
 
 **<ins>Reference Counting smart pointer</ins>:**   **`Rc<T>`**
 
